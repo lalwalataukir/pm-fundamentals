@@ -159,6 +159,55 @@ const check = (c, m) => c ? ok(m) : bad(m);
   check(await page.evaluate(() => getComputedStyle(document.body).backgroundColor) === 'rgb(9, 7, 15)', 'stays dark when the OS prefers light');
   await page.emulateMedia({ colorScheme: null });
 
+  console.log('Tool links');
+  await go('scrum-4');
+  const sgLinks = await page.$$eval('#main a.tool-link[href^="https://scrumguides.org"]', e => e.length);
+  check(sgLinks >= 3, `Scrum Guide linked in Scrum lesson 4 (${sgLinks} links)`);
+  await go('pm-1');
+  check(await page.$('#main a.tool-link[data-tool="PostgreSQL"]') !== null, 'Postgres linked in lesson pm-1');
+  await go('pm-2');
+  check(await page.$('#main a.tool-link[data-tool="WhatsApp Business"]') !== null, 'WhatsApp linked in lesson pm-2');
+  await go('pm-7');
+  const cams = await page.$('#main a.tool-link[data-tool="CAMS"]');
+  check(cams !== null && await page.$('#main a.tool-link[data-tool="KFintech"]') !== null, 'CAMS and KFintech linked in lesson pm-7');
+  await cams.scrollIntoViewIfNeeded(); await cams.hover(); await page.waitForTimeout(150);
+  check(await page.isVisible('#tooltip') && (await page.$eval('#tooltip', e => e.textContent)).includes('registrar'), 'hovering a tool link shows its card');
+  await page.mouse.move(5, 5); await page.waitForTimeout(150);
+  check(!(await page.isVisible('#tooltip')), 'card hides when the pointer leaves');
+  await go('pm-1');
+  if (await page.$('#quiz-pm-1 [data-action="quiz-retry"]')) await page.click('#quiz-pm-1 [data-action="quiz-retry"]');
+  await page.click('#quiz-pm-1 [data-q="1"][data-o="2"]');
+  check((await page.$$eval('#quiz-pm-1 .why a.tool-link', e => e.length)) > 0, 'links appear in quiz explanations revealed after answering');
+  await go('glossary');
+  await page.fill('#gl-q', 'scrum'); await page.waitForTimeout(100);
+  check(await page.$('#gl-list a.tool-link[data-tool="Scrum Guide"]') !== null, 'filtered glossary links the Scrum Guide');
+  await page.fill('#gl-q', '');
+  const seenTools = new Set(), hrefs = new Set(); let nested = 0, badAttrs = 0; const missed = [];
+  for (const r of [...ids, 'glossary', 'simulator', 'cheatsheet']) {
+    await go(r);
+    const res = await page.evaluate(() => {
+      const links = [...document.querySelectorAll('#main a.tool-link')];
+      const re = /(?<![A-Za-z0-9])(Scrum Guide|Kanban Guide|Agile Manifesto|Scrum\.org|Jira|Figma|Slack|Postgres|WhatsApp|Excel|CAMS|KFintech|SEBI)(?![A-Za-z0-9])/;
+      const skip = 'a,button,input,textarea,select,svg,script,style,h1,h2,.badge,.section-label,.q-n,.opt-flag,.fb-h,.tag,.kbd';
+      const w = document.createTreeWalker(document.querySelector('#main'), NodeFilter.SHOW_TEXT); const miss = [];
+      while (w.nextNode()) { const n = w.currentNode; if (re.test(n.nodeValue) && !n.parentElement.closest(skip)) miss.push(n.nodeValue.trim().slice(0, 60)); }
+      return { tools: links.map(a => a.dataset.tool), hrefs: links.map(a => a.href), nested: document.querySelectorAll('button a.tool-link, a a.tool-link').length, bad: links.filter(a => a.target !== '_blank' || !/noopener/.test(a.rel)).length, miss };
+    });
+    res.tools.forEach(t => seenTools.add(t)); res.hrefs.forEach(h => hrefs.add(h)); nested += res.nested; badAttrs += res.bad; res.miss.forEach(m => missed.push(r + ': ' + m));
+  }
+  check(missed.length === 0, 'every eligible tool mention on every page is linked' + (missed.length ? ' — missed: ' + missed.slice(0, 5).join(' | ') : ''));
+  check(nested === 0, 'no tool link is nested inside a button or another link');
+  check(badAttrs === 0, 'every tool link opens in a new tab with rel=noopener');
+  check(seenTools.size >= 12, `${seenTools.size} tools linked across the course: ${[...seenTools].join(', ')}`);
+  if (URL.startsWith('http')) {
+    for (const h of hrefs) {
+      let status = 'error';
+      try { status = (await ctx.request.get(h, { timeout: 20000, maxRedirects: 5, headers: { 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36' } })).status(); } catch (e) { status = 'error: ' + e.message.split('\n')[0]; }
+      console.log(`    link ${status} ${h}`);
+      if (status === 404 || status === 410) bad(`broken link ${h} (${status})`);
+    }
+  }
+
   console.log('Course search');
   await go('home');
   await page.click('.sidebar [data-action="search-open"]');

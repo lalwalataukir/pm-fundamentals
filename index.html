@@ -91,7 +91,7 @@ main{min-width:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-ri
     padding:8px max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px));min-height:56px}
   .topbar .brand-name{font-size:.98rem}
   .topbar .brand-sub{display:none}
-  .topbar .pct{margin-left:auto;font-family:var(--f-mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .topbar .pct{margin-left:auto;font-family:var(--f-mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
   .iconbtn{width:44px;height:44px;border:1px solid var(--line);border-radius:10px;background:var(--bg);display:grid;place-items:center;cursor:pointer;flex:none}
   .sidebar{position:fixed;z-index:60;top:0;left:0;bottom:0;width:min(86vw,330px);height:auto;transform:translateX(-102%);transition:transform .25s ease;box-shadow:var(--shadow);
     padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
@@ -289,6 +289,14 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
 @media (max-width:640px){.home-grid{grid-template-columns:minmax(0,1fr)}.anatomy{grid-template-columns:repeat(2,minmax(0,1fr))}.anatomy div{border-bottom:1px solid var(--line)}.anatomy div:nth-child(odd){border-right:1px solid var(--line)}.anatomy div:nth-child(even){border-right:0}.anatomy div:nth-child(3){border-right:1px solid var(--line)}.anatomy div:nth-last-child(-n+2){border-bottom:0}.page{padding-block:28px 72px}}
 @media (max-width:420px){.tools{grid-template-columns:minmax(0,1fr)}.pager{grid-template-columns:minmax(0,1fr)}.pager a.next{grid-column:1}}
 
+/* tool links + hover card */
+.tool-link{color:var(--accent);text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:.22em}
+.tool-link:hover{text-decoration-style:solid}
+.tool-link::after{content:"\2197";font-size:.72em;margin-left:.12em;opacity:.85}
+.tooltip{position:fixed;z-index:90;max-width:280px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:10px 12px;display:grid;gap:3px;font-family:var(--f-ui);font-size:.82rem;line-height:1.4;color:var(--muted);pointer-events:none}
+.tooltip b{color:var(--ink);font-size:.9rem}
+.tooltip .tip-url{font-family:var(--f-mono);font-size:.7rem;color:var(--accent)}
+
 /* course search */
 .search-trigger{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:8px 10px 8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--muted);font-size:.88rem;cursor:pointer;text-align:left}
 .search-trigger:hover{border-color:var(--accent);color:var(--ink)}
@@ -412,7 +420,8 @@ mark{background:var(--accent-soft);color:var(--ink);outline:1px solid var(--acce
     --f-display:Arial,"Liberation Sans",Helvetica,sans-serif;--f-body:Arial,"Liberation Sans",Helvetica,sans-serif;--f-ui:Arial,"Liberation Sans",Helvetica,sans-serif;--f-mono:"Courier New","Liberation Mono",monospace}
   @page{size:A4;margin:7mm}
   body{font-size:9pt;background:#fff}
-  .topbar,.sidebar,.scrim,.no-print,.lesson-foot,.searchbar,.search-wrap{display:none!important}
+  .topbar,.sidebar,.scrim,.no-print,.lesson-foot,.searchbar,.search-wrap,.tooltip{display:none!important}
+  .tool-link{color:inherit;text-decoration:none} .tool-link::after{content:none}
   .app{display:block}
   main{padding:0!important}
   .page{max-width:none;padding:0}
@@ -444,6 +453,7 @@ mark{background:var(--accent-soft);color:var(--ink);outline:1px solid var(--acce
   <main id="main" tabindex="-1"></main>
 </div>
 <div id="live" class="sr-only" aria-live="polite"></div>
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
 <div class="search-wrap" id="search" hidden>
   <button class="search-scrim" type="button" data-action="search-close" aria-label="Close search" tabindex="-1"></button>
   <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search the course">
@@ -3376,6 +3386,98 @@ CHEAT = `
     if (target) target.scrollIntoView({ block: target.tagName === 'MARK' ? 'center' : 'start' });
   }
 
+  /* ---------- Tool links: every mention links to the official site, with a hover card ---------- */
+  const TOOLS = [
+    { name: 'Scrum Guide', match: ['Scrum Guide'], url: 'https://scrumguides.org/scrum-guide.html', desc: 'The official definition of Scrum by Ken Schwaber and Jeff Sutherland (2020 edition).' },
+    { name: 'Kanban Guide for Scrum Teams', match: ['Kanban Guide for Scrum Teams'], url: 'https://www.scrum.org/resources/kanban-guide-scrum-teams', desc: 'Scrum.org’s guide to adding flow practices (WIP limits, flow metrics) to Scrum.' },
+    { name: 'Kanban Guide', match: ['Kanban Guide'], url: 'https://kanbanguides.org/', desc: 'The Kanban Guide by Daniel Vacanti and Jim Coleman: defining, managing and improving flow.' },
+    { name: 'Agile Manifesto', match: ['Manifesto for Agile Software Development', 'Agile Manifesto'], url: 'https://agilemanifesto.org/', desc: 'The 2001 Manifesto for Agile Software Development: four values and twelve principles.' },
+    { name: 'Scrum.org', match: ['Scrum.org'], url: 'https://www.scrum.org/', desc: 'Training, certification and resources from Scrum co-creator Ken Schwaber’s organization.' },
+    { name: 'Jira', match: ['Jira'], url: 'https://www.atlassian.com/software/jira', desc: 'Atlassian’s issue and project tracker, widely used for backlogs and Sprints.' },
+    { name: 'Figma', match: ['Figma'], url: 'https://www.figma.com/', desc: 'Collaborative interface design and prototyping tool.' },
+    { name: 'Slack', match: ['Slack'], url: 'https://slack.com/', desc: 'Team messaging app for channels, threads and async updates.' },
+    { name: 'PostgreSQL', match: ['PostgreSQL', 'Postgres'], url: 'https://www.postgresql.org/', desc: 'Open-source relational database, with built-in full-text search.' },
+    { name: 'WhatsApp Business', match: ['WhatsApp Business', 'WhatsApp'], url: 'https://business.whatsapp.com/', desc: 'Meta’s WhatsApp Business Platform for messaging customers at scale.' },
+    { name: 'Microsoft Excel', match: ['Excel'], url: 'https://www.microsoft.com/microsoft-365/excel', desc: 'Microsoft’s spreadsheet app, part of Microsoft 365.' },
+    { name: 'CAMS', match: ['CAMS'], url: 'https://www.camsonline.com/', desc: 'Computer Age Management Services: India’s largest mutual fund registrar and transfer agent (RTA).' },
+    { name: 'KFintech', match: ['KFintech'], url: 'https://www.kfintech.com/', desc: 'KFin Technologies: mutual fund registrar and transfer agent (RTA) in India.' },
+    { name: 'SEBI', match: ['SEBI'], url: 'https://www.sebi.gov.in/', desc: 'Securities and Exchange Board of India, the securities market regulator.' }
+  ];
+  const TOOLMAP = Object.fromEntries(TOOLS.map(t => [t.name, t]));
+  const TOOL_BY_MATCH = {};
+  TOOLS.forEach(t => t.match.forEach(m => { TOOL_BY_MATCH[m] = t; }));
+  const TOOL_RE = new RegExp('(?<![A-Za-z0-9])(' + Object.keys(TOOL_BY_MATCH).sort((a, b) => b.length - a.length).map(m => m.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z0-9])', 'g');
+  const NO_LINK = 'a,button,input,textarea,select,svg,script,style,h1,h2,.badge,.section-label,.q-n,.opt-flag,.fb-h,.tag,.kbd,.search-wrap';
+  function linkTools(root) {
+    if (!root || (root.nodeType === 1 && root.closest(NO_LINK))) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => {
+        const p = n.parentElement;
+        if (!p || p.closest(NO_LINK)) return NodeFilter.FILTER_REJECT;
+        TOOL_RE.lastIndex = 0;
+        return TOOL_RE.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const text = node.nodeValue;
+      const frag = document.createDocumentFragment();
+      let pos = 0, m;
+      TOOL_RE.lastIndex = 0;
+      while ((m = TOOL_RE.exec(text))) {
+        const t = TOOL_BY_MATCH[m[1]];
+        if (m.index > pos) frag.appendChild(document.createTextNode(text.slice(pos, m.index)));
+        const a = document.createElement('a');
+        a.className = 'tool-link';
+        a.href = t.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.dataset.tool = t.name;
+        a.textContent = m[1];
+        frag.appendChild(a);
+        pos = m.index + m[1].length;
+      }
+      if (pos < text.length) frag.appendChild(document.createTextNode(text.slice(pos)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+  new MutationObserver(muts => {
+    muts.forEach(m => m.addedNodes.forEach(n => {
+      if (n.nodeType === 1) linkTools(n);
+      else if (n.nodeType === 3 && n.parentElement) linkTools(n.parentElement);
+    }));
+  }).observe($('#main'), { childList: true, subtree: true });
+
+  const TIP = { el: $('#tooltip'), for: null };
+  function showTip(a) {
+    const t = TOOLMAP[a.dataset.tool];
+    if (!t) return;
+    const host = new URL(t.url).hostname.replace(/^www\./, '');
+    TIP.el.innerHTML = `<b>${esc(t.name)}</b><span>${esc(t.desc)}</span><span class="tip-url">${esc(host)} ↗ opens in a new tab</span>`;
+    TIP.el.hidden = false;
+    a.setAttribute('aria-describedby', 'tooltip');
+    const r = a.getBoundingClientRect(), tr = TIP.el.getBoundingClientRect();
+    let top = r.top - tr.height - 8;
+    if (top < 8) top = r.bottom + 8;
+    const left = Math.max(8, Math.min(r.left + r.width / 2 - tr.width / 2, window.innerWidth - tr.width - 8));
+    TIP.el.style.top = top + 'px';
+    TIP.el.style.left = left + 'px';
+    TIP.for = a;
+  }
+  function hideTip() {
+    if (TIP.for) TIP.for.removeAttribute('aria-describedby');
+    TIP.el.hidden = true;
+    TIP.for = null;
+  }
+  document.addEventListener('mouseover', e => {
+    const a = e.target.closest && e.target.closest('a.tool-link');
+    if (a) { if (a !== TIP.for) showTip(a); } else if (TIP.for) hideTip();
+  });
+  document.addEventListener('focusin', e => { const a = e.target.closest && e.target.closest('a.tool-link'); if (a) showTip(a); });
+  document.addEventListener('focusout', e => { if (e.target === TIP.for) hideTip(); });
+  window.addEventListener('scroll', () => { if (TIP.for) hideTip(); }, { passive: true });
+
   /* ---------- Router ---------- */
   function route() {
     const h = (location.hash || '').replace(/^#\/?/, '') || 'home';
@@ -3392,6 +3494,7 @@ CHEAT = `
     else if (r === 'cheatsheet') html = cheatPage();
     else html = homePage();
     main.innerHTML = html;
+    linkTools(main);
     if (r === 'glossary') glossaryList();
     $$('[data-widget]', main).forEach(el => { const w = WIDGETS[el.dataset.widget]; if (w && w.mount) w.mount(el, store); });
     renderNav(LMAP[r] || ['glossary', 'flashcards', 'simulator', 'cheatsheet'].includes(r) ? r : 'home');
@@ -3399,6 +3502,7 @@ CHEAT = `
     document.title = t + 'PM & Scrum Fundamentals';
   }
   function navigate() {
+    hideTip();
     closeMenu();
     render();
     window.scrollTo(0, 0);
@@ -3588,6 +3692,7 @@ CHEAT = `
     }
   });
   document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') hideTip();
     if (!$('#search').hidden) {
       if (e.key === 'Escape') { e.preventDefault(); closeSearch(); }
       else if (e.key === 'ArrowDown') { e.preventDefault(); setActive(SR.active + 1); }
