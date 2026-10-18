@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PM &amp; Scrum Fundamentals</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="An interactive field course in Product Management and Scrum fundamentals for a new APM on a B2B wealth-tech AI platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a syllabus rail on the left, one ~70ch reading column, mono labels that read like a fund factsheet. */
+:root{
+  --bg:#F4F7F7; --surface:#FFFFFF; --surface-2:#EAF0F0; --ink:#12242A; --muted:#53666C; --line:#D5DFE0;
+  --accent:#0C6A63; --accent-ink:#FFFFFF; --accent-soft:#DCEFEC;
+  --gold:#A06B06; --gold-soft:#F7EBD2;
+  --good:#1D7448; --good-soft:#E0F2E7; --bad:#B03A2E; --bad-soft:#F9E4E1;
+  --guide:#2A5596; --guide-soft:#E4ECF8; --practice:#86560A; --practice-soft:#F6EDDB;
+  --overlay:rgba(10,24,28,.42);
+  --shadow:0 1px 2px rgba(18,36,42,.06),0 6px 20px rgba(18,36,42,.07);
+  --f-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Source Serif 4","Iowan Old Style",Georgia,"Times New Roman",serif;
+  --f-ui:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --t-xs:.75rem; --t-sm:.875rem; --t-base:1.0625rem; --t-md:1.25rem; --t-lg:1.625rem; --t-xl:2.25rem; --t-2xl:clamp(2.1rem,5vw,3.1rem);
+  --r:10px; --rail:300px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1416; --surface:#121D20; --surface-2:#18272B; --ink:#E3ECED; --muted:#98ABAF; --line:#263639;
+    --accent:#4FC3B5; --accent-ink:#04201C; --accent-soft:#12332F;
+    --gold:#E2B04E; --gold-soft:#33280F;
+    --good:#62C891; --good-soft:#11301F; --bad:#F08074; --bad-soft:#3B1A16;
+    --guide:#8DB3F0; --guide-soft:#15243A; --practice:#E6B862; --practice-soft:#33270F;
+    --overlay:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1416; --surface:#121D20; --surface-2:#18272B; --ink:#E3ECED; --muted:#98ABAF; --line:#263639;
+  --accent:#4FC3B5; --accent-ink:#04201C; --accent-soft:#12332F;
+  --gold:#E2B04E; --gold-soft:#33280F;
+  --good:#62C891; --good-soft:#11301F; --bad:#F08074; --bad-soft:#3B1A16;
+  --guide:#8DB3F0; --guide-soft:#15243A; --practice:#E6B862; --practice-soft:#33270F;
+  --overlay:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5}
+img,svg{max-width:100%}
+a{color:var(--accent);text-underline-offset:.18em}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- App frame ---------- */
+.app{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);min-height:100vh}
+.topbar{display:none}
+.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--surface);border-right:1px solid var(--line);
+  padding:22px 18px 28px max(18px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:22px}
+main{min-width:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));outline:none}
+.scrim{display:none}
+
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand-mark{width:34px;height:34px;flex:none}
+.brand-name{font-family:var(--f-display);font-weight:750;font-size:1.05rem;line-height:1.1;letter-spacing:-.01em}
+.brand-sub{display:block;font-family:var(--f-mono);font-size:.66rem;font-weight:400;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+
+.meter{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.meter>i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s ease}
+.overall{display:grid;gap:6px}
+.overall-row{display:flex;justify-content:space-between;align-items:baseline;font-size:var(--t-sm)}
+.overall-row b{font-family:var(--f-mono);font-weight:600;font-variant-numeric:tabular-nums}
+
+.nav-group{display:grid;gap:4px}
+.nav-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:0 8px 6px}
+.nav-head h2{margin:0;font-family:var(--f-mono);font-size:.7rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.nav-head span{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.nav-group .meter{margin:0 8px 6px;height:4px}
+.nav-link{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:7px 8px;border-radius:8px;text-decoration:none;color:var(--ink);font-size:.9rem;line-height:1.3;min-height:36px}
+.nav-link:hover{background:var(--surface-2)}
+.nav-link[aria-current="page"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.nav-num{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:.66rem;color:var(--muted);font-weight:600;margin-top:-1px}
+.nav-link.done .nav-num{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.nav-link .tool-ico{width:22px;height:22px;display:grid;place-items:center;color:var(--accent)}
+.nav-meta{display:block;font-size:.72rem;color:var(--muted);font-weight:400;font-family:var(--f-mono);margin-top:2px}
+
+.side-foot{margin-top:auto;display:grid;gap:12px;padding:14px 8px 0;border-top:1px solid var(--line)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px;background:var(--bg)}
+.seg button{border:0;background:transparent;padding:6px 10px;border-radius:6px;font-size:.8rem;cursor:pointer;color:var(--muted);min-height:32px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+.foot-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.foot-label{font-family:var(--f-mono);font-size:.68rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.linkbtn{border:0;background:none;padding:4px 0;color:var(--muted);font-size:.8rem;text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
+.linkbtn.armed{color:var(--bad);font-weight:600}
+.storage-note{font-size:.75rem;color:var(--practice);background:var(--practice-soft);padding:8px 10px;border-radius:8px;margin:0}
+
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
+  .topbar{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:30;align-items:center;gap:10px;background:var(--surface);border-bottom:1px solid var(--line);
+    padding:8px max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px));min-height:56px}
+  .topbar .brand-name{font-size:.98rem}
+  .topbar .brand-sub{display:none}
+  .topbar .pct{margin-left:auto;font-family:var(--f-mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .iconbtn{width:44px;height:44px;border:1px solid var(--line);border-radius:10px;background:var(--bg);display:grid;place-items:center;cursor:pointer;flex:none}
+  .sidebar{position:fixed;z-index:60;top:0;left:0;bottom:0;width:min(86vw,330px);height:auto;transform:translateX(-102%);transition:transform .25s ease;box-shadow:var(--shadow);
+    padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+  .sidebar.open{transform:none}
+  .scrim{display:block;position:fixed;inset:0;z-index:50;background:var(--overlay);border:0;opacity:0;pointer-events:none;transition:opacity .25s}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .sidebar .brand{display:none}
+}
+
+/* ---------- Page & typography ---------- */
+.page{max-width:44rem;margin:0 auto;padding-block:44px 96px}
+.page.wide{max-width:68rem}
+.eyebrow{font-family:var(--f-mono);font-size:var(--t-xs);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--line)}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.15;letter-spacing:-.015em;margin:0}
+h1{font-size:var(--t-xl);font-weight:750}
+.hero h1{font-size:var(--t-2xl)}
+.prose{font-family:var(--f-body);font-size:var(--t-base);line-height:1.68}
+.prose p,.prose ul,.prose ol{margin:0 0 1em}
+.prose li{margin:.3em 0}
+.prose h3{font-size:var(--t-md);font-weight:650;margin:1.6em 0 .55em}
+.prose h4{font-size:1.02rem;font-weight:650;margin:1.3em 0 .4em}
+.prose strong{font-weight:600}
+.prose code,.mono{font-family:var(--f-mono);font-size:.86em}
+.prose blockquote{margin:1em 0;padding:.2em 0 .2em 1em;border-left:2px solid var(--line);color:var(--muted);font-style:italic}
+.lead{font-family:var(--f-body);font-size:var(--t-md);line-height:1.55;color:var(--muted);margin:14px 0 0}
+
+.section{margin-top:44px}
+.section-label{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+.section-label::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.idea{margin-top:28px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.idea p{margin:0;font-family:var(--f-display);font-weight:500;font-size:clamp(1.3rem,2.6vw,1.6rem);line-height:1.3;letter-spacing:-.01em;text-wrap:balance}
+
+.example{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px clamp(16px,3vw,28px)}
+.example>h3:first-child{margin-top:0;font-size:1.15rem}
+.example .tag{display:inline-block;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:var(--gold);background:var(--gold-soft);padding:3px 8px;border-radius:4px;margin-bottom:10px}
+
+.mistakes{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.mistakes li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;font-family:var(--f-body);font-size:var(--t-base);line-height:1.6;margin:0}
+.mistakes li::before{content:"";width:22px;height:22px;margin-top:3px;border-radius:50%;background:var(--bad-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cpath d='M7 7l8 8M15 7l-8 8' stroke='%23B03A2E' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center/22px no-repeat}
+
+.callout{border-radius:var(--r);padding:16px 18px;margin:1.2em 0;font-family:var(--f-body);font-size:1rem;line-height:1.62}
+.callout>:last-child{margin-bottom:0}
+.callout-h{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.7rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;margin:0 0 8px}
+.callout-h svg{width:16px;height:16px;flex:none}
+.guide{background:var(--guide-soft)}
+.guide .callout-h{color:var(--guide)}
+.practice{background:var(--practice-soft)}
+.practice .callout-h{color:var(--practice)}
+.tip{background:var(--accent-soft)}
+.tip .callout-h{color:var(--accent)}
+.guide ul,.practice ul,.tip ul{padding-left:1.15em}
+
+/* tables */
+.tablewrap{overflow-x:auto;margin:1em 0 1.3em;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-family:var(--f-ui);font-size:.88rem;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:.82rem}
+
+/* diagrams */
+.diagram{margin:1.4em 0;padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow-x:auto}
+.diagram svg{display:block;width:100%;height:auto;min-width:480px;margin:0 auto}
+.diagram.narrow svg{min-width:0}
+.diagram figcaption{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);margin-top:10px}
+svg text{font-family:var(--f-ui);fill:var(--ink)}
+svg .t-sm{font-size:12px} svg .t-xs{font-size:10.5px} svg .t-md{font-size:14px} svg .t-lg{font-size:17px;font-weight:700;font-family:var(--f-display)}
+svg .t-mono{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.04em}
+svg .t-muted{fill:var(--muted)} svg .t-acc{fill:var(--accent)} svg .t-gold{fill:var(--gold)} svg .t-bad{fill:var(--bad)} svg .t-good{fill:var(--good)} svg .t-onacc{fill:var(--accent-ink)}
+svg .b{font-weight:650}
+.d-surface{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.d-soft{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.d-gold{fill:var(--gold-soft);stroke:var(--gold);stroke-width:1.5}
+.d-guide{fill:var(--guide-soft);stroke:var(--guide);stroke-width:1.5}
+.d-bad{fill:var(--bad-soft);stroke:var(--bad);stroke-width:1.5}
+.d-good{fill:var(--good-soft);stroke:var(--good);stroke-width:1.5}
+.d-fill-acc{fill:var(--accent)} .d-fill-gold{fill:var(--gold)} .d-fill-muted{fill:var(--muted)} .d-fill-line{fill:var(--line)} .d-fill-bg{fill:var(--bg)}
+.d-line{fill:none;stroke:var(--muted);stroke-width:1.5}
+.d-grid{fill:none;stroke:var(--line);stroke-width:1}
+.d-acc{fill:none;stroke:var(--accent);stroke-width:2.2}
+.d-goldline{fill:none;stroke:var(--gold);stroke-width:2.2}
+.d-badline{fill:none;stroke:var(--bad);stroke-width:2;stroke-dasharray:5 4}
+.d-guideline{fill:none;stroke:var(--guide);stroke-width:2.2}
+.d-venn{fill-opacity:.5;stroke-width:1.5}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:10px 16px;font-size:.92rem;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;line-height:1.2}
+.btn:hover{border-color:var(--muted)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.07);border-color:var(--accent)}
+.btn-ghost{background:transparent}
+.btn-sm{min-height:36px;padding:7px 12px;font-size:.84rem}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.5;cursor:not-allowed}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* try it */
+.tryit{border:1.5px dashed var(--line);border-radius:var(--r);padding:20px clamp(16px,3vw,24px);background:var(--surface);display:grid;gap:16px}
+.tryit .prose{font-size:1rem}
+.tryit .prose>:last-child{margin-bottom:0}
+textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--bg);color:var(--ink);font-family:var(--f-mono);font-size:.85rem;line-height:1.55}
+.draft-meta{font-size:.75rem;color:var(--muted);font-family:var(--f-mono)}
+.model{border-radius:var(--r);background:var(--good-soft);padding:18px 20px}
+.model .callout-h{color:var(--good)}
+.model .prose{font-size:.98rem}
+.model .prose>:last-child{margin-bottom:0}
+
+/* classify widget */
+.cls{display:grid;gap:10px}
+.cls-row{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:var(--bg)}
+.cls-row p{margin:0;font-family:var(--f-body);font-size:.98rem;line-height:1.45}
+.cls-row .seg{flex-wrap:wrap}
+.cls-row .seg button{font-size:.78rem;padding:6px 10px}
+.cls-row.ok{border-color:var(--good);background:var(--good-soft)}
+.cls-row.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls-why{font-size:.88rem!important;color:var(--ink)}
+.cls-why b{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;margin-right:6px}
+.cls-row.ok .cls-why b{color:var(--good)} .cls-row.no .cls-why b{color:var(--bad)}
+.cls-score{font-family:var(--f-mono);font-size:.85rem}
+
+/* RICE widget */
+.rice{display:grid;gap:12px}
+.rice-item{border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:12px 14px;display:grid;gap:10px}
+.rice-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.rice-head b{font-size:.95rem;line-height:1.3}
+.rice-score{font-family:var(--f-mono);font-size:1rem;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rice-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rice-fields label{display:grid;gap:4px;font-size:.68rem;font-family:var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:0}
+.rice-fields input,.rice-fields select{width:100%;min-height:40px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink);padding:6px 8px;font-family:var(--f-ui);font-size:.92rem;text-transform:none;letter-spacing:0}
+.rice-bar{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.rice-bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.rice-rank{font-size:.9rem;color:var(--ink);margin:0}
+.formula{font-family:var(--f-mono);font-size:.95rem;background:var(--surface-2);border-radius:8px;padding:12px 14px;margin:0 0 1em;overflow-x:auto;white-space:nowrap}
+@media (max-width:560px){.rice-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* quiz */
+.quiz{display:grid;gap:22px}
+.q{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:18px clamp(14px,3vw,22px)}
+.q-n{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.q-text{font-family:var(--f-body);font-size:1.06rem;line-height:1.5;font-weight:600;margin:0 0 14px}
+.opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.opt{width:100%;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:start;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:10px 12px;cursor:pointer;font-size:.95rem;line-height:1.45;min-height:46px}
+.opt:hover{border-color:var(--accent)}
+.opt-key{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-mono);font-size:.75rem;font-weight:600;color:var(--muted)}
+.opt-flag{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;padding-top:5px;white-space:nowrap}
+.q.answered .opt{cursor:default}
+.q.answered .opt:hover{border-color:var(--line)}
+.opt.is-correct{border-color:var(--good)!important;background:var(--good-soft)}
+.opt.is-correct .opt-key{background:var(--good);color:var(--surface)}
+.opt.is-correct .opt-flag{color:var(--good)}
+.opt.is-wrong{border-color:var(--bad)!important;background:var(--bad-soft)}
+.opt.is-wrong .opt-key{background:var(--bad);color:var(--surface)}
+.opt.is-wrong .opt-flag{color:var(--bad)}
+.why{margin:6px 0 4px 38px;font-family:var(--f-body);font-size:.93rem;line-height:1.5;color:var(--ink)}
+.why b{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;margin-right:6px}
+.why.good b{color:var(--good)} .why.bad b{color:var(--muted)}
+.quiz-sum{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-radius:var(--r);background:var(--surface-2)}
+.quiz-sum p{margin:0;font-size:.95rem}
+.quiz-sum b{font-family:var(--f-mono)}
+
+.lesson-foot{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);display:grid;gap:18px}
+.complete-btn[aria-pressed="true"]{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pager a{display:grid;gap:3px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r);text-decoration:none;color:var(--ink);background:var(--surface);min-width:0}
+.pager a:hover{border-color:var(--accent)}
+.pager a.next{text-align:right;grid-column:2}
+.pager small{font-family:var(--f-mono);font-size:.68rem;color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.pager span{font-weight:600;font-size:.92rem;line-height:1.3}
+
+/* home */
+.hero{padding-top:10px}
+.hero .lead{max-width:40rem}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:36px}
+.track-card{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:22px;display:grid;gap:14px;align-content:start;min-width:0}
+.track-card h2{font-size:1.35rem}
+.track-card ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.track-card li a{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;padding:6px 4px;text-decoration:none;color:var(--ink);font-size:.9rem;border-radius:6px}
+.track-card li a:hover{background:var(--surface-2)}
+.track-card li a.done .nav-num{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.track-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.track-top span{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+.tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}
+.tool{display:grid;gap:6px;align-content:start;padding:18px;border-radius:12px;border:1px solid var(--line);background:var(--surface);text-decoration:none;color:var(--ink);min-width:0}
+.tool:hover{border-color:var(--accent)}
+.tool svg{width:28px;height:28px;color:var(--accent)}
+.tool b{font-family:var(--f-display);font-size:1.02rem}
+.tool span{font-size:.84rem;color:var(--muted);line-height:1.4}
+.anatomy{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;margin-top:36px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.anatomy div{padding:14px;border-right:1px solid var(--line);min-width:0}
+.anatomy div:last-child{border-right:0}
+.anatomy b{display:block;font-family:var(--f-mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.anatomy span{font-size:.82rem;color:var(--muted);line-height:1.35;display:block}
+@media (max-width:1100px){.tools{grid-template-columns:repeat(2,minmax(0,1fr))}.anatomy{grid-template-columns:repeat(3,minmax(0,1fr))}.anatomy div:nth-child(3){border-right:0}.anatomy div:nth-child(-n+3){border-bottom:1px solid var(--line)}}
+@media (max-width:640px){.home-grid{grid-template-columns:minmax(0,1fr)}.anatomy{grid-template-columns:repeat(2,minmax(0,1fr))}.anatomy div{border-bottom:1px solid var(--line)}.anatomy div:nth-child(odd){border-right:1px solid var(--line)}.anatomy div:nth-child(even){border-right:0}.anatomy div:nth-child(3){border-right:1px solid var(--line)}.anatomy div:nth-last-child(-n+2){border-bottom:0}.page{padding-block:28px 72px}}
+@media (max-width:420px){.tools{grid-template-columns:minmax(0,1fr)}.pager{grid-template-columns:minmax(0,1fr)}.pager a.next{grid-column:1}}
+
+/* glossary */
+.searchbar{display:grid;gap:12px;margin:24px 0 8px;position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0}
+@media (max-width:900px){.searchbar{top:calc(56px + env(safe-area-inset-top,0px))}}
+.search{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px 14px 12px 40px;font-size:1rem;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2353666C' stroke-width='2'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cpath d='M14 14l4 4'/%3E%3C/svg%3E") 13px center/17px no-repeat;color:var(--ink);min-height:46px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 12px;font-size:.82rem;cursor:pointer;min-height:34px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.count{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);margin-left:auto}
+.gl-letter{font-family:var(--f-display);font-size:1.4rem;color:var(--accent);margin:28px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.gl-item{padding:12px 0;border-bottom:1px solid var(--line)}
+.gl-item:last-child{border-bottom:0}
+.gl-term{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 4px}
+.gl-term h3{font-size:1.06rem;font-weight:650}
+.gl-def{margin:0;font-family:var(--f-body);font-size:1rem;line-height:1.6}
+.gl-link{font-size:.82rem}
+.badge{display:inline-block;font-family:var(--f-mono);font-size:.62rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.badge.sg{background:var(--guide-soft);color:var(--guide)}
+.badge.np{background:var(--practice-soft);color:var(--practice)}
+.badge.pm{background:var(--accent-soft);color:var(--accent)}
+.empty{padding:40px 0;text-align:center;color:var(--muted)}
+
+/* flashcards */
+.fc-wrap{display:grid;gap:18px;margin-top:26px}
+.fc-stage{perspective:1400px}
+.fc{position:relative;width:100%;min-height:300px;border:0;padding:0;background:none;cursor:pointer;text-align:center;display:block}
+.fc-inner{position:relative;width:100%;min-height:300px;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.fc.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);display:grid;align-content:center;justify-items:center;gap:14px;padding:28px clamp(18px,5vw,48px)}
+.fc-back{transform:rotateY(180deg);background:var(--surface)}
+.fc-term{font-family:var(--f-display);font-size:clamp(1.5rem,4.5vw,2.2rem);font-weight:750;line-height:1.15;text-wrap:balance}
+.fc-def{font-family:var(--f-body);font-size:1.08rem;line-height:1.6;max-width:36rem}
+.fc-hint{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.fc-known{position:absolute;top:14px;right:16px}
+.fc-bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.fc-pos{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 5px;background:var(--surface)}
+@media (prefers-reduced-motion:reduce){.fc-inner,.sidebar,.meter>i,.scrim{transition:none}}
+
+/* simulator */
+.sim{display:grid;gap:22px;margin-top:24px}
+.timeline{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
+.tl-day{display:grid;gap:5px;justify-items:center;font-family:var(--f-mono);font-size:.64rem;color:var(--muted)}
+.tl-day i{display:block;width:100%;height:8px;border-radius:3px;background:var(--surface-2)}
+.tl-day.past i{background:var(--accent);opacity:.45}
+.tl-day.now i{background:var(--accent)}
+.tl-day.now{color:var(--accent);font-weight:600}
+.gauges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.gauge{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);display:grid;gap:6px;min-width:0}
+.gauge-top{display:flex;justify-content:space-between;gap:6px;font-size:.78rem;color:var(--muted)}
+.gauge-top b{font-family:var(--f-mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.gauge .meter>i.lo{background:var(--bad)} .gauge .meter>i.mid{background:var(--gold)}
+.delta{font-family:var(--f-mono);font-size:.72rem;margin-left:4px}
+.delta.up{color:var(--good)} .delta.down{color:var(--bad)}
+.scene{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:22px clamp(16px,3vw,28px);display:grid;gap:16px}
+.scene-tag{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.scene h2{font-size:1.4rem}
+.scene .prose{font-size:1.02rem}
+.scene .prose>:last-child{margin-bottom:0}
+.who{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;align-items:start;background:var(--surface-2);border-radius:10px;padding:12px 14px;margin:0 0 1em;font-family:var(--f-ui);font-size:.93rem;line-height:1.5}
+.who .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-mono);font-weight:600;font-size:.75rem;background:var(--gold-soft);color:var(--gold)}
+.who b{display:block;font-size:.8rem;color:var(--muted);font-weight:600}
+.choices{display:grid;gap:10px;list-style:none;padding:0;margin:0}
+.choice{width:100%;text-align:left;display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:12px 14px;cursor:pointer;font-size:.95rem;line-height:1.45;min-height:48px}
+.choice:hover{border-color:var(--accent)}
+.choice.picked{border-color:var(--accent);background:var(--accent-soft)}
+.choices.locked .choice{cursor:default}
+.choices.locked .choice:not(.picked){opacity:.55}
+.fb{border-radius:12px;padding:16px 18px;display:grid;gap:8px}
+.fb.s-hi{background:var(--good-soft)} .fb.s-mid{background:var(--gold-soft)} .fb.s-lo{background:var(--bad-soft)}
+.fb-h{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:var(--f-mono);font-size:.74rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+.fb.s-hi .fb-h{color:var(--good)} .fb.s-mid .fb-h{color:var(--gold)} .fb.s-lo .fb-h{color:var(--bad)}
+.fb p{margin:0;font-family:var(--f-body);font-size:1rem;line-height:1.6}
+.fb .ref{font-family:var(--f-ui);font-size:.82rem;color:var(--muted)}
+.recap{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.recap li{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--surface);display:grid;gap:4px;font-size:.9rem}
+.recap .r-top{display:flex;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.score-big{font-family:var(--f-display);font-size:3.2rem;font-weight:750;line-height:1;font-variant-numeric:tabular-nums}
+@media (max-width:560px){.gauges{grid-template-columns:minmax(0,1fr)}.gauge{grid-template-columns:1fr}.tl-day span{display:none}}
+
+/* cheat sheet */
+.cheat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:24px}
+.cheat section{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px 18px;min-width:0;break-inside:avoid}
+.cheat section.span{grid-column:1/-1}
+.cheat h2{font-size:1.02rem;margin:0 0 10px;color:var(--accent)}
+.cheat p,.cheat li{font-size:.86rem;line-height:1.45;margin:0 0 .35em}
+.cheat ul{padding-left:1.1em;margin:0}
+.cheat table{font-size:.8rem}
+.cheat th,.cheat td{padding:6px 8px}
+.cheat .tablewrap{margin:0}
+.cheat code{font-family:var(--f-mono);font-size:.8em;background:var(--surface-2);padding:1px 4px;border-radius:3px}
+@media (max-width:760px){.cheat{grid-template-columns:minmax(0,1fr)}}
+
+@media print{
+  html:root:not(#_){--bg:#fff;--surface:#fff;--surface-2:#f1f3f3;--ink:#000;--muted:#444;--line:#bbb;--accent:#0C6A63;--accent-soft:#e8f3f1;--guide-soft:#eef2f9;--practice-soft:#f8f2e6;--good-soft:#eef7f1;--bad-soft:#fbeeec;--gold-soft:#f8f1e1;color-scheme:light}
+  @page{size:A4;margin:9mm}
+  body{font-size:9pt;background:#fff}
+  .topbar,.sidebar,.scrim,.no-print,.lesson-foot,.searchbar{display:none!important}
+  .app{display:block}
+  main{padding:0!important}
+  .page{max-width:none;padding:0}
+  .cheat{grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+  .cheat section{padding:6px 8px;border-radius:4px}
+  .cheat h2{font-size:9.5pt;margin-bottom:3px}
+  .cheat p,.cheat li{font-size:7.4pt;line-height:1.3;margin-bottom:1px}
+  .cheat table{font-size:7pt} .cheat th,.cheat td{padding:2px 4px}
+  .cheat-head h1{font-size:15pt} .cheat-head .lead{font-size:8pt;margin-top:2px}
+  .cheat-head .eyebrow{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <button class="iconbtn" type="button" data-action="menu" aria-label="Open course menu" aria-controls="sidebar" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+    <a class="brand" href="#home"><span class="brand-name">PM &amp; Scrum Fundamentals</span></a>
+    <span class="pct" id="top-pct">0%</span>
+  </header>
+  <button class="scrim" type="button" data-action="close-menu" aria-label="Close course menu" tabindex="-1"></button>
+  <nav class="sidebar" id="sidebar" aria-label="Course"></nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<div id="live" class="sr-only" aria-live="polite"></div>
+
+<script>
+/* Course data containers. Content scripts below push into these. */
+const LESSONS = [];
+const DIAG = {};
+const WIDGETS = {};
+const GLOSSARY = [];
+const SIM = { steps: [] };
+let CHEAT = '';
+/* Small helpers for authoring callouts inside lesson HTML. */
+const ICON_BOOK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5h4.5A1.5 1.5 0 0 1 8 4v10a1.5 1.5 0 0 0-1.5-1.5H2zM14 2.5H9.5A1.5 1.5 0 0 0 8 4v10a1.5 1.5 0 0 1 1.5-1.5H14z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+const ICON_TOOL = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 1.8a3.6 3.6 0 0 0-3.3 4.9L2 11.9 4.1 14l5.2-5.2a3.6 3.6 0 0 0 4.9-3.3l-2 2-2.1-.4-.4-2.1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+const ICON_TIP = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="6.5" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6.2 12.5h3.6M6.8 14.6h2.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+const guide = (html, label = 'What the Scrum Guide says') => `<div class="callout guide"><p class="callout-h">${ICON_BOOK}${label}</p>${html}</div>`;
+const practice = (html, label = 'Common practice · not in the Scrum Guide') => `<div class="callout practice"><p class="callout-h">${ICON_TOOL}${label}</p>${html}</div>`;
+const tip = (html, label = 'APM tip') => `<div class="callout tip"><p class="callout-h">${ICON_TIP}${label}</p>${html}</div>`;
+const fig = (svg, caption, cls = '') => `<figure class="diagram ${cls}">${svg}${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+const table = (head, rows, numCols = []) => `<div class="tablewrap"><table><thead><tr>${head.map((h, i) => `<th${numCols.includes(i) ? ' class="num"' : ''}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${numCols.includes(i) ? ' class="num"' : ''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+</script>
+
+<script>
+/* ================= Module 2 · PM diagrams + lessons 1–5 ================= */
+DIAG.venn = `<svg viewBox="0 0 560 330" role="img" aria-labelledby="venn-t"><title id="venn-t">Product, engineering and design overlap. Good product decisions sit where valuable, feasible and usable meet.</title>
+  <circle cx="280" cy="118" r="100" fill="var(--accent-soft)" fill-opacity=".75" stroke="var(--accent)" stroke-width="1.5"/>
+  <circle cx="218" cy="212" r="100" fill="var(--gold-soft)" fill-opacity=".75" stroke="var(--gold)" stroke-width="1.5"/>
+  <circle cx="342" cy="212" r="100" fill="var(--guide-soft)" fill-opacity=".75" stroke="var(--guide)" stroke-width="1.5"/>
+  <text x="280" y="58" text-anchor="middle" class="t-md b">Product (PM)</text>
+  <text x="280" y="76" text-anchor="middle" class="t-sm t-muted">valuable · viable</text>
+  <text x="168" y="256" text-anchor="middle" class="t-md b">Engineering</text>
+  <text x="168" y="274" text-anchor="middle" class="t-sm t-muted">feasible</text>
+  <text x="392" y="256" text-anchor="middle" class="t-md b">Design</text>
+  <text x="392" y="274" text-anchor="middle" class="t-sm t-muted">usable</text>
+  <text x="280" y="178" text-anchor="middle" class="t-sm b">Good product</text>
+  <text x="280" y="194" text-anchor="middle" class="t-sm b">decisions</text>
+</svg>`;
+
+DIAG.ladder = `<svg viewBox="0 0 600 300" role="img" aria-labelledby="lad-t"><title id="lad-t">Laddering from a feature request up to the underlying job by asking why.</title>
+  <defs><marker id="ah-lad" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <rect x="80" y="236" width="440" height="48" rx="8" class="d-surface"/>
+  <text x="96" y="256" class="t-mono t-muted">REQUEST</text><text x="96" y="274" class="t-md">“Can we get an Excel export of the portfolio?”</text>
+  <rect x="80" y="166" width="440" height="48" rx="8" class="d-surface"/>
+  <text x="96" y="186" class="t-mono t-muted">BECAUSE</text><text x="96" y="204" class="t-md">I calculate returns since our last meeting by hand</text>
+  <rect x="80" y="96" width="440" height="48" rx="8" class="d-surface"/>
+  <text x="96" y="116" class="t-mono t-muted">BECAUSE</text><text x="96" y="134" class="t-md">I have to prepare 40 quarterly reviews</text>
+  <rect x="80" y="16" width="440" height="58" rx="8" class="d-soft"/>
+  <text x="96" y="38" class="t-mono t-acc">THE JOB</text><text x="96" y="58" class="t-md b">Walk in confident and spend the meeting on advice</text>
+  <path d="M60 232 L60 220" class="d-line" marker-end="url(#ah-lad)"/><path d="M60 162 L60 150" class="d-line" marker-end="url(#ah-lad)"/><path d="M60 92 L60 80" class="d-line" marker-end="url(#ah-lad)"/>
+  <text x="535" y="225" class="t-sm t-muted">why?</text><text x="535" y="155" class="t-sm t-muted">why?</text><text x="535" y="85" class="t-sm t-muted">why?</text>
+</svg>`;
+
+DIAG.dualtrack = `<svg viewBox="0 0 640 270" role="img" aria-labelledby="dt-t"><title id="dt-t">Discovery and delivery loops run in parallel. Validated ideas flow into delivery and usage data flows back into discovery.</title>
+  <defs><marker id="ah-dt" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker>
+  <marker id="ah-dt2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-gold"/></marker>
+  <marker id="ah-dt3" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-acc"/></marker></defs>
+  <circle cx="160" cy="135" r="98" class="d-gold"/>
+  <path d="M160 37 A98 98 0 0 1 258 135" class="d-goldline" marker-end="url(#ah-dt2)"/>
+  <path d="M160 233 A98 98 0 0 1 62 135" class="d-goldline" marker-end="url(#ah-dt2)"/>
+  <text x="160" y="98" text-anchor="middle" class="t-mono t-gold">DISCOVERY</text>
+  <text x="160" y="122" text-anchor="middle" class="t-md b">Is it worth</text>
+  <text x="160" y="140" text-anchor="middle" class="t-md b">building?</text>
+  <text x="160" y="166" text-anchor="middle" class="t-xs t-muted">interview · prototype</text>
+  <text x="160" y="181" text-anchor="middle" class="t-xs t-muted">test assumptions</text>
+  <circle cx="480" cy="135" r="98" class="d-soft"/>
+  <path d="M480 37 A98 98 0 0 1 578 135" class="d-acc" marker-end="url(#ah-dt3)"/>
+  <path d="M480 233 A98 98 0 0 1 382 135" class="d-acc" marker-end="url(#ah-dt3)"/>
+  <text x="480" y="98" text-anchor="middle" class="t-mono t-acc">DELIVERY</text>
+  <text x="480" y="122" text-anchor="middle" class="t-md b">Build it right,</text>
+  <text x="480" y="140" text-anchor="middle" class="t-md b">ship it safely</text>
+  <text x="480" y="166" text-anchor="middle" class="t-xs t-muted">plan · build · release</text>
+  <text x="480" y="181" text-anchor="middle" class="t-xs t-muted">measure</text>
+  <path d="M262 100 C 300 80, 340 80, 376 100" class="d-line" marker-end="url(#ah-dt)"/>
+  <text x="320" y="72" text-anchor="middle" class="t-sm">validated ideas</text>
+  <path d="M376 170 C 340 190, 300 190, 262 170" class="d-line" marker-end="url(#ah-dt)"/>
+  <text x="320" y="208" text-anchor="middle" class="t-sm">usage data, feedback</text>
+</svg>`;
+
+DIAG.kano = `<svg viewBox="0 0 640 345" role="img" aria-labelledby="kano-t"><title id="kano-t">Kano model: basic features only prevent dissatisfaction, performance features scale linearly, delighters create outsized satisfaction.</title>
+  <path d="M60 170 L470 170" class="d-line"/><path d="M265 15 L265 325" class="d-line"/>
+  <text x="271" y="24" class="t-xs t-muted">Satisfied</text><text x="271" y="322" class="t-xs t-muted">Dissatisfied</text>
+  <text x="60" y="188" class="t-xs t-muted">Not implemented</text><text x="470" y="188" text-anchor="end" class="t-xs t-muted">Fully implemented</text>
+  <path d="M60 325 C120 215 220 180 470 174" fill="none" stroke="var(--bad)" stroke-width="2.4"/>
+  <path d="M60 300 L470 50" class="d-acc"/>
+  <path d="M60 168 C260 166 400 140 470 22" class="d-goldline"/>
+  <circle cx="470" cy="174" r="4" fill="var(--bad)"/><circle cx="470" cy="50" r="4" fill="var(--accent)"/><circle cx="470" cy="22" r="4" fill="var(--gold)"/>
+  <text x="482" y="26" class="t-sm b">Delighter</text><text x="482" y="40" class="t-xs t-muted">AI talking points</text>
+  <text x="482" y="56" class="t-sm b">Performance</text><text x="482" y="70" class="t-xs t-muted">report speed</text>
+  <text x="482" y="172" class="t-sm b">Basic (must-be)</text><text x="482" y="186" class="t-xs t-muted">audit trail, correct NAV</text>
+</svg>`;
+
+DIAG.impactEffort = `<svg viewBox="0 0 560 380" role="img" aria-labelledby="ie-t"><title id="ie-t">Impact versus effort matrix with four backlog items plotted.</title>
+  <rect x="70" y="20" width="230" height="155" class="d-good" fill-opacity=".6"/>
+  <rect x="300" y="20" width="230" height="155" class="d-gold" fill-opacity=".6"/>
+  <rect x="70" y="175" width="230" height="155" class="d-surface"/>
+  <rect x="300" y="175" width="230" height="155" class="d-bad" fill-opacity=".5"/>
+  <text x="82" y="40" class="t-mono t-good">QUICK WINS</text><text x="518" y="40" text-anchor="end" class="t-mono t-gold">BIG BETS</text>
+  <text x="82" y="320" class="t-mono t-muted">FILL-INS</text><text x="518" y="320" text-anchor="end" class="t-mono t-bad">MONEY PITS</text>
+  <circle cx="200" cy="80" r="7" class="d-fill-acc"/><text x="212" y="84" class="t-sm b">Bulk KYC upload</text>
+  <circle cx="395" cy="100" r="7" class="d-fill-acc"/><text x="407" y="104" class="t-sm b">SSO (SAML)</text>
+  <circle cx="380" cy="245" r="7" class="d-fill-acc"/><text x="392" y="241" class="t-sm b">AI tone control</text><text x="392" y="256" class="t-xs t-muted">low confidence</text>
+  <circle cx="160" cy="262" r="7" class="d-fill-acc"/><text x="172" y="266" class="t-sm b">Dark mode</text>
+  <text x="300" y="356" text-anchor="middle" class="t-sm t-muted">Effort →</text>
+  <text x="34" y="175" text-anchor="middle" transform="rotate(-90 34 175)" class="t-sm t-muted">Impact →</text>
+</svg>`;
+
+WIDGETS.rice = (() => {
+  const DEF = [
+    { n: 'Bulk KYC upload', r: 300, i: 2, c: 0.8, e: 3 },
+    { n: 'AI summary tone control', r: 600, i: 0.5, c: 0.5, e: 4 },
+    { n: 'SSO (SAML) for enterprise partners', r: 150, i: 1, c: 1, e: 5 },
+    { n: 'Dark mode', r: 900, i: 0.25, c: 0.8, e: 2 }
+  ];
+  const IMP = [[3, '3 · massive'], [2, '2 · high'], [1, '1 · medium'], [0.5, '0.5 · low'], [0.25, '0.25 · minimal']];
+  const CONF = [[1, '100% · strong data'], [0.8, '80% · some data'], [0.5, '50% · gut feel']];
+  const load = store => {
+    const v = store.get('rice', null);
+    return Array.isArray(v) && v.length === DEF.length ? v : DEF.map(d => Object.assign({}, d));
+  };
+  const score = d => (d.e > 0 ? d.r * d.i * d.c / d.e : 0);
+  const opt = (list, val) => list.map(([v, l]) => `<option value="${v}"${+val === v ? ' selected' : ''}>${l}</option>`).join('');
+  return {
+    html(store) {
+      const items = load(store);
+      return `<div class="rice">
+        <p class="formula">RICE = (Reach × Impact × Confidence) ÷ Effort</p>
+        ${items.map((d, k) => `<div class="rice-item" data-k="${k}">
+          <div class="rice-head"><b>${d.n}</b><span class="rice-score" id="rice-s-${k}">0</span></div>
+          <div class="rice-fields">
+            <label for="rice-${k}-r">Reach / qtr<input id="rice-${k}-r" data-f="r" type="number" min="0" step="10" inputmode="numeric" value="${d.r}"></label>
+            <label for="rice-${k}-i">Impact<select id="rice-${k}-i" data-f="i">${opt(IMP, d.i)}</select></label>
+            <label for="rice-${k}-c">Confidence<select id="rice-${k}-c" data-f="c">${opt(CONF, d.c)}</select></label>
+            <label for="rice-${k}-e">Effort (person-wks)<input id="rice-${k}-e" data-f="e" type="number" min="0.5" step="0.5" inputmode="decimal" value="${d.e}"></label>
+          </div>
+          <div class="rice-bar"><i id="rice-b-${k}" style="width:0"></i></div>
+        </div>`).join('')}
+        <p class="rice-rank" id="rice-rank" aria-live="polite"></p>
+        <div class="btnrow"><button type="button" class="btn btn-sm btn-ghost" id="rice-reset">Reset to example values</button></div>
+      </div>`;
+    },
+    mount(el, store) {
+      let items = load(store);
+      const update = () => {
+        const scores = items.map(score);
+        const max = Math.max(...scores, 1);
+        scores.forEach((s, k) => {
+          el.querySelector('#rice-s-' + k).textContent = s.toFixed(s < 10 ? 1 : 0);
+          el.querySelector('#rice-b-' + k).style.width = (s / max * 100) + '%';
+        });
+        const rank = items.map((d, k) => [d.n, scores[k]]).sort((a, b) => b[1] - a[1]);
+        el.querySelector('#rice-rank').innerHTML = '<b>Ranking:</b> ' + rank.map((r, i) => `${i + 1}. ${r[0]}`).join(' · ');
+      };
+      el.addEventListener('input', e => {
+        const f = e.target.dataset.f;
+        if (!f) return;
+        const k = +e.target.closest('.rice-item').dataset.k;
+        const v = parseFloat(e.target.value);
+        items[k][f] = isFinite(v) ? v : 0;
+        store.set('rice', items);
+        update();
+      });
+      el.querySelector('#rice-reset').addEventListener('click', () => {
+        items = DEF.map(d => Object.assign({}, d));
+        store.set('rice', items);
+        items.forEach((d, k) => ['r', 'i', 'c', 'e'].forEach(f => { el.querySelector(`#rice-${k}-${f}`).value = d[f]; }));
+        update();
+      });
+      update();
+    }
+  };
+})();
+
+LESSONS.push({
+  id: 'pm-1', track: 'pm', n: 1, minutes: 10,
+  title: 'What a PM actually does (and doesn’t)', short: 'What a PM does',
+  sub: 'PM, Product Owner, project manager and engineering manager are four different jobs. This lesson covers how they split the work and what an APM owns.',
+  idea: 'A PM owns the <em>why</em> and the <em>what</em>: which problem, for whom, and how we’ll know it worked. Engineering owns the <em>how</em>, and design owns how it feels to use.',
+  body: `
+<p>A product manager makes sure the team builds something that is <strong>valuable</strong> (users want it), <strong>usable</strong> (they can figure it out), <strong>feasible</strong> (we can build and run it) and <strong>viable</strong> (it works for the business, including legal and compliance). You are accountable for outcomes, such as advisors preparing reviews faster. You are not accountable for output, such as the number of tickets closed. And you have almost no formal authority over the people who do the work.</p>
+${fig(DIAG.venn, 'The PM’s job is to make sure decisions sit in the middle, not to do everyone else’s job.')}
+<h3>Four jobs that get confused</h3>
+${table(['Role', 'Owns', 'Typical question', 'Not their call'], [
+  ['<strong>Product Manager</strong>', 'Problem selection, outcomes, priorities, product decisions, the “why”', '“Which advisor problem matters most this quarter, and how will we know we solved it?”', 'How the code is written; who works on which task; people management'],
+  ['<strong>Product Owner</strong>', 'A <em>Scrum accountability</em>: maximizing product value by managing the Product Backlog', '“Is the backlog ordered so the next Sprint delivers the most value?”', 'Not a separate job in most companies. The PM usually holds it'],
+  ['<strong>Project / program manager</strong>', 'Timelines, dependencies, cross-team coordination, risk logs', '“Will SSO, the data migration and the partner rollout all land by 30 June?”', 'Deciding what the product should do'],
+  ['<strong>Engineering manager</strong>', 'Engineers’ growth and hiring, delivery health, technical quality', '“Is the team sustainable? Is the architecture ready for 10× more advisors?”', 'Deciding which customer problem to solve'],
+  ['<strong>Designer</strong>', 'User experience, interaction, visual design; a research partner', '“Can an advisor find the AI brief between back-to-back calls?”', 'Business prioritization (but they should influence it)']
+])}
+<h3>What an APM actually owns</h3>
+<p>An APM usually owns a <strong>slice</strong> of the product, such as “AI meeting prep” or “client onboarding”, rather than the whole strategy. Expect to spend your weeks like this:</p>
+<ul>
+  <li><strong>Understanding problems</strong>: partner calls, support tickets, usage data, sitting with ops.</li>
+  <li><strong>Shaping work</strong>: problem statements, specs, user stories with acceptance criteria.</li>
+  <li><strong>Keeping the backlog ordered</strong> and the team clear on the current goal.</li>
+  <li><strong>Unblocking</strong>: getting answers from compliance, sales, ops and the CTO quickly.</li>
+  <li><strong>Measuring</strong>: did the release move the metric we cared about?</li>
+  <li><strong>Communicating</strong>: concise updates, early bad news, explicit trade-offs.</li>
+</ul>
+<p>You earn more scope by being right about problems and reliable on follow-through. A big title doesn’t do it.</p>
+${tip('<p>In a CTO-led company you are often the person closest to customers. Your leverage is <strong>context</strong>. Bring evidence to every decision: call notes, usage data and compliance constraints. With evidence on the table, engineers and the CTO can make better calls, and they will start to seek you out.</p>')}
+<p>Many companies describe the core working group as the <strong>product trio</strong>: a PM, a design lead and a tech lead doing discovery together, so that value, usability and feasibility are considered at the same time instead of handed over in sequence.</p>`,
+  example: {
+    title: 'The AI portfolio summary slipped two weeks. Who owns what?',
+    html: `
+<p>Your team promised an <strong>AI-generated portfolio review summary</strong> to a 15-partner pilot. It slips for three reasons. The LLM sometimes misstates XIRR figures. Compliance wants a disclaimer and an audit log. The “edit before sending” flow isn’t designed yet.</p>
+${table(['Who', 'What they own in this situation'], [
+  ['<strong>You (PM)</strong>', 'Re-scope the pilot: launch view-only for advisors first, with client sending in v1.1. Define a measurable quality bar, such as zero numeric errors across 50 sampled summaries. Turn compliance’s needs into acceptance criteria. Tell stakeholders the new plan and the trade-off.'],
+  ['<strong>Tech lead / EM</strong>', 'Root-cause the XIRR errors. The likely fix: compute every number in the calculation engine and let the LLM only write the narrative around them. Re-estimate and plan the work.'],
+  ['<strong>Designer</strong>', 'Design the review-and-edit flow and how “AI-generated, verify before use” is shown.'],
+  ['<strong>CTO</strong>', 'Approve the trade-off if it changes what was committed this quarter.']
+])}
+<p><strong>What you don’t do:</strong> debug the prompt yourself, assign tickets to engineers, or quietly push the date and hope nobody asks. <strong>What you do:</strong> make sure everyone knows the problem, the quality bar and the trade-off, and get decisions made fast.</p>`
+  },
+  mistakes: [
+    'Acting as a “backlog secretary” who writes a ticket for every stakeholder request without asking which problem it solves.',
+    'Telling engineers how to build something (“just add a cron job”) instead of describing the problem, constraints and quality bar.',
+    'Turning into a project manager only: chasing dates and status while nobody owns whether the feature moves a metric.',
+    'Waiting for authority. As an APM your influence comes from evidence and clarity, not your title.',
+    'Saying yes to everyone to be liked. Your job is to make trade-offs visible and get them decided.'
+  ],
+  tryit: {
+    prompt: '<p>Sort each task into whoever <em>primarily</em> owns it in a healthy product team. “Shared” means the work is done together by design. Then check your answers.</p>',
+    noText: true,
+    classify: {
+      buckets: ['PM', 'Engineering', 'Design', 'Shared'],
+      items: [
+        ['Decide whether next quarter focuses on client onboarding or the AI meeting brief', 0, 'Choosing which problem to solve (aligned with your CTO) is the core PM decision.'],
+        ['Choose between a vector database and Postgres full-text search for searching client notes', 1, 'This is an implementation choice. You supply the constraints, such as latency, cost and data residency, and engineering picks the approach.'],
+        ['Lay out the meeting-prep screen so it works on an advisor’s tablet', 2, 'Interaction and layout are design’s call, informed by the requirements you share.'],
+        ['Define the success metric for the AI brief pilot', 0, 'Deciding what “worked” means is the PM’s job, ideally agreed with the team before you build.'],
+        ['Estimate the effort to add SAML single sign-on', 1, 'The people doing the work estimate it. A PM who supplies the estimate gets a fictional plan.'],
+        ['Interview five mutual fund distributors about how they prepare for client reviews', 3, 'Discovery works best as a product trio (PM, designer, engineer), so everyone hears the pain first-hand.'],
+        ['Assign Sprint tasks to individual engineers', 1, 'In Scrum the Developers self-manage who does what. The PM explains what matters and why.'],
+        ['Decide what scope to cut so the pilot date holds', 0, 'Scope trade-offs are a product decision. Take input from engineering and design, then decide and tell people.']
+      ]
+    },
+    model: `<p><strong>PM:</strong> quarter focus, success metric, scope cuts. <strong>Engineering:</strong> technical approach, estimates, task assignment. <strong>Design:</strong> screen layout. <strong>Shared:</strong> user interviews.</p>
+<p>The pattern: the PM decides <em>what problem</em> and <em>what trade-off</em>, and the people doing the work decide <em>how</em>. When you’re unsure, ask yourself: “Am I deciding the problem or the solution?”</p>`
+  },
+  quiz: [
+    { q: 'Mid-Sprint, an engineer asks you which ticket they should pick up next. In a Scrum team, what’s the best response?', o: [
+      ['Assign one, because the PM decides who works on what.', false, 'In Scrum, the Developers self-manage how they deliver the Sprint Backlog. If the PM assigns tasks, the team stops owning its plan.'],
+      ['Point them to the Sprint Goal and the Sprint Backlog, and let the Developers decide together who takes what.', true, 'You make the priority and the reasoning clear. The team owns its plan for meeting the Sprint Goal.'],
+      ['Escalate it to the CTO.', false, 'This is a normal day-to-day question. Escalating it adds delay and signals the team can’t self-manage.'],
+      ['Tell them to pick the easiest one to keep velocity up.', false, 'Optimizing for “easy” over the Sprint Goal is how teams end a Sprint busy but with nothing usable.']
+    ] },
+    { q: 'In Scrum, “Product Owner” is best described as…', o: [
+      ['A job title more senior than Product Manager.', false, 'It isn’t a seniority level. The Scrum Guide defines it as an accountability within the Scrum Team.'],
+      ['A committee of stakeholders who vote on the backlog.', false, 'The Scrum Guide is explicit: the Product Owner is one person, not a committee.'],
+      ['An accountability for maximizing product value, held by one person and often the PM.', true, 'Scrum calls it an accountability. In most companies the PM holds it, and the PM job also includes work Scrum doesn’t describe, such as discovery and pricing input.'],
+      ['Another name for the project manager.', false, 'Project managers coordinate timelines and dependencies. The Product Owner is accountable for the value of the product.']
+    ] },
+    { q: 'Which of these is most clearly the PM’s responsibility rather than the engineering manager’s?', o: [
+      ['Running engineers’ performance reviews.', false, 'People management belongs to the engineering manager.'],
+      ['Deciding which advisor problem the team tackles next quarter and how success will be measured.', true, 'Problem selection and success metrics are the core of the PM role.'],
+      ['Choosing which version of the LLM provider’s SDK to use.', false, 'That is a technical decision for engineering. You might care about the cost or latency it implies.'],
+      ['Designing the on-call rotation.', false, 'Operational health is engineering’s domain.']
+    ] },
+    { q: 'You’re a new APM. What’s the most reliable way to gain influence without formal authority?', o: [
+      ['Mention the CTO’s name in every request.', false, 'Borrowed authority works once or twice, and then people stop trusting your judgment.'],
+      ['Bring evidence (customer calls, usage data, compliance constraints) and make trade-offs explicit.', true, 'Evidence and clarity make you useful to engineers, designers and leadership alike.'],
+      ['Agree with every stakeholder to build goodwill.', false, 'Saying yes to everyone produces a bloated backlog and broken promises, which erodes trust.'],
+      ['Write a detailed technical design so engineers have no ambiguity.', false, 'That takes over engineering’s job and usually produces a worse design.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-2', track: 'pm', n: 2, minutes: 12,
+  title: 'Understanding users and problems', short: 'Users & problems',
+  sub: 'Problem vs solution thinking, Jobs-to-be-Done, interviews that don’t lie to you, and how to write a problem statement.',
+  idea: 'Fall in love with the problem, not your solution. Find the job the user is trying to get done before you design anything.',
+  body: `
+<h3>Problem thinking vs solution thinking</h3>
+<p>Users and stakeholders almost always describe <strong>solutions</strong>: “add an Excel export”, “we need a chatbot”, “integrate WhatsApp”. That is natural, but a request is a clue, not a requirement. Your job is to understand the <strong>problem</strong> behind it: what they are trying to do, what makes it hard today, and what that costs them. Keep asking “why?” until you reach something that matters to them.</p>
+${fig(DIAG.ladder, 'Laddering from a request to the job. The job opens up better solutions than the request did.')}
+<h3>Jobs-to-be-Done (JTBD)</h3>
+<p>People “hire” a product to make progress in a specific situation. A job statement captures that progress without naming a solution:</p>
+<p class="formula">When [situation], I want to [motivation], so I can [expected outcome].</p>
+<p>Jobs have three layers, and B2B PMs often forget the last two:</p>
+<ul>
+  <li><strong>Functional</strong>: “prepare a client review in under 15 minutes”.</li>
+  <li><strong>Emotional</strong>: “feel confident I won’t be caught off guard by a question about an underperforming fund”.</li>
+  <li><strong>Social</strong>: “look prepared and expert in front of a high-net-worth client”.</li>
+</ul>
+<h3>In B2B, the user isn’t the buyer</h3>
+${table(['Person', 'Their job', 'What they care about'], [
+  ['Advisor / relationship manager (user)', 'Serve clients well and grow their book', 'Speed, fewer embarrassing moments, client trust'],
+  ['Head of advisory / COO (buyer)', 'Grow AUM per advisor and control risk', 'Productivity, consistency, cost per advisor'],
+  ['Compliance officer (approver)', 'Keep the firm on the right side of SEBI', 'Audit trails, approved language, suitability'],
+  ['Operations (admin)', 'Onboard clients and keep data clean', 'Bulk actions, fewer manual errors']
+])}
+<p>A feature that delights advisors but fails compliance review won’t ship. A feature the COO loves but advisors ignore won’t renew. You need all four perspectives.</p>
+<h3>User interviews that tell the truth</h3>
+<ul>
+  <li><strong>Ask about past behavior, not future intentions.</strong> “Tell me about the last time you prepared for a quarterly review” beats “Would you use an AI brief?”</li>
+  <li><strong>Get specific.</strong> “Can you show me?” and “What happened next?” are your best questions.</li>
+  <li><strong>Don’t pitch.</strong> The moment you describe your idea, people get polite and the data goes bad.</li>
+  <li><strong>Listen for workarounds</strong>: spreadsheets, WhatsApp groups, sticky notes. A workaround proves the pain is real.</li>
+  <li><strong>Five to eight interviews per segment</strong> usually reveal the main patterns. Record verbatim quotes, and invite your designer and an engineer.</li>
+</ul>
+<h3>A problem statement template</h3>
+<p class="formula">[Segment] needs a way to [job] because [insight]. Today they [workaround], which costs [impact]. We’ll know it’s solved when [measurable outcome].</p>`,
+  example: {
+    title: '“Can we get an Excel export of the client portfolio?”',
+    html: `
+<p>Customer Success forwards the same request from three partner firms. You could write a ticket. Instead, you interview four advisors and ask: <em>“Walk me through the last time you exported a portfolio.”</em></p>
+<p>The pattern: before each quarterly review, advisors export holdings to Excel, calculate performance since the last meeting by hand, flag underperforming funds, and paste it all into a slide. That takes <strong>45–60 minutes per client</strong>, and an advisor with 120 client families does about 40 reviews a quarter.</p>
+<p><strong>Job statement:</strong> “When I’m preparing for a client review, I want a one-page view of what changed and what to discuss, so I can walk in confident and spend the meeting on advice instead of data.”</p>
+<p><strong>Problem statement:</strong> “Advisors at our partner firms (MFDs and RIAs managing ₹50–500 Cr AUM) spend 45–60 minutes preparing each quarterly client review because the platform shows holdings but not <em>what changed since we last met</em>. Today they rebuild it in Excel, which costs 30+ hours per advisor per quarter. We’ll know it’s solved when median prep time for pilot advisors falls below 15 minutes.”</p>
+<p><strong>Result:</strong> the export would help a little and is cheap, so it ships as a stopgap. The real opportunity is an <strong>AI meeting-prep brief</strong>, which you’ll keep working on through the rest of this course.</p>`
+  },
+  mistakes: [
+    'Taking feature requests literally and dropping them into the backlog as-is.',
+    'Asking “Would you use X?” People are bad at predicting their own behavior and will say yes to be polite.',
+    'Interviewing only the buyer (the firm’s head) and never watching an advisor actually do the work.',
+    'Pitching your idea in the interview and then counting polite nods as validation.',
+    'Writing a problem statement that smuggles in the solution, such as “Advisors need a chatbot to…”.'
+  ],
+  tryit: {
+    prompt: `<p>The Head of Sales says: <em>“Partners keep asking for WhatsApp alerts when a client’s SIP fails. Can we add WhatsApp integration?”</em></p>
+<ol><li>Write a <strong>job statement</strong> and a <strong>problem statement</strong> for this.</li>
+<li>Rewrite these three leading interview questions:<br>a) “Wouldn’t it be great to get WhatsApp alerts for failed SIPs?”<br>b) “How much would you pay for WhatsApp alerts?”<br>c) “Do you find failed SIPs frustrating?”</li></ol>`,
+    placeholder: 'Job statement: When…\nProblem statement: …\nBetter questions:\na)\nb)\nc)',
+    model: `<p><strong>Job statement:</strong> “When a client’s SIP instalment fails (a bounced mandate or insufficient funds), I want to find out quickly and know what to do next, so I can fix it before the client misses a month of investing and blames me.”</p>
+<p><strong>Problem statement:</strong> “Advisors with 200+ SIP clients learn about failed SIPs days later from monthly RTA reports, by which time a mandate may need re-registering. Each missed instalment hurts the client’s outcome, the advisor’s trail income and their credibility. Today they reconcile RTA files by hand. We’ll know it’s solved when advisors act on 80% of failed SIPs within 48 hours.”</p>
+<p>WhatsApp might be the right channel. But an in-app task list, an email digest, or an automatic nudge to the client might solve the job too. WhatsApp Business messaging also has consent and record-keeping implications that compliance will want to review.</p>
+<p><strong>Better questions:</strong> a) “Tell me about the last time a client’s SIP failed. How did you find out?” b) “What did you do next, how long did it take, and what did it cost you or the client?” c) “How do you keep track of failed SIPs today? Could you show me?” Each one asks about the past, is specific and open, and doesn’t embed a solution.</p>`
+  },
+  quiz: [
+    { q: 'Which of these is a job statement rather than a feature request?', o: [
+      ['“Add a Generate PDF button to the client page.”', false, 'This names a specific solution. It tells you nothing about the situation or the progress the user wants.'],
+      ['“When a client asks how their portfolio did this year, I want a clear answer in seconds, so I look competent and keep their trust.”', true, 'It has a situation, a motivation and an outcome, including the emotional and social layers, and it names no solution.'],
+      ['“Integrate with WhatsApp.”', false, 'That’s a channel or solution, not a job.'],
+      ['“Make the dashboard more modern.”', false, 'This is a vague solution preference. Ask what the user is struggling to do.']
+    ] },
+    { q: 'Which interview question is least likely to bias the answer?', o: [
+      ['“Would you use an AI that writes your meeting notes?”', false, 'A hypothetical, solution-led question invites a polite yes.'],
+      ['“Don’t you hate manual reconciliation?”', false, 'The question supplies the answer, so you learn nothing.'],
+      ['“Walk me through the last time you prepared for a client review.”', true, 'It asks about real past behavior and is open-ended, so you’ll hear about the actual steps, tools and pain.'],
+      ['“How much faster would AI make your prep?”', false, 'It presumes AI helps and asks the user to estimate something they can’t know.']
+    ] },
+    { q: 'Why interview advisors and not only the head of advisory who signs the contract?', o: [
+      ['The head of advisory’s view doesn’t matter.', false, 'It matters a lot, because they buy and renew. It just isn’t the whole picture.'],
+      ['Users and buyers have different jobs. The person who signs the contract often doesn’t do the daily work, so you’d miss the real workflow pain.', true, 'B2B products have to satisfy both. Daily workflow pain only shows up when you talk to the people who use the product.'],
+      ['Advisors are easier to schedule.', false, 'They usually aren’t, and convenience is a bad reason to choose who you research.'],
+      ['SEBI requires it.', false, 'No regulation requires this. It’s simply good practice.']
+    ] },
+    { q: 'What’s wrong with this problem statement: “Advisors need an AI chatbot to answer client questions faster”?', o: [
+      ['Nothing. It’s specific.', false, 'It’s specific about the solution, which is exactly the problem.'],
+      ['It’s too long.', false, 'Length isn’t the issue.'],
+      ['It puts a solution (a chatbot) inside the problem, which closes off other options before you understand the real need.', true, 'Maybe advisors need an FAQ, better data or a one-click summary. Describe the problem without the solution.'],
+      ['It doesn’t mention pricing.', false, 'Pricing belongs elsewhere. The flaw is the embedded solution.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-3', track: 'pm', n: 3, minutes: 11,
+  title: 'Discovery vs delivery', short: 'Discovery vs delivery',
+  sub: 'How ideas get validated before they get built, and how to test the riskiest assumption cheaply.',
+  idea: 'Discovery decides what’s worth building. Delivery builds it well. Run both continuously, and test your riskiest assumption in the cheapest way you can before writing production code.',
+  body: `
+<p>Product teams do two kinds of work. <strong>Discovery</strong> answers “should we build this, and in what shape?” <strong>Delivery</strong> answers “how do we build, test and release it reliably?” Strong teams run them <strong>in parallel</strong>, often called dual-track. Discovery is not a phase that ends before delivery begins.</p>
+${fig(DIAG.dualtrack, 'Dual-track product work: two loops that feed each other continuously.')}
+<h3>The four product risks</h3>
+${table(['Risk', 'Question', 'Wealth-tech / AI flavor'], [
+  ['<strong>Value</strong>', 'Will they use it or buy it?', 'Will advisors act on AI suggestions, or ignore them like most notifications?'],
+  ['<strong>Usability</strong>', 'Can they figure it out?', 'Can an advisor verify an AI brief in under a minute between calls?'],
+  ['<strong>Feasibility</strong>', 'Can we build and run it?', 'Model accuracy, latency, cost per call, data quality from RTAs and custodians'],
+  ['<strong>Viability</strong>', 'Does it work for the business?', 'SEBI rules on advice vs distribution, the DPDP Act, audit trails, partner contracts, unit economics']
+])}
+<h3>Test assumptions, not ideas</h3>
+<p>Every idea rests on assumptions. List them, then rank each one by <strong>how important it is</strong> and <strong>how little evidence you have</strong>. Test the important, low-evidence ones first.</p>
+${table(['Test', 'Best for', 'Typical cost', 'Example'], [
+  ['Problem interviews', 'Value of solving the problem', 'Days', 'Talk to 6 advisors about review prep'],
+  ['Clickable prototype', 'Usability, desirability', '~1 week', 'A Figma brief shown to 5 advisors'],
+  ['Fake door', 'Demand', '1–2 days', 'A “Generate rebalancing proposal” button that leads to “Coming soon. Want early access?”'],
+  ['Wizard of Oz', 'Value before the tech exists', '1–2 weeks', 'An analyst writes the “AI” suggestions by hand behind the scenes'],
+  ['Concierge', 'Value and workflow', '1–2 weeks', 'You personally prepare briefs for 3 advisors and watch how they use them'],
+  ['Technical spike', 'Feasibility', 'Days', 'Can the model extract fields from 200 scanned KYC forms at ≥95% accuracy?'],
+  ['Compliance review of a mock', 'Viability', 'Days', 'Compliance marks up 20 sample AI messages']
+])}
+<p><strong>Decide your success criteria before you run the test</strong>, for example “we continue if at least 40% of suggestions are acted on”. Otherwise every result will look like a win.</p>
+${tip('<p>In B2B, keep fake doors honest and limited. A partner who clicks a fake button should immediately see “We’re exploring this. Want to be in the pilot?” Never fake something a firm might rely on for client money.</p>')}
+<p>The output of discovery is not a document. It’s <strong>evidence, a decision</strong> (go, change course or stop) and a sharper backlog item that delivery can pick up.</p>`,
+  example: {
+    title: 'Testing “AI next-best-action” before building any AI',
+    html: `
+<p><strong>The idea:</strong> every morning the platform suggests each advisor’s three most useful actions. For example: client A has ₹40 L idle in savings, client B’s SIP failed, client C’s FD matures next week.</p>
+<p><strong>Riskiest assumptions:</strong></p>
+<ol>
+  <li>Advisors will act on suggestions (<em>value</em>). Very important, no evidence.</li>
+  <li>Our data can produce relevant suggestions (<em>feasibility</em>). Some evidence.</li>
+  <li>Suggestions won’t cross into unregistered investment advice (<em>viability</em>). Must be checked.</li>
+</ol>
+<p><strong>Test:</strong> a two-week Wizard of Oz with 5 partner advisors. An analyst writes three suggestions per advisor each morning from platform data and delivers them through the existing notification panel. In parallel, compliance reviews 20 sample suggestions and sets guardrails, such as no scheme-specific recommendations unless the firm is a registered investment adviser.</p>
+<p><strong>Success criteria, set in advance:</strong> at least 40% of suggestions acted on within 48 hours, and at least 4 of 5 advisors ask to keep receiving them.</p>
+<p><strong>Illustrative result:</strong> 52% were acted on, but the “idle cash” suggestions were ignored because advisors already knew. Failed-SIP and maturity alerts drove most of the action. <strong>Decision:</strong> build rule-based alerts for those two types first, and use the LLM only to explain each alert in plain language. That saved roughly a quarter of machine-learning work on the parts nobody used.</p>`
+  },
+  mistakes: [
+    'Treating discovery as a phase that’s “done” before building starts.',
+    'Testing what’s easy instead of what’s risky, for example polishing the UI when nobody knows if advisors want the feature.',
+    'Building the full AI pipeline to “test” an idea that a one-week Wizard of Oz could have tested.',
+    'Not defining success criteria up front, so any result can be spun as validation.',
+    'Leaving viability to the end. Compliance raising an issue in week 10 can kill a launch that could have been shaped in week 1.'
+  ],
+  tryit: {
+    prompt: '<p>Pick the <strong>cheapest test that addresses each assumption</strong>. Then write a pass/fail criterion for assumption 3 in the box.</p>',
+    placeholder: 'Pass/fail criterion for assumption 3: Over 2 weeks…',
+    classify: {
+      buckets: ['Interviews', 'Fake door', 'Wizard of Oz', 'Tech spike', 'Compliance'],
+      items: [
+        ['1. Our model can extract PAN, name and address from scanned KYC forms with at least 95% field accuracy.', 3, 'This is pure feasibility. Run 200 real (masked) documents through the model in a few days.'],
+        ['2. Enough advisors would click “Generate rebalancing proposal” to justify building it.', 1, 'This is a demand question. Measure clicks on an honest “coming soon” entry point.'],
+        ['3. Advisors will forward AI-written portfolio commentary to clients if it’s good enough.', 2, 'You need real behavior with real output. Humans can write the commentary while you watch what advisors do with it.'],
+        ['4. Sending AI-drafted client messages won’t breach rules on client communication.', 4, 'This is viability. Show compliance real samples early and let their markup shape the guardrails.'],
+        ['5. Advisors’ biggest onboarding pain is paperwork, not the risk-profiling questionnaire.', 0, 'This is about understanding the problem. Talking to advisors about their last few onboardings is the cheapest way to learn it.']
+      ]
+    },
+    model: `<p>1 → tech spike · 2 → fake door · 3 → Wizard of Oz · 4 → compliance review · 5 → interviews.</p>
+<p><strong>A good criterion for assumption 3:</strong> “For 2 weeks, 5 pilot advisors receive human-written commentary presented as an AI draft. We continue if at least 60% of drafts are sent to clients with light edits (under 20% of the text changed), and at least 3 advisors say they’d be upset if we stopped.” It is specific, behavioral and decided before the test.</p>`
+  },
+  quiz: [
+    { q: 'Compliance signing off on AI-generated client communications mainly addresses which product risk?', o: [
+      ['Value', false, 'Value is whether users want it. Compliance doesn’t speak to that.'],
+      ['Usability', false, 'Usability is whether users can figure it out.'],
+      ['Feasibility', false, 'Feasibility is whether we can build and run it technically.'],
+      ['Viability', true, 'Regulatory and legal fit is part of viability, meaning whether the solution works for the business. In wealth-tech it is often the deciding risk.']
+    ] },
+    { q: 'What is a fake-door test?', o: [
+      ['A fake login page used to test security.', false, 'That’s phishing simulation, which is unrelated.'],
+      ['An entry point for a feature that doesn’t exist yet. You measure how many people try it, then tell them it’s coming.', true, 'It measures real intent cheaply. In B2B, be transparent the moment someone clicks.'],
+      ['Releasing a feature to everyone without announcing it.', false, 'That’s a silent launch. It isn’t a demand test.'],
+      ['A/B testing two button colors.', false, 'That’s optimization, not testing demand for something new.']
+    ] },
+    { q: 'Your team wants six weeks to fine-tune a model for AI next-best-action. Nobody knows whether advisors would act on suggestions. What’s the best next step?', o: [
+      ['Fine-tune first, because quality drives adoption.', false, 'You’d be investing heavily in feasibility before checking value.'],
+      ['Run a two-week Wizard of Oz with a few advisors and a success threshold agreed in advance.', true, 'It tests the riskiest assumption (value) at a fraction of the cost. The results also tell you which suggestions are worth automating.'],
+      ['Send a survey asking whether they’d like AI suggestions.', false, 'Surveys about hypothetical features produce optimistic, unreliable answers.'],
+      ['Skip testing, because the CTO likes the idea.', false, 'Leadership enthusiasm is a reason to test quickly, not a reason to skip testing.']
+    ] },
+    { q: 'Which statement about discovery and delivery is most accurate?', o: [
+      ['Discovery happens once, at the start of a project.', false, 'That’s waterfall thinking. Learning continues after launch.'],
+      ['They run continuously and in parallel. Discovery feeds validated work into delivery, and delivery’s results feed back into discovery.', true, 'This is dual-track work. The loops inform each other all the time.'],
+      ['Only designers do discovery.', false, 'Discovery is a trio activity: PM, design and engineering.'],
+      ['Delivery should wait until all discovery is finished.', false, 'Then nothing would ship. Discovery stays a little ahead of delivery, not a whole phase ahead.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-4', track: 'pm', n: 4, minutes: 13,
+  title: 'Prioritization: RICE, MoSCoW, Kano, impact/effort', short: 'Prioritization',
+  sub: 'What each framework is good for, and when it misleads you.',
+  idea: 'Frameworks don’t make decisions. They make your assumptions visible, so the team argues about the right things.',
+  body: `
+<p>There will always be more good ideas than capacity. Prioritization really means deciding <strong>what you won’t do now</strong>, and being able to explain why.</p>
+<h3>RICE</h3>
+<p class="formula">(Reach × Impact × Confidence) ÷ Effort</p>
+<ul>
+  <li><strong>Reach</strong>: how many users or accounts it affects per period (e.g. advisors per quarter).</li>
+  <li><strong>Impact</strong>: 3 massive, 2 high, 1 medium, 0.5 low, 0.25 minimal.</li>
+  <li><strong>Confidence</strong>: 100% (strong data), 80% (some data), 50% (gut feel).</li>
+  <li><strong>Effort</strong>: person-weeks or person-months, estimated by the team.</li>
+</ul>
+<p><strong>Good for</strong> comparing many similar-sized items when you have some data. <strong>Misleads</strong> when value is concentrated, as it often is in B2B: a deal-blocker for one ₹1 Cr account, a regulatory deadline, or a dependency that unlocks three other items. It also invites fake precision, because 37.5 vs 40 means nothing.</p>
+<h3>MoSCoW</h3>
+<p><strong>Must</strong> have, <strong>Should</strong> have, <strong>Could</strong> have, <strong>Won’t</strong> have (this time). It’s best for <strong>scoping a fixed-date release</strong>, such as what must be in the build for a regulatory reporting change. It misleads when everything becomes a Must, and it doesn’t order items within a bucket.</p>
+<h3>Kano</h3>
+${fig(DIAG.kano, 'Kano: some features only prevent unhappiness, some scale with quality, and some surprise people.')}
+<ul>
+  <li><strong>Basic (must-be)</strong>: nobody praises it, but its absence is a deal-breaker. Examples: an audit trail, correct NAV data, two-factor login.</li>
+  <li><strong>Performance</strong>: more is better, roughly in proportion. Example: how fast a portfolio report generates.</li>
+  <li><strong>Delighters</strong>: unexpected and loved. Example: an AI brief that suggests a talking point for the client’s daughter’s education goal.</li>
+</ul>
+<p>Delighters decay into basics over time, so today’s magic is next year’s table stakes. Kano is useful for balancing a roadmap. It misleads if you chase delighters on a shaky set of basics.</p>
+<h3>Impact vs effort (2×2)</h3>
+${fig(DIAG.impactEffort, 'A fast workshop tool. Effort estimates are often optimistic and “impact” is vague, so use it for a first cut only.')}
+${table(['Framework', 'Use it for', 'Watch out for'], [
+  ['RICE', 'Ranking a long backlog with some data', 'Concentrated B2B value, false precision, inflated confidence'],
+  ['MoSCoW', 'Scoping a fixed-date release', 'Everything becoming a Must'],
+  ['Kano', 'Balancing basics, performance and delight', 'Needs real customer input to classify features well'],
+  ['Impact / effort', 'Quick team workshops', 'Vague “impact”, optimistic effort']
+])}
+${tip('<p>Use a framework for the first cut, then apply judgment and <strong>write down the reasoning</strong>. For example: “SSO goes above tone control despite a lower RICE score, because two enterprise deals worth ₹1.2 Cr ARR are blocked on it.”</p>')}`,
+  example: {
+    title: 'Four backlog items, three frameworks, one decision',
+    html: `
+<p>Context: 60 partner firms and about 900 advisors on the platform. Reach is counted per quarter and effort in person-weeks.</p>
+${table(['Item', 'Reach', 'Impact', 'Conf.', 'Effort', 'RICE'], [
+  ['Bulk KYC upload', '300', '2', '80%', '3', '<strong>160</strong>'],
+  ['Dark mode', '900', '0.25', '80%', '2', '90'],
+  ['AI summary tone control (formal/simple, English/Hindi)', '600', '0.5', '50%', '4', '37.5'],
+  ['SSO (SAML) for enterprise partners', '150', '1', '100%', '5', '30']
+], [1, 2, 3, 4, 5])}
+<p><strong>RICE says:</strong> Bulk KYC, then dark mode, then tone control, then SSO.</p>
+<p><strong>Then context arrives.</strong> Two enterprise prospects worth ₹1.2 Cr ARR combined won’t go live without SSO, because their infosec review requires it. In <strong>MoSCoW</strong> terms for the Q3 enterprise release, SSO is a Must. In <strong>Kano</strong> terms it’s a basic feature for enterprise buyers: nobody cheers for it, but without it you lose the deal. Hindi tone control may be a delighter for advisors serving Tier-2 and Tier-3 cities, but confidence is only 50%.</p>
+<p><strong>Decision:</strong> Bulk KYC and SSO this quarter. Dark mode as a fill-in if there’s capacity. Tone control goes back to discovery: a one-week test of Hindi summaries with 5 advisors will raise confidence far more cheaply than arguing about it.</p>
+<p>RICE ranked dark mode second. That doesn’t make RICE wrong. It showed you where your data is thin and where B2B value hides.</p>`
+  },
+  mistakes: [
+    'Treating the RICE score as the decision instead of an input to it.',
+    'Inflating Impact and Confidence for pet ideas. Every pet idea is somehow a “3 at 100%”.',
+    'Letting everything become a “Must” in MoSCoW.',
+    'Ignoring small-reach, high-value B2B items such as deal-blockers, regulatory deadlines and key-account renewals.',
+    'Announcing priorities without the reasoning. Stakeholders accept a “not now” much more easily when they can see why.'
+  ],
+  tryit: {
+    widget: 'rice',
+    prompt: `<p>Change the inputs and watch the ranking move. Then answer in the box:</p>
+<ol><li>What would have to be true for <strong>tone control</strong> to beat Bulk KYC?</li>
+<li>Write two or three sentences to the Head of Sales explaining why <strong>SSO ships before dark mode</strong>, even though dark mode scores higher.</li></ol>`,
+    placeholder: '1) Tone control would beat Bulk KYC if…\n2) Message to Head of Sales: …',
+    model: `<p><strong>1.</strong> If a quick test showed Hindi summaries doubled the rate at which advisors shared them, Impact might go from 0.5 to 2 and Confidence from 50% to 100%. Then 600 × 2 × 1.0 ÷ 4 = <strong>300</strong>, which beats Bulk KYC’s 160. The lesson is to raise confidence with a cheap test instead of arguing over the numbers.</p>
+<p><strong>2.</strong> “RICE measures broad usage value. SSO’s value is concentrated: two enterprise deals worth ₹1.2 Cr ARR can’t go live without it, and their infosec teams treat it as non-negotiable. That makes it a must-have for revenue, which sits outside a usage score. Dark mode stays on the list as a fill-in when we have spare capacity.”</p>`
+  },
+  quiz: [
+    { q: 'A ₹60 L ARR enterprise prospect will sign only if you support SAML SSO. It scores low on RICE because reach is one firm. What’s the best approach?', o: [
+      ['Follow RICE strictly and leave it as a low priority.', false, 'RICE undervalues concentrated B2B value. Following it blindly here could lose a material deal.'],
+      ['Recognize that RICE misses concentrated value, weigh SSO on revenue and strategy, and make the trade-off explicit.', true, 'Use the framework as an input, apply judgment, and explain what moves down the list as a result.'],
+      ['Build it immediately without telling anyone what gets bumped.', false, 'Silent re-prioritization destroys trust. Every yes is a no to something else, so say what.'],
+      ['Ask Sales to persuade the prospect to drop the requirement.', false, 'Enterprise infosec requirements rarely move, and pushing back risks the deal.']
+    ] },
+    { q: 'When is MoSCoW most useful?', o: [
+      ['Ranking 200 backlog items against each other.', false, 'MoSCoW doesn’t order items within a bucket, so it can’t rank a long list.'],
+      ['Agreeing the scope of a fixed-date release, such as what must be in the version for a regulatory reporting change.', true, 'When the date is fixed, the useful question is what must go in and what can wait.'],
+      ['Estimating effort.', false, 'MoSCoW says nothing about effort.'],
+      ['Measuring customer satisfaction.', false, 'That would be Kano or a survey.']
+    ] },
+    { q: 'In the Kano model, an audit trail of every AI-generated client message is most likely…', o: [
+      ['A delighter.', false, 'Nobody is delighted by an audit trail.'],
+      ['A performance feature.', false, 'Having more of it doesn’t raise satisfaction proportionally.'],
+      ['A basic (must-be) feature. Nobody praises it, but compliance teams treat its absence as a deal-breaker.', true, 'Basic features prevent dissatisfaction. In regulated industries many compliance features fall here.'],
+      ['An indifferent feature.', false, 'Compliance buyers care a great deal. It’s far from indifferent.']
+    ] },
+    { q: 'Your RICE sheet shows “AI chatbot” at the top with Impact 3 and Confidence 100%, but there’s been no user research. What’s the problem?', o: [
+      ['Nothing. The math is right.', false, 'The arithmetic is right but the inputs aren’t honest.'],
+      ['Confidence is inflated. Without evidence it should be 50% at most, and the real next step is a cheap test.', true, 'Confidence exists to penalize guesses. A cheap test is how you earn a higher number.'],
+      ['Reach should be higher.', false, 'Reach isn’t the issue here.'],
+      ['RICE doesn’t work for AI features.', false, 'It works fine. The inputs just have to be honest.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-5', track: 'pm', n: 5, minutes: 13,
+  title: 'Writing specs: PRDs, stories, acceptance criteria', short: 'Writing specs',
+  sub: 'PRDs, user stories, acceptance criteria, edge cases and non-goals, plus what’s different about specifying AI behavior.',
+  idea: 'A good spec makes the problem, the boundaries and “done” unambiguous, and leaves the how to the people building it.',
+  body: `
+<h3>The lean PRD (1–3 pages)</h3>
+<p>A PRD (product requirements document) exists to create shared understanding. It isn’t paperwork for its own sake. A useful outline:</p>
+<ol>
+  <li><strong>Problem and evidence</strong>: who hurts, how much, and how you know.</li>
+  <li><strong>Goals and success metrics</strong>: the outcome you’ll measure.</li>
+  <li><strong>Non-goals</strong>: what’s explicitly out of scope.</li>
+  <li><strong>Users and key scenarios.</strong></li>
+  <li><strong>Requirements</strong>: user stories with acceptance criteria, in priority order.</li>
+  <li><strong>Edge cases and error states.</strong></li>
+  <li><strong>Constraints</strong>: compliance, security, data, and for AI features, behavior and quality bars.</li>
+  <li><strong>Open questions</strong>, each with an owner.</li>
+  <li><strong>Rollout and measurement plan.</strong></li>
+</ol>
+<h3>User stories</h3>
+<p class="formula">As a [user], I want [capability], so that [benefit].</p>
+<p>A story is a <strong>placeholder for a conversation</strong>, not a contract. The “so that” is the most important part: it records the intent, so engineers can suggest a better solution. Check stories against <strong>INVEST</strong>: Independent, Negotiable, Valuable, Estimable, Small, Testable.</p>
+<h3>Acceptance criteria</h3>
+<p>These are pass/fail conditions that say a story is complete. The Given/When/Then format keeps them testable:</p>
+<p class="formula">Given [context], when [action], then [observable result].</p>
+${table(['Weak', 'Strong'], [
+  ['“The summary should be accurate.”', '“Every number in the summary matches the portfolio service exactly. The LLM generates narrative only.”'],
+  ['“The page should load fast.”', '“For advisors with up to 1,000 clients, the dashboard renders above-the-fold content in ≤2 s at p95.”'],
+  ['“Handle errors gracefully.”', '“Given the LLM times out after 8 s, then show the data-only brief with a ‘Summary unavailable, retry’ message.”']
+])}
+<h3>Edge cases: where B2B trust is won or lost</h3>
+<ul>
+  <li><strong>Empty</strong>: a new client with no holdings, or an advisor with no clients yet.</li>
+  <li><strong>Stale data</strong>: the NAV feed is delayed, or the RTA file arrived late.</li>
+  <li><strong>Scale</strong>: an HNI family with 300 holdings across 12 accounts.</li>
+  <li><strong>Permissions</strong>: an advisor must never see another advisor’s clients.</li>
+  <li><strong>AI-specific</strong>: hallucination, low confidence, refusals, latency, cost spikes, PII in prompts, and instructions hidden inside uploaded documents.</li>
+</ul>
+<h3>Non-goals</h3>
+<p>Writing down what you are <em>not</em> doing prevents scope creep and wrong assumptions. For example: “No investment recommendations in v1”, or “No client-facing sending in v1”.</p>
+${tip('<p>For AI features, add a <strong>golden set</strong>: 30–50 real (masked) example inputs with what good output looks like. It becomes your acceptance test for prompts and models, and it ends the endless “is this good enough?” debates.</p>')}`,
+  example: {
+    title: 'Mini-PRD: AI meeting-prep brief (v1)',
+    html: `
+<p><strong>Problem:</strong> advisors spend 45–60 minutes preparing each quarterly review (see the interviews in Lesson 2).</p>
+<p><strong>Goal:</strong> median prep time below 15 minutes for pilot advisors, with the brief used in at least 60% of pilot reviews.</p>
+<p><strong>Non-goals (v1):</strong> no investment or scheme recommendations; advisor-only view with no sending to clients; English only; no editing of portfolio data.</p>
+<p><strong>Story:</strong> As an advisor preparing for a client review, I want a one-page brief of what changed since our last meeting, so that I can prepare in minutes and spend the meeting on advice.</p>
+<p><strong>Acceptance criteria:</strong></p>
+<ul>
+  <li><em>Given</em> a client with holdings and a logged previous meeting, <em>when</em> the advisor opens “Prepare review”, <em>then</em> the brief shows the change in portfolio value, XIRR since the last meeting, the top 3 gainers and losers, any failed or paused SIPs, and maturities in the next 90 days.</li>
+  <li>All figures come from the portfolio calculation service. The LLM writes only the narrative.</li>
+  <li><em>Given</em> NAV data older than one business day, <em>then</em> the brief shows “Data as of [date]”.</li>
+  <li><em>Given</em> no previous meeting is logged, <em>then</em> the brief compares the last 90 days and says so.</li>
+  <li>The brief generates in ≤10 s at p95. Every brief is labeled “AI-generated draft. Verify before use” and logged with the prompt version and inputs for audit.</li>
+</ul>
+<p><strong>Edge cases:</strong> zero holdings (show the onboarding checklist instead); joint and family accounts; 300+ holdings (summarize the top 20 and group the rest); LLM timeout (data-only brief); no permission for that client (403, with no data leaked into logs).</p>
+<p><strong>Open questions:</strong> Should insurance policies be included, given they come from a different data source? (Owner: you, by Friday.) Is PDF export needed in v1? (Owner: design, after the pilot.)</p>`
+  },
+  mistakes: [
+    'Specifying the solution in pixel-perfect detail while never stating the problem or the success metric.',
+    'Writing acceptance criteria that can’t be tested, such as “fast”, “user-friendly” or “accurate”.',
+    'Skipping non-goals, so every reviewer adds their own wish list.',
+    'Ignoring unhappy paths: empty, error, stale data and permissions. That’s where B2B products lose trust.',
+    'Throwing the spec over the wall instead of refining it with engineers and design.',
+    'For AI features, not defining what acceptable output looks like or what happens when the model fails.'
+  ],
+  tryit: {
+    prompt: `<p>A partner says: <em>“Make the dashboard faster and smarter.”</em> You know two things. The advisor home dashboard takes about 9 s to load for advisors with 500+ clients. And advisors say they can’t see which clients need attention today.</p>
+<p>Rewrite the request as <strong>user stories with acceptance criteria</strong>, plus <strong>3 edge cases</strong> and <strong>2 non-goals</strong>.</p>`,
+    placeholder: 'Story 1: As a…, I want…, so that…\nAC:\n- Given… when… then…\n\nEdge cases:\nNon-goals:',
+    model: `<p>“Faster” and “smarter” are two separate problems, so split them into two stories.</p>
+<p><strong>Story 1:</strong> As an advisor with a large book (500+ client families), I want my dashboard to load quickly, so that I can check it between client calls.</p>
+<ul><li>Given up to 1,000 clients, when the dashboard opens, then above-the-fold content renders in ≤2 s at p95.</li>
+<li>The client list loads progressively, with the first 50 rows in ≤3 s at p95.</li>
+<li>Totals (AUM, SIP book) show an “as of” timestamp.</li></ul>
+<p><strong>Story 2:</strong> As an advisor, I want a “Needs attention today” list, so that I act on the most urgent client issues first.</p>
+<ul><li>Given a failed SIP in the last 7 days, KYC expiring within 30 days, or a maturity within 30 days, then the client appears in the list with the reason.</li>
+<li>The list is sorted by urgency: failed SIPs, then KYC, then maturities.</li>
+<li>Each item has a one-tap action (open client or log a call).</li>
+<li>Given nothing needs attention, then show an “All clear” state.</li></ul>
+<p><strong>Edge cases:</strong> a new advisor with 0 clients (show an onboarding state); a delayed RTA sync (show a stale-data banner); more than 50 items (show the top 50 and “View all”).</p>
+<p><strong>Non-goals:</strong> no AI recommendations on the dashboard in this release; no navigation redesign.</p>`
+  },
+  quiz: [
+    { q: 'Which is the best acceptance criterion?', o: [
+      ['“The AI summary should be accurate.”', false, 'There’s no way to pass or fail this. Accurate compared with what, measured how?'],
+      ['“Given a portfolio with holdings, when the summary is generated, then every figure matches the portfolio service and the summary is labeled ‘AI-generated draft’.”', true, 'It’s observable and pass/fail, and it puts the compliance requirement into the test.'],
+      ['“The page should be user-friendly.”', false, 'This is subjective and can’t be tested.'],
+      ['“Use GPT for the summary.”', false, 'That’s an implementation choice, not a condition of done.']
+    ] },
+    { q: 'What belongs in a “Non-goals” section?', o: [
+      ['Things the team failed to deliver last time.', false, 'That’s a retrospective topic.'],
+      ['Things explicitly out of scope for this release, such as “no investment recommendations in v1”.', true, 'Non-goals set boundaries and stop well-meaning scope creep.'],
+      ['Known bugs.', false, 'Bugs belong in the backlog.'],
+      ['Stretch metrics.', false, 'Stretch targets belong under goals.']
+    ] },
+    { q: 'In “As a [user], I want [capability], so that [benefit]”, why does the “so that” matter?', o: [
+      ['Jira requires it.', false, 'Tools don’t care. People do.'],
+      ['It records the intent, so the team can suggest better solutions and make sensible trade-offs.', true, 'When engineers know why, they often find a simpler or better way to deliver the benefit.'],
+      ['It sets the deadline.', false, 'User stories don’t contain deadlines.'],
+      ['It names the developer.', false, 'Stories don’t assign people.']
+    ] },
+    { q: 'Which edge case is most important to specify for an AI-generated portfolio brief?', o: [
+      ['The button color on hover.', false, 'That’s a minor design detail.'],
+      ['What happens when the LLM times out or returns low-confidence output, such as falling back to a data-only brief.', true, 'AI features fail in new ways. Specifying the fallback protects the advisor’s workflow and their trust.'],
+      ['The PDF font.', false, 'This is cosmetic.'],
+      ['Which framework the developers prefer.', false, 'That’s an engineering choice, not a requirement.']
+    ] }
+  ]
+});
+</script>
+
+<!-- @content-end -->
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Safe storage: every read/write is wrapped; falls back to memory ---------- */
+  const store = (() => {
+    const KEY = 'pm-scrum-course.v1';
+    let mem = {};
+    let available = false;
+    try {
+      const raw = window.localStorage.getItem(KEY);
+      if (raw) mem = JSON.parse(raw) || {};
+      window.localStorage.setItem(KEY + '.probe', '1');
+      window.localStorage.removeItem(KEY + '.probe');
+      available = true;
+    } catch (e) { available = false; }
+    return {
+      available,
+      get(k, d) { return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : d; },
+      set(k, v) {
+        mem[k] = v;
+        try { window.localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) { /* storage unavailable: keep in memory */ }
+      },
+      reset() {
+        mem = {};
+        try { window.localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+      }
+    };
+  })();
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const live = msg => { const el = $('#live'); el.textContent = ''; setTimeout(() => { el.textContent = msg; }, 30); };
+  const inFrame = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+
+  const TRACKS = {
+    pm: { name: 'PM Fundamentals', label: 'Track 1' },
+    scrum: { name: 'Scrum Fundamentals', label: 'Track 2' }
+  };
+  const byTrack = t => LESSONS.filter(l => l.track === t).sort((a, b) => a.n - b.n);
+  const ORDER = [...byTrack('pm'), ...byTrack('scrum')];
+  const LMAP = Object.fromEntries(ORDER.map(l => [l.id, l]));
+
+  /* ---------- State ---------- */
+  const S = {
+    completed: new Set(store.get('completed', [])),
+    quiz: store.get('quiz', {}),
+    drafts: store.get('drafts', {}),
+    revealed: store.get('revealed', {}),
+    cls: store.get('cls', {}),
+    known: new Set(store.get('known', [])),
+    sim: store.get('sim', null),
+    simBest: store.get('simBest', null),
+    theme: store.get('theme', 'system'),
+    last: store.get('last', null)
+  };
+  const persist = key => {
+    const v = S[key];
+    store.set(key, v instanceof Set ? [...v] : v);
+  };
+
+  /* ---------- Theme ---------- */
+  function applyTheme() {
+    const root = document.documentElement;
+    if (S.theme === 'light' || S.theme === 'dark') root.setAttribute('data-theme', S.theme);
+    else root.removeAttribute('data-theme');
+  }
+  applyTheme();
+
+  /* ---------- Icons ---------- */
+  const IC = {
+    sim: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/><path d="M12 8v4l2.5 2.5"/></svg>',
+    cards: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg>',
+    gloss: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 5h11M4 10h16M4 15h9M4 20h13"/><circle cx="18.5" cy="16.5" r="2.5"/></svg>',
+    sheet: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 11h7M9 15h7M9 19h4" stroke-linecap="round"/></svg>',
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>'
+  };
+  const MARK = '<svg class="brand-mark" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="9" fill="var(--accent)"/><path d="M9 22.5c2.5-6 5-9 8-9s4.5 3 8-5" fill="none" stroke="var(--accent-ink)" stroke-width="2.4" stroke-linecap="round"/><circle cx="25" cy="8.5" r="2.4" fill="var(--gold)"/></svg>';
+
+  /* ---------- Sidebar ---------- */
+  function trackStats(t) {
+    const ls = byTrack(t);
+    const done = ls.filter(l => S.completed.has(l.id)).length;
+    return { done, total: ls.length };
+  }
+  function overallPct() {
+    const total = ORDER.length || 1;
+    const done = ORDER.filter(l => S.completed.has(l.id)).length;
+    return Math.round(done / total * 100);
+  }
+  function renderNav(route) {
+    const pct = overallPct();
+    const cards = GLOSSARY.filter(g => g.card);
+    const knownCount = cards.filter(c => S.known.has(c.term)).length;
+    const navTrack = t => {
+      const st = trackStats(t);
+      return `<div class="nav-group">
+        <div class="nav-head"><h2>${TRACKS[t].label} · ${TRACKS[t].name}</h2><span>${st.done}/${st.total}</span></div>
+        <div class="meter" role="progressbar" aria-label="${TRACKS[t].name} progress" aria-valuemin="0" aria-valuemax="${st.total}" aria-valuenow="${st.done}"><i style="width:${st.total ? st.done / st.total * 100 : 0}%"></i></div>
+        ${byTrack(t).map(l => `<a class="nav-link${S.completed.has(l.id) ? ' done' : ''}" href="#${l.id}"${route === l.id ? ' aria-current="page"' : ''}>
+          <span class="nav-num" aria-hidden="true">${S.completed.has(l.id) ? '✓' : l.n}</span>
+          <span>${l.short || l.title}${S.completed.has(l.id) ? '<span class="sr-only"> (completed)</span>' : ''}</span></a>`).join('')}
+      </div>`;
+    };
+    const tool = (id, ico, label, meta) => `<a class="nav-link" href="#${id}"${route === id ? ' aria-current="page"' : ''}><span class="tool-ico">${ico}</span><span>${label}${meta ? `<span class="nav-meta">${meta}</span>` : ''}</span></a>`;
+    $('#sidebar').innerHTML = `
+      <a class="brand" href="#home">${MARK}<span class="brand-name">PM &amp; Scrum Fundamentals<span class="brand-sub">Field course for a new APM</span></span></a>
+      <div class="overall">
+        <div class="overall-row"><span>Course progress</span><b>${pct}%</b></div>
+        <div class="meter" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div>
+      </div>
+      <div class="nav-group">${tool('home', IC.home, 'Start here')}</div>
+      ${navTrack('pm')}
+      ${navTrack('scrum')}
+      <div class="nav-group">
+        <div class="nav-head"><h2>Practice &amp; reference</h2></div>
+        ${tool('simulator', IC.sim, 'Sprint simulator', S.simBest != null ? `Best score ${S.simBest}%` : '8 decisions · ~10 min')}
+        ${tool('flashcards', IC.cards, 'Flashcards', `${knownCount}/${cards.length} known`)}
+        ${tool('glossary', IC.gloss, 'Glossary', `${GLOSSARY.length} terms`)}
+        ${tool('cheatsheet', IC.sheet, 'Cheat sheet', 'One printable page')}
+      </div>
+      <div class="side-foot">
+        <div class="foot-row"><span class="foot-label">Theme</span>
+          <div class="seg" role="group" aria-label="Theme">
+            ${['system', 'light', 'dark'].map(v => `<button type="button" data-action="theme" data-v="${v}" aria-pressed="${S.theme === v}">${v[0].toUpperCase() + v.slice(1)}</button>`).join('')}
+          </div>
+        </div>
+        <div class="foot-row"><button type="button" class="linkbtn" data-action="reset">Reset all progress</button></div>
+        ${store.available ? '' : '<p class="storage-note">This browser is blocking storage, so progress lasts only until you close the tab.</p>'}
+      </div>`;
+    $('#top-pct').textContent = pct + '% complete';
+  }
+
+  /* ---------- Lesson rendering ---------- */
+  function classifyHTML(l) {
+    const c = l.tryit.classify;
+    const st = S.cls[l.id] || { picks: {}, checked: false };
+    const rows = c.items.map((it, i) => {
+      const pick = st.picks[i];
+      const right = st.checked && pick === it[1];
+      const cls = st.checked && pick !== undefined ? (right ? ' ok' : ' no') : '';
+      return `<div class="cls-row${cls}">
+        <p>${it[0]}</p>
+        <div class="seg" role="group" aria-label="Choose a category">
+          ${c.buckets.map((b, bi) => `<button type="button" data-action="cls-pick" data-l="${l.id}" data-i="${i}" data-b="${bi}" aria-pressed="${pick === bi}">${b}</button>`).join('')}
+        </div>
+        ${st.checked && pick !== undefined ? `<p class="cls-why"><b>${right ? 'Right' : 'Answer: ' + esc(c.buckets[it[1]])}</b>${it[2]}</p>` : ''}
+      </div>`;
+    }).join('');
+    const answered = Object.keys(st.picks).length;
+    const correct = c.items.filter((it, i) => st.picks[i] === it[1]).length;
+    return `<div class="cls" id="cls-${l.id}">${rows}
+      <div class="btnrow">
+        <button type="button" class="btn btn-sm btn-primary" data-action="cls-check" data-l="${l.id}"${answered ? '' : ' disabled'}>Check my answers</button>
+        <button type="button" class="btn btn-sm btn-ghost" data-action="cls-reset" data-l="${l.id}">Clear</button>
+        ${st.checked ? `<span class="cls-score">${correct}/${c.items.length} right${answered < c.items.length ? ` · ${c.items.length - answered} unanswered` : ''}</span>` : `<span class="cls-score">${answered}/${c.items.length} chosen</span>`}
+      </div></div>`;
+  }
+
+  function quizHTML(l) {
+    const ans = S.quiz[l.id] || {};
+    const n = l.quiz.length;
+    const qs = l.quiz.map((q, qi) => {
+      const chosen = ans[qi];
+      const answered = chosen !== undefined;
+      const opts = q.o.map((o, oi) => {
+        let cls = 'opt';
+        let flag = '';
+        if (answered) {
+          if (o[1]) { cls += ' is-correct'; flag = oi === chosen ? 'Your answer · correct' : 'Correct answer'; }
+          else if (oi === chosen) { cls += ' is-wrong'; flag = 'Your answer'; }
+        }
+        return `<li>
+          <button type="button" class="${cls}" data-action="answer" data-l="${l.id}" data-q="${qi}" data-o="${oi}"${answered ? ' aria-disabled="true"' : ''}>
+            <span class="opt-key" aria-hidden="true">${'ABCD'[oi]}</span><span class="opt-text">${o[0]}</span><span class="opt-flag">${flag}</span>
+          </button>
+          ${answered ? `<p class="why ${o[1] ? 'good' : 'bad'}"><b>${o[1] ? 'Why it’s right' : 'Why not'}</b>${o[2]}</p>` : ''}
+        </li>`;
+      }).join('');
+      return `<div class="q${answered ? ' answered' : ''}">
+        <p class="q-n">Question ${qi + 1} of ${n}</p>
+        <p class="q-text">${q.q}</p>
+        <ol class="opts" type="A">${opts}</ol>
+      </div>`;
+    }).join('');
+    const answeredCount = Object.keys(ans).length;
+    const correct = l.quiz.filter((q, qi) => ans[qi] !== undefined && q.o[ans[qi]][1]).length;
+    const pass = Math.max(1, n - 1);
+    let sum;
+    if (answeredCount < n) sum = `<p><b>${answeredCount}/${n}</b> answered. Pick an option to see why each choice is right or wrong.</p>`;
+    else if (correct >= pass) sum = `<p><b>${correct}/${n}</b> correct. Passed: lesson marked complete.</p>`;
+    else sum = `<p><b>${correct}/${n}</b> correct. Re-read the explanations above, then retry (pass mark ${pass}/${n}).</p>`;
+    return `<div class="quiz" id="quiz-${l.id}">${qs}
+      <div class="quiz-sum"><div aria-live="polite">${sum}</div>${answeredCount ? `<button type="button" class="btn btn-sm" data-action="quiz-retry" data-l="${l.id}">Retry quiz</button>` : ''}</div>
+    </div>`;
+  }
+
+  function tryitHTML(l) {
+    const t = l.tryit;
+    const draft = S.drafts[l.id] || '';
+    const revealed = !!S.revealed[l.id];
+    let widget = '';
+    if (t.widget && WIDGETS[t.widget]) widget = `<div data-widget="${t.widget}" data-l="${l.id}">${WIDGETS[t.widget].html(store)}</div>`;
+    if (t.classify) widget += classifyHTML(l);
+    const text = t.noText ? '' : `
+      <div>
+        <label class="sr-only" for="draft-${l.id}">Your answer</label>
+        <textarea class="draft" id="draft-${l.id}" data-l="${l.id}" placeholder="${esc(t.placeholder || 'Write your answer here. It is saved as you type.')}">${esc(draft)}</textarea>
+        <div class="draft-meta" id="draft-meta-${l.id}">${draft ? 'Draft saved' : 'Your draft is saved in this browser as you type.'}</div>
+      </div>`;
+    return `<div class="tryit">
+      <div class="prose">${t.prompt}</div>
+      ${widget}${text}
+      <div class="btnrow"><button type="button" class="btn btn-sm" data-action="reveal" data-l="${l.id}" aria-expanded="${revealed}" aria-controls="model-${l.id}">${revealed ? 'Hide model answer' : 'Reveal model answer'}</button></div>
+      <div class="model" id="model-${l.id}"${revealed ? '' : ' hidden'}><p class="callout-h">Model answer</p><div class="prose">${t.model}</div></div>
+    </div>`;
+  }
+
+  function lessonPage(l) {
+    const list = byTrack(l.track);
+    const idx = ORDER.indexOf(l);
+    const prev = ORDER[idx - 1];
+    const next = ORDER[idx + 1];
+    const done = S.completed.has(l.id);
+    return `<article class="page lesson">
+      <p class="eyebrow"><span>${TRACKS[l.track].name}</span><span class="dot"></span><span>Lesson ${l.n} of ${list.length}</span><span class="dot"></span><span>${l.minutes || 10} min</span>${done ? '<span class="dot"></span><span style="color:var(--good)">Completed</span>' : ''}</p>
+      <h1 tabindex="-1" id="page-title">${l.title}</h1>
+      ${l.sub ? `<p class="lead">${l.sub}</p>` : ''}
+      <div class="idea"><p class="section-label">The idea in one line</p><p>${l.idea}</p></div>
+
+      <section class="section" aria-labelledby="s-exp"><h2 class="section-label" id="s-exp">Explanation</h2><div class="prose">${l.body}</div></section>
+
+      <section class="section" aria-labelledby="s-ex"><h2 class="section-label" id="s-ex">Worked example</h2>
+        <div class="example"><span class="tag">${l.example.tag || 'B2B wealth-tech · AI platform'}</span><h3>${l.example.title}</h3><div class="prose">${l.example.html}</div></div>
+      </section>
+
+      <section class="section" aria-labelledby="s-mis"><h2 class="section-label" id="s-mis">Common mistakes new PMs make</h2>
+        <ul class="mistakes">${l.mistakes.map(m => `<li><span>${m}</span></li>`).join('')}</ul>
+      </section>
+
+      <section class="section" aria-labelledby="s-try"><h2 class="section-label" id="s-try">Try it</h2>${tryitHTML(l)}</section>
+
+      <section class="section" aria-labelledby="s-q"><h2 class="section-label" id="s-q">Quick check</h2>${quizHTML(l)}</section>
+
+      <footer class="lesson-foot">
+        <div class="btnrow">
+          <button type="button" class="btn complete-btn" data-action="complete" data-l="${l.id}" aria-pressed="${done}">${done ? '✓ Completed · click to undo' : 'Mark lesson complete'}</button>
+        </div>
+        <nav class="pager" aria-label="Lesson navigation">
+          ${prev ? `<a href="#${prev.id}" class="prev"><small>← Previous</small><span>${prev.title}</span></a>` : '<span></span>'}
+          ${next ? `<a href="#${next.id}" class="next"><small>Next →</small><span>${next.title}</span></a>` : `<a href="#simulator" class="next"><small>Next →</small><span>Sprint simulator</span></a>`}
+        </nav>
+      </footer>
+    </article>`;
+  }
+
+  /* ---------- Home ---------- */
+  function homePage() {
+    const resume = S.last && LMAP[S.last] ? LMAP[S.last] : ORDER.find(l => !S.completed.has(l.id)) || ORDER[0];
+    const trackCard = t => {
+      const st = trackStats(t);
+      return `<section class="track-card" aria-labelledby="tc-${t}">
+        <div class="track-top"><p class="eyebrow" style="margin:0">${TRACKS[t].label}</p><span>${st.done}/${st.total} done</span></div>
+        <h2 id="tc-${t}">${TRACKS[t].name}</h2>
+        <div class="meter"><i style="width:${st.total ? st.done / st.total * 100 : 0}%"></i></div>
+        <ol>${byTrack(t).map(l => `<li><a href="#${l.id}" class="${S.completed.has(l.id) ? 'done' : ''}"><span class="nav-num">${S.completed.has(l.id) ? '✓' : l.n}</span><span>${l.title}</span></a></li>`).join('')}</ol>
+      </section>`;
+    };
+    return `<div class="page wide">
+      <section class="hero">
+        <p class="eyebrow"><span>Field course</span><span class="dot"></span><span>${ORDER.length} lessons</span><span class="dot"></span><span>~3 hours</span></p>
+        <h1 tabindex="-1" id="page-title">PM &amp; Scrum Fundamentals</h1>
+        <p class="lead">How product management and Scrum work day to day, for an APM shipping AI features to wealth managers and partners. Every example comes from B2B wealth-tech: advisor workflows, compliance, AUM in ₹ crore, and models that sometimes get things wrong.</p>
+        <div class="btnrow" style="margin-top:22px">
+          ${resume ? `<a class="btn btn-primary" href="#${resume.id}">${S.completed.size ? 'Continue' : 'Start'}: ${resume.short || resume.title}</a>` : ''}
+          <a class="btn" href="#simulator">Try the Sprint simulator</a>
+        </div>
+      </section>
+      <div class="anatomy" aria-label="How each lesson is structured">
+        <div><b>Idea</b><span>The lesson in one line</span></div>
+        <div><b>Explain</b><span>Plain-English concept</span></div>
+        <div><b>Example</b><span>A wealth-tech AI case</span></div>
+        <div><b>Mistakes</b><span>Traps new PMs fall into</span></div>
+        <div><b>Try it</b><span>Exercise + model answer</span></div>
+        <div><b>Check</b><span>Quiz with explanations</span></div>
+      </div>
+      <div class="home-grid">${trackCard('pm')}${trackCard('scrum')}</div>
+      <div class="tools">
+        <a class="tool" href="#simulator">${IC.sim}<b>Sprint simulator</b><span>Run a 2-week Sprint and handle a mid-Sprint request from Sales.</span></a>
+        <a class="tool" href="#flashcards">${IC.cards}<b>Flashcards</b><span>Drill the key PM and Scrum terms.</span></a>
+        <a class="tool" href="#glossary">${IC.gloss}<b>Glossary</b><span>Searchable, with Scrum Guide terms flagged.</span></a>
+        <a class="tool" href="#cheatsheet">${IC.sheet}<b>Cheat sheet</b><span>Frameworks, templates and timeboxes on one printable page.</span></a>
+      </div>
+    </div>`;
+  }
+
+  /* ---------- Glossary ---------- */
+  const G = { q: '', f: 'all' };
+  function glossaryList() {
+    const q = G.q.trim().toLowerCase();
+    const items = GLOSSARY.filter(g => {
+      if (G.f === 'pm' && g.track !== 'pm') return false;
+      if (G.f === 'scrum' && g.track !== 'scrum') return false;
+      if (G.f === 'sg' && !g.sg) return false;
+      if (!q) return true;
+      return (g.term + ' ' + (g.aka || '') + ' ' + g.def).toLowerCase().includes(q);
+    }).sort((a, b) => a.term.localeCompare(b.term));
+    let html = '';
+    let letter = '';
+    items.forEach(g => {
+      const L = /[a-z]/i.test(g.term[0]) ? g.term[0].toUpperCase() : '#';
+      if (L !== letter) { letter = L; html += `<h2 class="gl-letter">${L}</h2>`; }
+      const lesson = g.lesson && LMAP[g.lesson];
+      html += `<div class="gl-item">
+        <div class="gl-term"><h3>${esc(g.term)}</h3>
+          <span class="badge ${g.track === 'pm' ? 'pm' : ''}">${g.track === 'pm' ? 'PM' : 'Scrum'}</span>
+          ${g.sg ? '<span class="badge sg">Scrum Guide term</span>' : ''}${g.np ? '<span class="badge np">Not in Scrum Guide</span>' : ''}
+        </div>
+        <p class="gl-def">${g.def}${lesson ? ` <a class="gl-link" href="#${lesson.id}">Lesson: ${lesson.short || lesson.title} →</a>` : ''}</p>
+      </div>`;
+    });
+    $('#gl-count').textContent = `${items.length} of ${GLOSSARY.length} terms`;
+    $('#gl-list').innerHTML = html || `<p class="empty">No terms match “${esc(G.q)}”. Try a shorter word, or clear the filter.</p>`;
+  }
+  function glossaryPage() {
+    const chip = (v, label) => `<button type="button" class="chip" data-action="gl-filter" data-v="${v}" aria-pressed="${G.f === v}">${label}</button>`;
+    return `<div class="page">
+      <p class="eyebrow"><span>Reference</span></p>
+      <h1 tabindex="-1" id="page-title">Glossary</h1>
+      <p class="lead">PM and Scrum vocabulary in plain English. Terms defined by the official Scrum Guide are flagged, and so are popular practices the Guide doesn't mention.</p>
+      <div class="searchbar">
+        <label class="sr-only" for="gl-q">Search the glossary</label>
+        <input class="search" id="gl-q" type="search" placeholder="Search terms, e.g. velocity, RICE, increment" value="${esc(G.q)}" autocomplete="off">
+        <div class="chips">${chip('all', 'All')}${chip('pm', 'PM')}${chip('scrum', 'Scrum')}${chip('sg', 'Scrum Guide terms')}<span class="count" id="gl-count"></span></div>
+      </div>
+      <div id="gl-list"></div>
+    </div>`;
+  }
+
+  /* ---------- Flashcards ---------- */
+  const F = { f: store.get('fcFilter', 'all'), order: null, i: 0, flipped: false };
+  function fcDeck() {
+    let cards = GLOSSARY.filter(g => g.card);
+    if (F.f === 'pm') cards = cards.filter(c => c.track === 'pm');
+    if (F.f === 'scrum') cards = cards.filter(c => c.track === 'scrum');
+    if (F.f === 'learning') cards = cards.filter(c => !S.known.has(c.term));
+    if (F.order) {
+      const pos = new Map(F.order.map((t, i) => [t, i]));
+      cards = cards.slice().sort((a, b) => (pos.has(a.term) ? pos.get(a.term) : 1e6) - (pos.has(b.term) ? pos.get(b.term) : 1e6));
+    }
+    return cards;
+  }
+  function flashcardsInner() {
+    const deck = fcDeck();
+    const all = GLOSSARY.filter(g => g.card);
+    const knownCount = all.filter(c => S.known.has(c.term)).length;
+    if (!deck.length) {
+      return `<div class="empty"><p>${F.f === 'learning' ? 'You know every card in the deck. Nice work.' : 'No cards in this deck.'}</p><button type="button" class="btn" data-action="fc-filter" data-v="all">Show all cards</button></div>`;
+    }
+    if (F.i >= deck.length) F.i = 0;
+    const c = deck[F.i];
+    const isKnown = S.known.has(c.term);
+    return `<div class="fc-stage">
+        <button type="button" class="fc${F.flipped ? ' flipped' : ''}" id="fc-card" data-action="fc-flip" aria-label="${F.flipped ? 'Definition shown. Press to show the term' : 'Term shown. Press to reveal the definition'}">
+          <span class="fc-inner">
+            <span class="fc-face fc-front" aria-hidden="${F.flipped}">
+              ${isKnown ? '<span class="badge sg fc-known">Known</span>' : ''}
+              <span class="badge ${c.track === 'pm' ? 'pm' : ''}">${c.track === 'pm' ? 'PM' : 'Scrum'}${c.sg ? ' · Scrum Guide' : ''}${c.np ? ' · not in Guide' : ''}</span>
+              <span class="fc-term">${esc(c.term)}</span>
+              <span class="fc-hint">Tap or press space to flip</span>
+            </span>
+            <span class="fc-face fc-back" aria-hidden="${!F.flipped}">
+              <span class="fc-hint">${esc(c.term)}</span>
+              <span class="fc-def">${c.def}</span>
+            </span>
+          </span>
+        </button>
+      </div>
+      <div class="fc-bar">
+        <span class="fc-pos">Card ${F.i + 1} / ${deck.length} · ${knownCount}/${all.length} known</span>
+        <div class="btnrow">
+          <button type="button" class="btn btn-sm" data-action="fc-prev" aria-label="Previous card">←</button>
+          <button type="button" class="btn btn-sm" data-action="fc-again">Still learning</button>
+          <button type="button" class="btn btn-sm btn-primary" data-action="fc-know">${isKnown ? 'Known ✓ · next' : 'I know this'}</button>
+          <button type="button" class="btn btn-sm" data-action="fc-next" aria-label="Next card">→</button>
+        </div>
+      </div>`;
+  }
+  function flashcardsPage() {
+    const chip = (v, label) => `<button type="button" class="chip" data-action="fc-filter" data-v="${v}" aria-pressed="${F.f === v}">${label}</button>`;
+    return `<div class="page">
+      <p class="eyebrow"><span>Practice</span></p>
+      <h1 tabindex="-1" id="page-title">Flashcards</h1>
+      <p class="lead">Say the definition out loud, then flip to check. Cards you mark “I know this” drop out of the “Still learning” deck.</p>
+      <div class="fc-wrap">
+        <div class="chips">${chip('all', 'All cards')}${chip('pm', 'PM')}${chip('scrum', 'Scrum')}${chip('learning', 'Still learning')}
+          <button type="button" class="chip" data-action="fc-shuffle">Shuffle</button>
+          <button type="button" class="chip" data-action="fc-unknow">Reset known</button></div>
+        <div id="fc-body">${flashcardsInner()}</div>
+        <p class="fc-hint" style="text-align:center">Keyboard: <span class="kbd">Space</span> flip · <span class="kbd">←</span> <span class="kbd">→</span> move · <span class="kbd">K</span> know it · <span class="kbd">L</span> still learning</p>
+      </div>
+    </div>`;
+  }
+  function fcRefresh() { const b = $('#fc-body'); if (b) b.innerHTML = flashcardsInner(); renderNav('flashcards'); }
+
+  /* ---------- Sprint simulator ---------- */
+  const METERS = [['goal', 'Sprint Goal'], ['trust', 'Stakeholder trust'], ['team', 'Team health']];
+  const clamp = v => Math.max(0, Math.min(100, v));
+  function simNew() { return { i: 0, picks: [], m: { goal: 60, trust: 60, team: 60 }, last: null }; }
+  function simState() { if (!S.sim || !Array.isArray(S.sim.picks)) S.sim = simNew(); return S.sim; }
+  function simMax() { return SIM.steps.reduce((a, s) => a + Math.max(...s.options.map(o => o.s)), 0); }
+  function simScore(st) { return st.picks.reduce((a, p, i) => a + (SIM.steps[i] ? SIM.steps[i].options[p].s : 0), 0); }
+  function gaugesHTML(st) {
+    return `<div class="gauges">${METERS.map(([k, label]) => {
+      const v = st.m[k];
+      const d = st.last && st.last[k] ? st.last[k] : 0;
+      const cls = v < 40 ? 'lo' : v < 65 ? 'mid' : '';
+      return `<div class="gauge"><div class="gauge-top"><span>${label}</span><b>${v}${d ? `<span class="delta ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : ''}${d}</span>` : ''}</b></div>
+        <div class="meter" role="meter" aria-label="${label}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${v}"><i class="${cls}" style="width:${v}%"></i></div></div>`;
+    }).join('')}</div>`;
+  }
+  function timelineHTML(day) {
+    return `<div class="timeline" aria-label="Sprint day ${day} of 10">${Array.from({ length: 10 }, (_, i) => {
+      const d = i + 1;
+      return `<div class="tl-day ${d < day ? 'past' : d === day ? 'now' : ''}"><i></i><span>D${d}</span></div>`;
+    }).join('')}</div>`;
+  }
+  function simInner() {
+    const st = simState();
+    const steps = SIM.steps;
+    if (!steps.length) return '<p class="empty">Simulator content is loading.</p>';
+    if (st.i >= steps.length) {
+      const score = simScore(st);
+      const pct = Math.round(score / simMax() * 100);
+      const rating = SIM.ratings.find(r => pct >= r.min);
+      return `${timelineHTML(11)}${gaugesHTML(st)}
+        <div class="scene">
+          <div class="scene-tag"><span class="badge sg">Sprint complete</span></div>
+          <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap"><span class="score-big">${pct}%</span><div><h2>${rating.title}</h2><p class="lead" style="margin-top:6px;font-size:1rem">${rating.text}</p></div></div>
+          <h3 style="font-size:1.05rem;margin-top:6px">Your decisions</h3>
+          <ol class="recap">${steps.map((s, i) => {
+            const o = s.options[st.picks[i]];
+            const best = s.options.reduce((a, b) => (b.s > a.s ? b : a));
+            return `<li><div class="r-top"><span>Day ${s.day} · ${s.phase}</span><span>${o.s}/${best.s}</span></div>
+              <b>${s.title}</b><span>You chose: ${o.t}</span>${o !== best ? `<span style="color:var(--good)">Strongest move: ${best.t}</span>` : ''}
+              ${s.lesson && LMAP[s.lesson] ? `<a href="#${s.lesson}" style="font-size:.82rem">Review: ${LMAP[s.lesson].short || LMAP[s.lesson].title} →</a>` : ''}</li>`;
+          }).join('')}</ol>
+          <div class="btnrow"><button type="button" class="btn btn-primary" data-action="sim-restart">Run the Sprint again</button><a class="btn" href="#cheatsheet">Open the cheat sheet</a></div>
+        </div>`;
+    }
+    const s = steps[st.i];
+    const pick = st.picks[st.i];
+    const answered = pick !== undefined;
+    const o = answered ? s.options[pick] : null;
+    const max = Math.max(...s.options.map(x => x.s));
+    const lvl = o ? (o.s >= max ? 's-hi' : o.s >= max / 2 ? 's-mid' : 's-lo') : '';
+    return `${timelineHTML(s.day)}${gaugesHTML(st)}
+      <div class="scene" id="scene">
+        <div class="scene-tag"><span class="badge">Decision ${st.i + 1} of ${steps.length}</span><span class="badge sg">Day ${s.day} · ${s.phase}</span></div>
+        <h2 tabindex="-1" id="scene-title">${s.title}</h2>
+        <div class="prose">${s.scene}</div>
+        <ol class="choices${answered ? ' locked' : ''}">${s.options.map((c, ci) => `<li><button type="button" class="choice${pick === ci ? ' picked' : ''}" data-action="sim-pick" data-o="${ci}"${answered ? ' aria-disabled="true"' : ''}><span class="opt-key">${'ABCD'[ci]}</span><span>${c.t}</span></button></li>`).join('')}</ol>
+        ${o ? `<div class="fb ${lvl}" id="sim-fb"><div class="fb-h"><span>${o.s >= max ? 'Strong move' : o.s >= max / 2 ? 'Partly right' : 'Risky move'}</span><span>+${o.s} of ${max} pts</span></div><p>${o.fb}</p>${o.ref ? `<p class="ref">${ICON_BOOK.replace('<svg', '<svg width="13" height="13" style="vertical-align:-2px;margin-right:4px"')}${o.ref}</p>` : ''}</div>
+          <div class="btnrow"><button type="button" class="btn btn-primary" data-action="sim-next">${st.i + 1 < steps.length ? 'Continue the Sprint →' : 'See how the Sprint went →'}</button></div>` : ''}
+      </div>`;
+  }
+  function simulatorPage() {
+    return `<div class="page">
+      <p class="eyebrow"><span>Practice</span><span class="dot"></span><span>${SIM.steps.length} decisions</span>${S.simBest != null ? `<span class="dot"></span><span>Best ${S.simBest}%</span>` : ''}</p>
+      <h1 tabindex="-1" id="page-title">${SIM.title || 'Sprint simulator'}</h1>
+      <div class="prose" style="margin-top:14px">${SIM.intro || ''}</div>
+      <div class="sim" id="sim-body">${simInner()}</div>
+      <p class="btnrow" style="margin-top:18px"><button type="button" class="linkbtn" data-action="sim-restart">Restart the simulator</button></p>
+    </div>`;
+  }
+  function simRefresh(focusSel) {
+    const b = $('#sim-body');
+    if (b) b.innerHTML = simInner();
+    if (focusSel) { const el = $(focusSel); if (el) { el.focus({ preventScroll: true }); el.scrollIntoView({ block: 'start', behavior: 'smooth' }); } }
+  }
+
+  /* ---------- Cheat sheet ---------- */
+  function cheatPage() {
+    return `<div class="page wide">
+      <div class="cheat-head">
+        <p class="eyebrow"><span>Reference</span><span class="dot"></span><span>Scrum content per the Scrum Guide (Nov 2020)</span></p>
+        <h1 tabindex="-1" id="page-title">Cheat sheet</h1>
+        <p class="lead">The whole course on one page.${inFrame ? ' To print it, open the file directly in your browser and press Ctrl/Cmd + P.' : ' Press Ctrl/Cmd + P or use the button to print it on one A4 sheet.'}</p>
+        ${inFrame ? '' : '<div class="btnrow no-print" style="margin-top:16px"><button type="button" class="btn btn-primary" data-action="print">Print cheat sheet</button></div>'}
+      </div>
+      <div class="cheat">${CHEAT}</div>
+    </div>`;
+  }
+
+  /* ---------- Router ---------- */
+  function route() {
+    const h = (location.hash || '').replace(/^#\/?/, '') || 'home';
+    return h;
+  }
+  function render() {
+    const r = route();
+    const main = $('#main');
+    let html;
+    if (LMAP[r]) { html = lessonPage(LMAP[r]); S.last = r; persist('last'); }
+    else if (r === 'glossary') html = glossaryPage();
+    else if (r === 'flashcards') html = flashcardsPage();
+    else if (r === 'simulator') html = simulatorPage();
+    else if (r === 'cheatsheet') html = cheatPage();
+    else html = homePage();
+    main.innerHTML = html;
+    if (r === 'glossary') glossaryList();
+    $$('[data-widget]', main).forEach(el => { const w = WIDGETS[el.dataset.widget]; if (w && w.mount) w.mount(el, store); });
+    renderNav(LMAP[r] || ['glossary', 'flashcards', 'simulator', 'cheatsheet'].includes(r) ? r : 'home');
+    const t = LMAP[r] ? (LMAP[r].title + ' · ') : r !== 'home' && ['glossary', 'flashcards', 'simulator', 'cheatsheet'].includes(r) ? ({ glossary: 'Glossary', flashcards: 'Flashcards', simulator: 'Sprint simulator', cheatsheet: 'Cheat sheet' }[r] + ' · ') : '';
+    document.title = t + 'PM & Scrum Fundamentals';
+  }
+  function navigate() {
+    closeMenu();
+    render();
+    window.scrollTo(0, 0);
+    const h = $('#page-title');
+    if (h) h.focus({ preventScroll: true });
+  }
+
+  /* ---------- Menu (mobile drawer) ---------- */
+  function openMenu() { $('#sidebar').classList.add('open'); $('.scrim').classList.add('open'); $('[data-action="menu"]').setAttribute('aria-expanded', 'true'); const a = $('#sidebar a[aria-current="page"]') || $('#sidebar a'); if (a) a.focus(); }
+  function closeMenu() { const sb = $('#sidebar'); if (!sb.classList.contains('open')) return; sb.classList.remove('open'); $('.scrim').classList.remove('open'); $('[data-action="menu"]').setAttribute('aria-expanded', 'false'); }
+
+  /* ---------- Actions ---------- */
+  function setComplete(id, on) {
+    if (on) S.completed.add(id); else S.completed.delete(id);
+    persist('completed');
+  }
+  let resetArmed = null;
+  const actions = {
+    menu: () => openMenu(),
+    'close-menu': () => closeMenu(),
+    theme: el => { S.theme = el.dataset.v; persist('theme'); applyTheme(); renderNav(route()); },
+    reset: el => {
+      if (!resetArmed) {
+        el.textContent = 'Click again to erase all progress';
+        el.classList.add('armed');
+        resetArmed = setTimeout(() => { resetArmed = null; el.textContent = 'Reset all progress'; el.classList.remove('armed'); }, 4000);
+        return;
+      }
+      clearTimeout(resetArmed); resetArmed = null;
+      const theme = S.theme;
+      store.reset();
+      S.completed = new Set(); S.quiz = {}; S.drafts = {}; S.revealed = {}; S.cls = {}; S.known = new Set(); S.sim = null; S.simBest = null; S.last = null;
+      S.theme = theme; persist('theme');
+      F.order = null; F.i = 0; F.flipped = false;
+      render();
+      live('All progress erased.');
+    },
+    answer: el => {
+      const { l, q, o } = el.dataset;
+      const lesson = LMAP[l];
+      S.quiz[l] = S.quiz[l] || {};
+      if (S.quiz[l][q] !== undefined) return;
+      S.quiz[l][q] = +o;
+      persist('quiz');
+      const ok = lesson.quiz[q].o[o][1];
+      const ans = S.quiz[l];
+      const n = lesson.quiz.length;
+      if (Object.keys(ans).length === n) {
+        const correct = lesson.quiz.filter((qq, qi) => qq.o[ans[qi]][1]).length;
+        if (correct >= Math.max(1, n - 1) && !S.completed.has(l)) { setComplete(l, true); }
+      }
+      const box = $('#quiz-' + l);
+      box.outerHTML = quizHTML(lesson);
+      const btn = $(`#quiz-${l} [data-q="${q}"][data-o="${o}"]`);
+      if (btn) btn.focus({ preventScroll: true });
+      syncLessonChrome(lesson);
+      live(ok ? 'Correct.' : 'Not quite. The explanation is shown under each option.');
+    },
+    'quiz-retry': el => {
+      const l = el.dataset.l;
+      delete S.quiz[l]; persist('quiz');
+      const box = $('#quiz-' + l);
+      box.outerHTML = quizHTML(LMAP[l]);
+      const first = $(`#quiz-${l} .opt`);
+      if (first) first.focus();
+    },
+    complete: el => {
+      const l = el.dataset.l;
+      setComplete(l, !S.completed.has(l));
+      syncLessonChrome(LMAP[l]);
+      live(S.completed.has(l) ? 'Lesson marked complete.' : 'Lesson marked not complete.');
+    },
+    reveal: el => {
+      const l = el.dataset.l;
+      S.revealed[l] = !S.revealed[l]; persist('revealed');
+      const m = $('#model-' + l);
+      m.hidden = !S.revealed[l];
+      el.textContent = S.revealed[l] ? 'Hide model answer' : 'Reveal model answer';
+      el.setAttribute('aria-expanded', String(!!S.revealed[l]));
+    },
+    'cls-pick': el => {
+      const { l, i, b } = el.dataset;
+      const st = S.cls[l] || { picks: {}, checked: false };
+      st.picks[i] = +b; st.checked = false;
+      S.cls[l] = st; persist('cls');
+      $('#cls-' + l).outerHTML = classifyHTML(LMAP[l]);
+      const again = $(`#cls-${l} [data-i="${i}"][data-b="${b}"]`); if (again) again.focus({ preventScroll: true });
+    },
+    'cls-check': el => {
+      const l = el.dataset.l;
+      const st = S.cls[l] || { picks: {}, checked: false };
+      st.checked = true; S.cls[l] = st; persist('cls');
+      $('#cls-' + l).outerHTML = classifyHTML(LMAP[l]);
+      const c = LMAP[l].tryit.classify;
+      const correct = c.items.filter((it, i) => st.picks[i] === it[1]).length;
+      live(`${correct} of ${c.items.length} right.`);
+    },
+    'cls-reset': el => {
+      const l = el.dataset.l;
+      delete S.cls[l]; persist('cls');
+      $('#cls-' + l).outerHTML = classifyHTML(LMAP[l]);
+    },
+    'gl-filter': el => { G.f = el.dataset.v; $$('[data-action="gl-filter"]').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === G.f))); glossaryList(); },
+    'fc-flip': () => {
+      const c = $('#fc-card'); if (!c) return;
+      F.flipped = !F.flipped;
+      c.classList.toggle('flipped', F.flipped);
+      c.setAttribute('aria-label', F.flipped ? 'Definition shown. Press to show the term' : 'Term shown. Press to reveal the definition');
+      $('.fc-front', c).setAttribute('aria-hidden', String(F.flipped));
+      $('.fc-back', c).setAttribute('aria-hidden', String(!F.flipped));
+      live(F.flipped ? $('.fc-def', c).textContent : $('.fc-term', c).textContent);
+    },
+    'fc-next': () => { const n = fcDeck().length; if (!n) return; F.i = (F.i + 1) % n; F.flipped = false; fcRefresh(); },
+    'fc-prev': () => { const n = fcDeck().length; if (!n) return; F.i = (F.i - 1 + n) % n; F.flipped = false; fcRefresh(); },
+    'fc-know': () => {
+      const deck = fcDeck(); if (!deck.length) return;
+      S.known.add(deck[F.i].term); persist('known');
+      F.flipped = false;
+      if (F.f !== 'learning') F.i = (F.i + 1) % deck.length;
+      fcRefresh(); live('Marked as known.');
+    },
+    'fc-again': () => {
+      const deck = fcDeck(); if (!deck.length) return;
+      S.known.delete(deck[F.i].term); persist('known');
+      F.flipped = false; F.i = (F.i + 1) % deck.length;
+      fcRefresh();
+    },
+    'fc-filter': el => { F.f = el.dataset.v; store.set('fcFilter', F.f); F.i = 0; F.flipped = false; $$('[data-action="fc-filter"]').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === F.f))); fcRefresh(); },
+    'fc-shuffle': () => {
+      const terms = GLOSSARY.filter(g => g.card).map(g => g.term);
+      for (let i = terms.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [terms[i], terms[j]] = [terms[j], terms[i]]; }
+      F.order = terms; F.i = 0; F.flipped = false; fcRefresh(); live('Deck shuffled.');
+    },
+    'fc-unknow': () => { S.known = new Set(); persist('known'); F.i = 0; F.flipped = false; fcRefresh(); live('All cards reset to still learning.'); },
+    'sim-pick': el => {
+      const st = simState();
+      if (st.picks[st.i] !== undefined) return;
+      const o = SIM.steps[st.i].options[+el.dataset.o];
+      st.picks[st.i] = +el.dataset.o;
+      const fx = o.fx || {};
+      st.last = {};
+      METERS.forEach(([k]) => { const before = st.m[k]; st.m[k] = clamp(before + (fx[k] || 0)); st.last[k] = st.m[k] - before; });
+      persist('sim');
+      simRefresh('#sim-fb');
+    },
+    'sim-next': () => {
+      const st = simState();
+      st.i += 1; st.last = null;
+      if (st.i >= SIM.steps.length) {
+        const pct = Math.round(simScore(st) / simMax() * 100);
+        if (S.simBest == null || pct > S.simBest) { S.simBest = pct; persist('simBest'); }
+        renderNav('simulator');
+      }
+      persist('sim');
+      simRefresh(st.i < SIM.steps.length ? '#scene-title' : '.scene');
+    },
+    'sim-restart': () => { S.sim = simNew(); persist('sim'); simRefresh('#scene-title'); },
+    print: () => { try { window.print(); } catch (e) { /* print unavailable */ } }
+  };
+  function syncLessonChrome(lesson) {
+    const done = S.completed.has(lesson.id);
+    const b = $('.complete-btn');
+    if (b) { b.setAttribute('aria-pressed', String(done)); b.textContent = done ? '✓ Completed · click to undo' : 'Mark lesson complete'; }
+    renderNav(lesson.id);
+  }
+
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-action]');
+    if (!el || el.getAttribute('aria-disabled') === 'true' || el.disabled) return;
+    const fn = actions[el.dataset.action];
+    if (fn) { e.preventDefault(); fn(el); }
+  });
+  let draftTimer = null;
+  document.addEventListener('input', e => {
+    const t = e.target;
+    if (t.id === 'gl-q') { G.q = t.value; glossaryList(); return; }
+    if (t.classList.contains('draft')) {
+      const l = t.dataset.l;
+      clearTimeout(draftTimer);
+      draftTimer = setTimeout(() => {
+        S.drafts[l] = t.value; persist('drafts');
+        const m = $('#draft-meta-' + l); if (m) m.textContent = store.available ? 'Draft saved' : 'Draft kept for this session (storage is blocked)';
+      }, 350);
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
+    if (route() !== 'flashcards') return;
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+    const onButton = tag === 'button' && e.target.id !== 'fc-card';
+    if (e.key === ' ' && !onButton) { e.preventDefault(); actions['fc-flip'](); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); actions['fc-next'](); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); actions['fc-prev'](); }
+    else if (e.key.toLowerCase() === 'k') actions['fc-know']();
+    else if (e.key.toLowerCase() === 'l') actions['fc-again']();
+  });
+  window.addEventListener('hashchange', navigate);
+  window.addEventListener('resize', () => { if (window.innerWidth > 900) closeMenu(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
