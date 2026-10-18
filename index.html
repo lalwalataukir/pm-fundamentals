@@ -139,7 +139,7 @@ h1{font-size:var(--t-xl);font-weight:750}
 .section-label::after{content:"";flex:1;height:1px;background:var(--line)}
 
 .idea{margin-top:28px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.idea p{margin:0;font-family:var(--f-display);font-weight:500;font-size:clamp(1.3rem,2.6vw,1.6rem);line-height:1.3;letter-spacing:-.01em;text-wrap:balance}
+.idea p:not(.section-label){margin:0;font-family:var(--f-display);font-weight:500;font-size:clamp(1.3rem,2.6vw,1.6rem);line-height:1.3;letter-spacing:-.01em;text-wrap:balance}
 
 .example{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px clamp(16px,3vw,28px)}
 .example>h3:first-child{margin-top:0;font-size:1.15rem}
@@ -329,7 +329,7 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
 .fc-wrap{display:grid;gap:18px;margin-top:26px}
 .fc-stage{perspective:1400px}
 .fc{position:relative;width:100%;min-height:300px;border:0;padding:0;background:none;cursor:pointer;text-align:center;display:block}
-.fc-inner{position:relative;width:100%;min-height:300px;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.fc-inner{display:block;position:relative;width:100%;min-height:300px;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
 .fc.flipped .fc-inner{transform:rotateY(180deg)}
 .fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);display:grid;align-content:center;justify-items:center;gap:14px;padding:28px clamp(18px,5vw,48px)}
 .fc-back{transform:rotateY(180deg);background:var(--surface)}
@@ -404,12 +404,13 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
   .app{display:block}
   main{padding:0!important}
   .page{max-width:none;padding:0}
-  .cheat{grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
-  .cheat section{padding:6px 8px;border-radius:4px}
-  .cheat h2{font-size:9.5pt;margin-bottom:3px}
-  .cheat p,.cheat li{font-size:7.4pt;line-height:1.3;margin-bottom:1px}
-  .cheat table{font-size:7pt} .cheat th,.cheat td{padding:2px 4px}
-  .cheat-head h1{font-size:15pt} .cheat-head .lead{font-size:8pt;margin-top:2px}
+  .cheat{grid-template-columns:repeat(3,1fr);gap:5px;margin-top:5px}
+  .cheat section{padding:5px 7px;border-radius:4px}
+  .cheat h2{font-size:8.5pt;margin-bottom:2px}
+  .cheat p,.cheat li{font-size:6.7pt;line-height:1.28;margin-bottom:1px}
+  .cheat ul{padding-left:.9em}
+  .cheat table{font-size:6.5pt} .cheat th,.cheat td{padding:1.5px 4px} .cheat th{font-size:6pt}
+  .cheat-head h1{font-size:15pt} .cheat-head .lead{display:none}
   .cheat-head .eyebrow{display:none}
 }
 </style>
@@ -2941,7 +2942,7 @@ CHEAT = `
       <section class="hero">
         <p class="eyebrow"><span>Field course</span><span class="dot"></span><span>${ORDER.length} lessons</span><span class="dot"></span><span>~3 hours</span></p>
         <h1 tabindex="-1" id="page-title">PM &amp; Scrum Fundamentals</h1>
-        <p class="lead">How product management and Scrum work day to day, for an APM shipping AI features to wealth managers and partners. Every example comes from B2B wealth-tech: advisor workflows, compliance, AUM in ₹ crore, and models that sometimes get things wrong.</p>
+        <p class="lead">How product management and Scrum work day to day, for an APM shipping AI features to wealth managers and partners. Every example comes from B2B wealth-tech: advisor workflows, compliance, AUM in ₹&nbsp;crore, and models that sometimes get things wrong.</p>
         <div class="btnrow" style="margin-top:22px">
           ${resume ? `<a class="btn btn-primary" href="#${resume.id}">${S.completed.size ? 'Continue' : 'Start'}: ${resume.short || resume.title}</a>` : ''}
           <a class="btn" href="#simulator">Try the Sprint simulator</a>
