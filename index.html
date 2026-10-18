@@ -397,8 +397,9 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
 @media (max-width:760px){.cheat{grid-template-columns:minmax(0,1fr)}}
 
 @media print{
-  html:root:not(#_){--bg:#fff;--surface:#fff;--surface-2:#f1f3f3;--ink:#000;--muted:#444;--line:#bbb;--accent:#0C6A63;--accent-soft:#e8f3f1;--guide-soft:#eef2f9;--practice-soft:#f8f2e6;--good-soft:#eef7f1;--bad-soft:#fbeeec;--gold-soft:#f8f1e1;color-scheme:light}
-  @page{size:A4;margin:9mm}
+  html:root:not(#_){--bg:#fff;--surface:#fff;--surface-2:#f1f3f3;--ink:#000;--muted:#444;--line:#bbb;--accent:#0C6A63;--accent-soft:#e8f3f1;--guide-soft:#eef2f9;--practice-soft:#f8f2e6;--good-soft:#eef7f1;--bad-soft:#fbeeec;--gold-soft:#f8f1e1;color-scheme:light;
+    --f-display:Arial,"Liberation Sans",Helvetica,sans-serif;--f-body:Arial,"Liberation Sans",Helvetica,sans-serif;--f-ui:Arial,"Liberation Sans",Helvetica,sans-serif;--f-mono:"Courier New","Liberation Mono",monospace}
+  @page{size:A4;margin:7mm}
   body{font-size:9pt;background:#fff}
   .topbar,.sidebar,.scrim,.no-print,.lesson-foot,.searchbar{display:none!important}
   .app{display:block}
@@ -406,10 +407,10 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
   .page{max-width:none;padding:0}
   .cheat{grid-template-columns:repeat(3,1fr);gap:5px;margin-top:5px}
   .cheat section{padding:5px 7px;border-radius:4px}
-  .cheat h2{font-size:8.5pt;margin-bottom:2px}
-  .cheat p,.cheat li{font-size:6.7pt;line-height:1.28;margin-bottom:1px}
+  .cheat h2{font-size:8pt;margin-bottom:2px}
+  .cheat p,.cheat li{font-size:6.4pt;line-height:1.25;margin-bottom:1px}
   .cheat ul{padding-left:.9em}
-  .cheat table{font-size:6.5pt} .cheat th,.cheat td{padding:1.5px 4px} .cheat th{font-size:6pt}
+  .cheat table{font-size:6.2pt} .cheat th,.cheat td{padding:1px 4px} .cheat th{font-size:5.8pt}
   .cheat-head h1{font-size:15pt} .cheat-head .lead{display:none}
   .cheat-head .eyebrow{display:none}
 }
