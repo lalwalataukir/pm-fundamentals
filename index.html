@@ -1084,6 +1084,526 @@ ${tip('<p>For AI features, add a <strong>golden set</strong>: 30–50 real (mask
 });
 </script>
 
+<script>
+/* ================= Module 3 · PM lessons 6–10 ================= */
+DIAG.metricTree = `<svg viewBox="0 0 690 300" role="img" aria-labelledby="mt-t"><title id="mt-t">Metric tree: one North Star metric driven by four input metrics, with guardrails underneath.</title>
+  <rect x="145" y="14" width="400" height="64" rx="10" class="d-soft"/>
+  <text x="345" y="38" text-anchor="middle" class="t-mono t-acc">NORTH STAR</text>
+  <text x="345" y="60" text-anchor="middle" class="t-md b">Client reviews prepared with the brief / week</text>
+  <path d="M345 78 V100 M89 100 H601 M89 100 V120 M259 100 V120 M429 100 V120 M599 100 V120" class="d-line"/>
+  <g>
+    <rect x="12" y="120" width="155" height="76" rx="8" class="d-surface"/>
+    <text x="89" y="146" text-anchor="middle" class="t-sm b">Advisors</text><text x="89" y="162" text-anchor="middle" class="t-sm b">activated</text><text x="89" y="182" text-anchor="middle" class="t-mono t-muted">BREADTH</text>
+    <rect x="182" y="120" width="155" height="76" rx="8" class="d-surface"/>
+    <text x="259" y="146" text-anchor="middle" class="t-sm b">Briefs per</text><text x="259" y="162" text-anchor="middle" class="t-sm b">active advisor</text><text x="259" y="182" text-anchor="middle" class="t-mono t-muted">FREQUENCY</text>
+    <rect x="352" y="120" width="155" height="76" rx="8" class="d-surface"/>
+    <text x="429" y="146" text-anchor="middle" class="t-sm b">Briefs used with</text><text x="429" y="162" text-anchor="middle" class="t-sm b">light edits</text><text x="429" y="182" text-anchor="middle" class="t-mono t-muted">QUALITY</text>
+    <rect x="522" y="120" width="155" height="76" rx="8" class="d-surface"/>
+    <text x="599" y="146" text-anchor="middle" class="t-sm b">Days from contract</text><text x="599" y="162" text-anchor="middle" class="t-sm b">to first brief</text><text x="599" y="182" text-anchor="middle" class="t-mono t-muted">TIME-TO-VALUE</text>
+  </g>
+  <rect x="12" y="222" width="665" height="64" rx="8" class="d-bad" fill-opacity=".6"/>
+  <text x="30" y="246" class="t-mono t-bad">GUARDRAILS · MUST NOT GET WORSE</text>
+  <text x="30" y="268" class="t-sm">Numeric errors = 0 · compliance flags · p95 latency ≤ 10 s · LLM cost ≤ ₹4 per brief</text>
+</svg>`;
+
+DIAG.funnel = `<svg viewBox="0 0 640 300" role="img" aria-labelledby="fn-t"><title id="fn-t">Advisor activation funnel from 900 licensed advisors to 105 weekly active at day 60.</title>
+  <text x="632" y="12" text-anchor="end" class="t-mono t-muted">STEP CONV.</text>
+  ${[['Licensed advisors', 900, ''], ['Logged in', 610, '68%'], ['Imported client data', 420, '69%'], ['Generated first brief', 260, '62%'], ['Activated (3+ briefs)', 150, '58%'], ['Active at day 60', 105, '70%']].map((r, i) => {
+    const y = 24 + i * 44, w = r[1] / 900 * 360, worst = i === 4;
+    return `<text x="10" y="${y + 22}" class="t-sm${worst ? ' b' : ''}">${r[0]}</text>
+    <rect x="200" y="${y}" width="${w.toFixed(1)}" height="32" rx="4" class="${worst ? 'd-fill-gold' : 'd-fill-acc'}" fill-opacity="${worst ? 1 : 0.85 - i * 0.08}"/>
+    <text x="${(208 + w).toFixed(1)}" y="${y + 21}" class="t-sm b">${r[1]}</text>
+    <text x="632" y="${y + 21}" text-anchor="end" class="t-mono ${worst ? 't-gold' : 't-muted'}" style="font-size:12px">${r[2] || '—'}</text>`;
+  }).join('')}
+</svg>`;
+
+DIAG.nnl = `<svg viewBox="0 0 680 280" role="img" aria-labelledby="nnl-t"><title id="nnl-t">Now, Next, Later roadmap with outcomes in each column and confidence falling to the right.</title>
+  ${[['NOW', 'committed · high confidence', 10, 'd-soft'], ['NEXT', 'shaped · medium confidence', 235, 'd-surface'], ['LATER', 'problems to explore · low confidence', 460, 'd-surface']].map(c => `
+    <rect x="${c[2]}" y="10" width="210" height="260" rx="12" class="${c[3]}" ${c[0] === 'NOW' ? 'fill-opacity=".55"' : ''}/>
+    <text x="${c[2] + 16}" y="38" class="t-lg">${c[0]}</text>
+    <text x="${c[2] + 16}" y="56" class="t-xs t-muted">${c[1]}</text>`).join('')}
+  ${[[10, 76, 'Review prep under', '15 minutes', 'metric: median prep time'], [10, 152, 'Enterprise firms pass', 'infosec review', 'metric: 2 blocked deals live'],
+     [235, 76, 'Failed SIPs actioned', 'within 48 hours', 'metric: 80% within 48 h'],
+     [460, 76, 'Advisors serve clients', 'in their language', 'needs discovery'], [460, 152, 'Clients see progress', 'toward their goals', 'needs discovery']].map(k => `
+    <rect x="${k[0] + 10}" y="${k[1]}" width="190" height="64" rx="8" class="d-surface"${k[0] === 460 ? ' stroke-dasharray="5 4"' : ''}/>
+    <text x="${k[0] + 22}" y="${k[1] + 22}" class="t-sm b">${k[2]}</text>
+    <text x="${k[0] + 22}" y="${k[1] + 38}" class="t-sm b">${k[3]}</text>
+    <text x="${k[0] + 22}" y="${k[1] + 55}" class="t-xs t-muted">${k[4]}</text>`).join('')}
+</svg>`;
+
+DIAG.rollout = `<svg viewBox="0 0 640 285" role="img" aria-labelledby="ro-t"><title id="ro-t">Staged rollout: internal, three pilot firms, 25 percent of firms, then all firms, with exit criteria checked at each step.</title>
+  <path d="M60 240 H612" class="d-line"/><path d="M60 240 V24" class="d-line"/>
+  <path d="M60 187.5 H612 M60 30 H612" class="d-grid" stroke-dasharray="3 4"/>
+  <text x="52" y="244" text-anchor="end" class="t-xs t-muted">0%</text><text x="52" y="191" text-anchor="end" class="t-xs t-muted">25%</text><text x="52" y="34" text-anchor="end" class="t-xs t-muted">100%</text>
+  <path d="M60 238 H138.6 V229.5 H295.7 V187.5 H452.9 V30 H610" class="d-acc"/>
+  <circle cx="138.6" cy="229.5" r="5" class="d-fill-gold"/><circle cx="295.7" cy="187.5" r="5" class="d-fill-gold"/><circle cx="452.9" cy="30" r="5" class="d-fill-gold"/>
+  <text x="99" y="224" text-anchor="middle" class="t-xs b">Internal</text>
+  <text x="217" y="216" text-anchor="middle" class="t-xs b">3 pilot firms</text>
+  <text x="374" y="176" text-anchor="middle" class="t-xs b">25% of firms</text>
+  <text x="531" y="22" text-anchor="middle" class="t-xs b">All firms (GA)</text>
+  ${[[60, 'wk 0'], [138.6, 'wk 1'], [295.7, 'wk 3'], [452.9, 'wk 5'], [610, 'wk 7']].map(t => `<text x="${t[0]}" y="258" text-anchor="middle" class="t-xs t-muted">${t[1]}</text>`).join('')}
+  <circle cx="380" cy="276" r="4" class="d-fill-gold"/><text x="390" y="280" class="t-xs t-muted">gate: exit criteria checked before widening</text>
+</svg>`;
+
+LESSONS.push({
+  id: 'pm-6', track: 'pm', n: 6, minutes: 14,
+  title: 'Metrics that matter', short: 'Metrics',
+  sub: 'North Star, input vs output, leading vs lagging, funnels, activation and retention, and the metrics B2B companies actually run on.',
+  idea: 'Pick one North Star that captures the value users get. Then manage the input metrics you can actually move, and watch guardrails so you don’t win by breaking something.',
+  body: `
+<h3>North Star metric</h3>
+<p>A North Star is the one metric that best captures <strong>the value customers get</strong> from the product and that predicts long-term business success. A good North Star reflects user value, leads revenue rather than lagging it, and is something the team can influence. It is not revenue itself. Revenue is the result of delivering that value.</p>
+<h3>Input vs output metrics</h3>
+<p><strong>Output metrics</strong> are the results you ultimately care about: ARR, net revenue retention, AUM on the platform. They move slowly and many teams influence them. <strong>Input metrics</strong> are the drivers your team can move this month: activation, frequency, quality. Set team goals on inputs and confirm with outputs.</p>
+${fig(DIAG.metricTree, 'A metric tree: the North Star breaks into inputs the team can move, with guardrails underneath.')}
+<h3>Leading vs lagging</h3>
+<p><strong>Leading</strong> indicators predict the future: 14-day activation rate, weekly active advisors, time-to-first-value. <strong>Lagging</strong> indicators confirm what already happened: renewals, logo churn, NRR. If your only goals are lagging, you find out a strategy failed two quarters too late.</p>
+<h3>Funnels, activation and retention</h3>
+<p>A funnel is a sequence of steps with a conversion rate at each one. <strong>Activation</strong> is the moment a user first gets real value, defined as a behavior. For example: “generated and opened at least 3 briefs within 14 days”. <strong>Retention</strong> is measured by cohort: of the advisors who activated in March, what percentage are still active in week 8? A healthy retention curve flattens. One that keeps falling means people try the product and leave.</p>
+${fig(DIAG.funnel, 'Illustrative advisor funnel. The biggest absolute leak is at login, but the worst conversion (58%) is from first brief to activation, which is closest to the value and squarely in the product team’s control.')}
+<h3>B2B metrics you’ll hear every week</h3>
+${table(['Metric', 'What it tells you'], [
+  ['Seat activation rate', 'Share of licensed seats that reached activation. Paid-for but unused seats are churn waiting to happen.'],
+  ['Weekly active advisors ÷ licensed seats', 'Depth of adoption inside each firm'],
+  ['Time-to-value', 'Days from contract signature to the firm’s first real outcome, such as the first brief'],
+  ['Logo churn vs revenue churn', 'How many firms leave vs how much ARR leaves. Losing one big firm can matter more than five small ones.'],
+  ['Net revenue retention (NRR)', 'Whether existing customers grow or shrink over time, including expansion'],
+  ['AI quality and cost', 'Acceptance or edit rate, error reports per 1,000 outputs, cost per output, p95 latency']
+])}
+<p class="formula">NRR = (Starting ARR + Expansion − Contraction − Churned ARR) ÷ Starting ARR</p>
+<p>Example: start at ₹10 Cr, add ₹1.5 Cr expansion, lose ₹0.4 Cr to contraction and ₹0.8 Cr to churn. NRR = 10.3 ÷ 10 = <strong>103%</strong>.</p>
+${tip('<p>Choose the metric’s time window to match the product’s natural cadence. Advisors prepare reviews weekly or around meetings, not daily, so a daily-active metric would label healthy weekly use as failure.</p>')}`,
+  example: {
+    title: 'Metrics for the AI meeting-prep brief',
+    html: `
+<p><strong>North Star:</strong> client reviews prepared with the brief per week, across all firms. It grows when more advisors adopt the brief (breadth) and when they use it for more of their reviews (depth). It counts value delivered, not clicks.</p>
+<p><strong>Inputs the team owns:</strong></p>
+<ul><li>Advisors activated (3+ briefs in their first 14 days)</li><li>Briefs per active advisor per week</li><li>Share of briefs used with light edits (a quality signal)</li><li>Days from contract signature to a firm’s first brief</li></ul>
+<p><strong>Guardrails:</strong> numeric error reports (target: zero), compliance flags, p95 latency ≤ 10 s, LLM cost ≤ ₹4 per brief.</p>
+<p><strong>Lagging business outcomes:</strong> renewal rate and seat expansion at pilot firms over the following two quarters.</p>
+<p><strong>Reading the funnel above:</strong> 260 advisors generated a first brief, but only 150 (58%) went on to use it regularly. Watching recordings and asking a few of them reveals the first brief often loaded slowly for large books, and missed SIP data advisors expected. Fixing the first-run experience is likely to move the North Star faster than another invite email campaign.</p>`
+  },
+  mistakes: [
+    'Choosing a vanity metric, such as total briefs generated including auto-generated ones nobody opened, as the North Star.',
+    'Setting only lagging metrics like NRR as team goals, so the feedback loop takes quarters.',
+    'Using daily active users for a product whose natural rhythm is weekly.',
+    'Defining metrics loosely (what exactly counts as “active”?), so three dashboards show three different numbers.',
+    'Having no guardrails, so the metric goes up while quality, cost or compliance quietly gets worse.',
+    'Looking only at averages. A few power users can hide the fact that most advisors never activated.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> classify each metric as leading or lagging.</p>
+<p><strong>Part 2 (box below):</strong> for the <em>AI KYC extraction</em> feature, propose a North Star, three input metrics and one guardrail. In that feature, ops teams upload scanned KYC documents and the AI pre-fills the onboarding form.</p>`,
+    placeholder: 'North Star:\nInputs:\n1.\n2.\n3.\nGuardrail:',
+    classify: {
+      buckets: ['Leading', 'Lagging'],
+      items: [
+        ['Net revenue retention for the year', 1, 'NRR confirms what already happened across renewals and expansion. It moves slowly.'],
+        ['Share of new advisors who generate 3 briefs in their first 14 days', 0, 'Early activation predicts later retention, so it is leading.'],
+        ['Logo churn this quarter', 1, 'The firm has already left. Churn is a result, so it is lagging.'],
+        ['Weekly active advisors ÷ licensed seats', 0, 'Falling depth of adoption is an early warning for renewals, so it is leading.'],
+        ['Days from contract signature to the firm’s first AI brief', 0, 'Fast time-to-value predicts healthy accounts, so it is leading.'],
+        ['Total AUM on the platform at year end', 1, 'It is an aggregate result of many past actions, so it is lagging.']
+      ]
+    },
+    model: `<p><strong>Part 1:</strong> lagging: NRR, logo churn, year-end AUM. Leading: 14-day activation, weekly active ratio, time-to-first-brief.</p>
+<p><strong>Part 2:</strong></p>
+<ul><li><strong>North Star:</strong> clients onboarded per week with AI-prefilled KYC and no manual re-entry.</li>
+<li><strong>Inputs:</strong> (1) field-level extraction accuracy on key fields (PAN, name, date of birth, address), target ≥98%; (2) median time from upload to submitted application; (3) share of ops users at live firms who used it this week.</li>
+<li><strong>Guardrails:</strong> KYC rejection rate at the KRA must not rise; zero PII handling incidents; PAN correction rate.</li></ul>
+<p>The guardrail matters most here: if speed goes up but KRA rejections rise too, you have moved the problem rather than solved it.</p>`
+  },
+  quiz: [
+    { q: 'Which is the best North Star for the AI meeting-prep brief?', o: [
+      ['Page views of the brief screen.', false, 'This is a vanity metric. Views don’t mean value was delivered, and they rise if the page is merely confusing.'],
+      ['Client reviews prepared with the brief per week.', true, 'It counts the value delivered (reviews prepared) and grows with both breadth and depth of use.'],
+      ['Number of LLM API calls.', false, 'That’s a cost driver. Optimizing it would reward waste.'],
+      ['Annual company revenue.', false, 'Revenue is a lagging business outcome that many teams influence. It doesn’t tell this team what to do this month.']
+    ] },
+    { q: 'Why is daily active users (DAU) often a poor engagement metric for a B2B advisor tool?', o: [
+      ['Advisors don’t use computers every day.', false, 'They do, but not necessarily this product every day.'],
+      ['Its natural usage rhythm may be weekly or tied to client meetings, so DAU would label healthy usage as failure.', true, 'Match the metric to the product’s natural cadence: weekly active users, or reviews prepared per week.'],
+      ['DAU is too hard to compute.', false, 'It’s easy to compute. It’s just the wrong lens here.'],
+      ['Regulators forbid tracking it.', false, 'No such rule exists.']
+    ] },
+    { q: 'Which pairing of leading and lagging indicators is correct?', o: [
+      ['Leading: NRR. Lagging: activation rate.', false, 'This is backwards. Activation predicts. NRR confirms.'],
+      ['Leading: 14-day activation rate. Lagging: annual renewal rate.', true, 'Early activation behavior predicts whether the account renews months later.'],
+      ['Both activation and renewal are lagging.', false, 'Activation happens early and predicts later results.'],
+      ['Leading: logo churn. Lagging: weekly active advisors.', false, 'Churn is the ultimate lagging result, and weekly activity is an early signal.']
+    ] },
+    { q: 'After a release, “briefs generated” doubles because the system now auto-generates a brief for every calendar meeting. What should you do?', o: [
+      ['Celebrate, because the metric doubled.', false, 'The definition changed, not the value delivered. This is how vanity metrics mislead teams.'],
+      ['Check quality and guardrail signals, such as the share of briefs opened and used, edit rates and advisor feedback.', true, 'Measure whether advisors get value. Then consider redefining the metric as “briefs used”.'],
+      ['Lower next quarter’s targets.', false, 'That doesn’t address what the number means.'],
+      ['Turn off analytics to save cost.', false, 'You would lose the ability to learn anything.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-7', track: 'pm', n: 7, minutes: 12,
+  title: 'Working with engineering and design', short: 'Engineering & design',
+  sub: 'Estimation conversations, trade-offs, tech debt, design feedback, and how to say no.',
+  idea: 'Bring problems and constraints, not solutions and deadlines. Negotiate the scope, never the estimate.',
+  body: `
+<p>Your relationship with engineers and designers <em>is</em> the job. Involve them early, share the why, and respect their expertise. If they only ever see finished tickets, you’ll get exactly what the tickets say and nothing better.</p>
+<h3>Estimation conversations</h3>
+<p>An estimate is a <strong>forecast under uncertainty</strong>, not a promise. Ask questions that reduce the uncertainty or the scope instead of haggling over the number:</p>
+<ul>
+  <li>“What makes this big? Which part is the riskiest?”</li>
+  <li>“Is there a smaller version that delivers most of the value?”</li>
+  <li>“What would we need to learn to be more confident, and could a short spike tell us?”</li>
+  <li>“If the date is fixed, what would you cut first?”</li>
+</ul>
+<p>The classic trade-off triangle is scope, time and people. When the date and the team are fixed, <strong>scope flexes</strong>. Quality doesn’t. In regulated finance, cutting testing or the audit log to hit a date is the most expensive shortcut there is.</p>
+<h3>Making trade-offs explicit</h3>
+<p>Give decision-makers options instead of a single plan. Show the value, cost and risk of each one, and make a recommendation. A good decision depends on seeing those side by side.</p>
+<h3>Tech debt</h3>
+<p>Tech debt is the future cost of shortcuts and outdated design. It can be <em>deliberate</em> (we shipped fast on purpose), <em>accidental</em> (we found a better design later) or <em>bit rot</em> (dependencies and infrastructure aged). You should care because it slows every future feature and causes incidents, often at the worst moment, like month-end or quarter-end reporting.</p>
+<ul>
+  <li>Make it visible as backlog items that state their <strong>business impact</strong>, for example “NAV import retries fail at month-end: 3 partner escalations last quarter”.</li>
+  <li>Many teams reserve a steady slice of capacity for it, often 15–25%. That’s a team practice, not a rule.</li>
+  <li>Tie paydown to outcomes: “cuts report-generation failures from 3% to under 0.5%”.</li>
+</ul>
+<h3>Working with design</h3>
+<p>Share the problem and the constraints before any screens exist. Give feedback anchored in <strong>user goals</strong>, not taste. “Can an advisor spot a failed SIP within 5 seconds on this screen?” is useful. “Make it pop” isn’t.</p>
+<h3>Saying no</h3>
+<p>Every yes is a no to something else. A good no: <strong>acknowledge</strong> the need, <strong>explain</strong> the trade-off against current priorities, and <strong>offer</strong> an alternative (“no, but…” or “yes, if…”) or a clear condition for revisiting it.</p>`,
+  example: {
+    title: '“Real-time portfolio sync” came back as an XL estimate',
+    html: `
+<p>A large partner asks, through the CTO, for “real-time portfolio values”. Engineers estimate 8–10 weeks.</p>
+<p><strong>You ask what drives the size.</strong> Mutual fund NAVs are published once a day, so real-time isn’t even available at the source. Holdings data from the RTAs (CAMS, KFintech) arrives in batches. Live equity prices need a paid exchange data licence plus streaming infrastructure.</p>
+<p><strong>You go back to the problem.</strong> In two partner calls, advisors say what they really want is to <em>trust</em> the numbers during a client call. They often don’t know when the data was last updated.</p>
+${table(['Option', 'Effort', 'Value'], [
+  ['A. Full real-time (live equity, intraday updates)', '8–10 weeks + licence cost', 'High, but only for equity-heavy HNI books'],
+  ['B. End-of-day sync with an “as of” timestamp, plus on-demand refresh of equity holdings using delayed prices', '2–3 weeks', 'Solves trust for most advisors'],
+  ['C. “Data as of [time]” timestamp only', '2 days', 'A quick trust win and a test of the hypothesis']
+])}
+<p><strong>Decision:</strong> C this Sprint, B next. Revisit A after measuring how many advisors manage equity-heavy books. You didn’t argue about whether it’s “really” 8 weeks. You changed the scope to fit the actual problem.</p>`
+  },
+  mistakes: [
+    'Negotiating the estimate (“can’t you do it in a week?”) instead of the scope.',
+    'Treating estimates as commitments, then blaming the team when uncertainty turns up.',
+    'Bringing engineers solutions instead of problems, which throws away their best ideas.',
+    'Treating tech debt as “engineering’s problem” until an outage hits during a partner’s quarter-end.',
+    'Agreeing with the CTO in the meeting and then telling the team something different, or the other way round.',
+    'Giving design feedback based on personal taste instead of user goals.'
+  ],
+  tryit: {
+    prompt: `<p>Thursday evening, your CTO messages: <em>“Big partner demo next Wednesday. Can we add a ‘chat with your portfolio’ AI assistant? Should be quick with the LLM APIs.”</em></p>
+<p>Context: the quarter goal is “cut review-prep time by 50% for pilot advisors”. The team is mid-Sprint on the meeting brief, and compliance review is pending. Draft your reply. Aim for a constructive “no, but…”.</p>`,
+    placeholder: 'Hi [CTO], …',
+    model: `<p>“Love the energy for the demo. Some quick context so we pick the best option. A production-safe ‘chat with your portfolio’ needs guardrails: no advice-like answers, numbers from our calculation engine, and audit logging. That makes it roughly 3–4 weeks, and it would push the meeting-brief pilot back by a month.</p>
+<p>Two options for Wednesday:<br>(1) Demo the <strong>meeting brief</strong>. It’s nearly done and directly serves the quarter goal. I’ll prepare a 3-minute script with a real (masked) client.<br>(2) If the partner specifically wants chat, show a <strong>clickable prototype</strong> labeled ‘exploring’, with no live data. That’s about a day of design time.</p>
+<p>I’d recommend (1) with a 30-second teaser from (2). If you’d still like to build chat properly, happy to talk through what we’d move out of the quarter.”</p>
+<p><em>Why it works:</em> it acknowledges the goal, puts a number on the trade-off, offers alternatives, makes a recommendation, and explicitly leaves the final call with the CTO.</p>`
+  },
+  quiz: [
+    { q: 'Engineers estimate a feature at 6 weeks. You hoped for 2. What’s the best response?', o: [
+      ['“Can you do it in 2 if you push?”', false, 'Haggling over the estimate produces a fake plan, burnout, or both.'],
+      ['Ask what drives the size, which parts carry most of the value, and whether a smaller first slice could ship in 2 weeks.', true, 'Negotiate scope, not the estimate. Often 20% of the work delivers 80% of the value.'],
+      ['Accept quietly, then tell stakeholders 2 weeks anyway.', false, 'This guarantees a broken promise and lost trust on both sides.'],
+      ['Ask another team for a lower estimate.', false, 'Estimate-shopping undermines the team that will actually do the work.']
+    ] },
+    { q: 'When is it most reasonable to prioritize paying down tech debt?', o: [
+      ['Never, because customers don’t see it.', false, 'Customers feel it as slower delivery and incidents.'],
+      ['Only when engineers complain loudly.', false, 'Volume of complaint is a poor prioritization signal.'],
+      ['When it measurably slows delivery or threatens reliability, such as the NAV import failing every month-end, framed by its business impact.', true, 'That makes it comparable with features and easy to justify to stakeholders.'],
+      ['Only in December.', false, 'Saving debt for a “cleanup month” lets it compound for the rest of the year.']
+    ] },
+    { q: 'What’s the most useful kind of design feedback?', o: [
+      ['“I’d prefer a darker blue.”', false, 'This is personal taste with no link to the user goal.'],
+      ['“Can an advisor spot a failed SIP within 5 seconds on this screen?”', true, 'It anchors the critique in a user goal the designer can test against.'],
+      ['Redesigning the screen yourself in Figma.', false, 'This undermines the designer and usually produces a worse result.'],
+      ['Approving everything to avoid conflict.', false, 'Silence now becomes rework later.']
+    ] },
+    { q: 'A regulatory deadline is fixed and so is the team. What should flex?', o: [
+      ['Quality: skip some testing.', false, 'In regulated finance, defects become compliance incidents. Scrum is also explicit that quality must not decrease.'],
+      ['Scope.', true, 'Prioritize what must be in for the deadline and defer the rest.'],
+      ['Nothing. Everyone just works harder.', false, 'Overtime as a plan isn’t a plan. It increases defects and attrition.'],
+      ['The deadline.', false, 'It’s regulatory, so it can’t move.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-8', track: 'pm', n: 8, minutes: 12,
+  title: 'Stakeholders and communication', short: 'Stakeholders',
+  sub: 'Status updates, managing up, and getting sales, ops and compliance aligned.',
+  idea: 'No surprises. Tell the right people the right level of detail early, especially when the news is bad.',
+  body: `
+<h3>Map your stakeholders</h3>
+<p>Internal: your CTO, sales, customer success, operations, compliance, finance and leadership. External: partner firms and their own compliance teams. A simple way to sort them is by <strong>power and interest</strong>. Manage the high-power, high-interest people closely (your CTO, a key partner). Keep high-power, lower-interest people satisfied with brief summaries (the CEO, the CFO). Keep high-interest people informed (the CS team).</p>
+<h3>Managing up</h3>
+<ul>
+  <li>Know your CTO’s goals and worries this quarter. Frame your updates in those terms.</li>
+  <li>Bring <strong>recommendations, not just problems</strong>: “Here are two options. I recommend A because…”</li>
+  <li>Ask for decisions explicitly and with a date: “I need a call on A or B by Thursday.”</li>
+  <li>Agree how they want to hear from you: a written weekly note, a Slack thread, a 1:1 agenda.</li>
+</ul>
+<h3>A weekly update that gets read</h3>
+<ol>
+  <li><strong>Headline</strong>: on track, at risk or off track, in one sentence.</li>
+  <li><strong>Progress vs goal</strong>, using the metric.</li>
+  <li><strong>Done and next.</strong></li>
+  <li><strong>Risks and asks</strong>: decisions you need, and from whom.</li>
+</ol>
+<p>Keep exec updates under about 150 words, with links for anyone who wants more detail.</p>
+<h3>Aligning sales, ops and compliance</h3>
+${table(['Group', 'What they need from you', 'What to avoid'], [
+  ['<strong>Sales</strong>', 'A clear roadmap story with confidence levels, one intake channel for requests, and early access to pilots', 'Letting them commit dates or features you haven’t agreed'],
+  ['<strong>Ops / Customer success</strong>', 'Launch readiness: training, FAQs, support macros, notice of changes', 'Shipping changes they discover from partners'],
+  ['<strong>Compliance</strong>', 'Involvement during discovery, real examples, and their requirements written as acceptance criteria', 'Arriving the week before launch for a rubber stamp']
+])}
+<h3>RACI</h3>
+<p><strong>R</strong>esponsible (does the work), <strong>A</strong>ccountable (makes the final call, exactly one person), <strong>C</strong>onsulted (gives input before the decision), <strong>I</strong>nformed (told afterwards). Most stakeholder pain comes from people who think they’re A when they’re C.</p>
+<h3>Delivering bad news</h3>
+<p>Do it early, privately first, and in this order: <strong>what happened, the impact, what we’re doing about it, and what we need</strong>. Don’t sugar-coat it, and don’t wait until you’ve fixed it.</p>`,
+  example: {
+    title: 'Sales promised “AI auto-rebalancing”, and compliance objects',
+    html: `
+<p>A sales lead told a wealth firm managing ₹2,000 Cr AUM that “AI auto-rebalancing” is coming in Q3. Compliance points out that changing client portfolios without the client’s consent each time is only allowed under certain licences, such as discretionary portfolio management. Most of your partners don’t have those licences.</p>
+<ol>
+  <li><strong>Get the facts within 24 hours.</strong> What exactly was promised, in which email or deck? What does the prospect actually need? Their real problem: 3,000 client portfolios drifting from their model allocations, with no way to manage it.</li>
+  <li><strong>Pre-wire people one-on-one.</strong> Ask compliance what would be approvable: “Rebalancing <em>proposals</em> that the advisor reviews and the client approves by OTP are fine.” Talk to the sales lead to understand the pressure, without blame. Give the CTO the options and your recommendation.</li>
+  <li><strong>Run one decision meeting.</strong> Reframe the promise as “AI rebalancing proposals: drift detection and suggested trades, advisor approval, client consent”. Sales gets a story it can tell compliantly, with honest timing (a Q4 pilot).</li>
+  <li><strong>Fix the process.</strong> A one-page sales roadmap labeled “committed / exploring / not planned”, and a rule that customer-facing dates need PM sign-off.</li>
+</ol>
+${table(['Decision: rebalancing scope', 'Who'], [['Responsible', 'You (APM)'], ['Accountable', 'CTO'], ['Consulted', 'Compliance, sales lead, tech lead'], ['Informed', 'Customer success, leadership team']])}`
+  },
+  mistakes: [
+    'Surprising your CTO with bad news in a group meeting.',
+    'Sending everyone the same long update. Executives stop reading after the first paragraph.',
+    'Involving compliance only at launch, then treating them as blockers.',
+    'Letting sales commit dates, then defending dates the team never agreed to.',
+    'Escalating problems without options or a recommendation.',
+    'Treating everyone you consult as a decision-maker, which leads to endless consensus-seeking.'
+  ],
+  tryit: {
+    prompt: `<p>Write this week’s update to your CTO using the four-part template. The facts:</p>
+<ul><li>AI brief pilot, week 3: 11 of 15 pilot advisors used it this week (target 12).</li>
+<li>Median review prep time is 22 minutes, down from 50 (goal: under 15). The biggest remaining time sink is advisors double-checking SIP data. A fix is planned for next Sprint.</li>
+<li>Compliance approved the disclaimer text and audit log.</li>
+<li>Risk: LLM cost is ₹9 per brief against a ₹4 budget. Full rollout would be about 38,000 briefs a month.</li>
+<li>Option: switch the narrative to a smaller model. That costs ₹3 per brief, but advisors made about 4% more edits in testing, which is within the quality bar.</li></ul>`,
+    placeholder: 'Headline:\nProgress vs goal:\nDone / next:\nRisks & asks:',
+    model: `<p><strong>AI meeting brief, pilot week 3. Status: on track for adoption, at risk on cost.</strong></p>
+<ul><li><strong>Progress:</strong> 11/15 advisors active (target 12). Median prep time 22 min, down from 50 (goal under 15). The biggest remaining time sink is checking SIP data, and that fix ships next Sprint.</li>
+<li><strong>Done:</strong> compliance approved the disclaimer and audit log.</li>
+<li><strong>Risk:</strong> LLM cost is ₹9 per brief vs a ₹4 budget. At about 38,000 briefs a month, full rollout would cost about ₹3.4 L/month against a ₹1.5 L budget.</li>
+<li><strong>Decision needed by Thursday:</strong> switch the narrative to the smaller model (₹3 per brief, about 4% more edits, within our quality bar), or keep the current model for the pilot and revisit at rollout. <strong>I recommend switching now.</strong></li></ul>
+<p>That’s about 110 words. The headline and the ask are impossible to miss.</p>`
+  },
+  quiz: [
+    { q: 'You realize the AI brief pilot will slip by 2 weeks. When should your CTO hear about it?', o: [
+      ['At the next monthly review.', false, 'Waiting turns a manageable slip into a trust problem.'],
+      ['Now, privately, with the cause, the impact and your options.', true, 'No surprises. Bring the news early and come with a plan.'],
+      ['Only if someone asks.', false, 'Hiding bad news is the fastest way to lose your manager’s confidence.'],
+      ['After you’ve tried to recover the time.', false, 'Recovering quietly often fails, and then the news arrives late and worse.']
+    ] },
+    { q: 'In RACI, how many people should be Accountable for a decision?', o: [
+      ['Everyone involved.', false, 'If everyone is accountable, nobody is.'],
+      ['Exactly one.', true, 'One person makes the final call. Others are Responsible, Consulted or Informed.'],
+      ['At least two, for safety.', false, 'Two accountable people produce stalemates.'],
+      ['None, because it’s a team decision.', false, 'Teams contribute, but someone still has to own the call.']
+    ] },
+    { q: 'When is the best time to involve compliance in an AI client-communication feature?', o: [
+      ['The week before launch.', false, 'By then their input means rework or a delay.'],
+      ['During discovery, with real examples, asking what would make it approvable.', true, 'Their constraints shape the design early and cost far less to accommodate.'],
+      ['After the first complaint.', false, 'That’s a regulatory incident, not involvement.'],
+      ['Never, because legal handles it.', false, 'Compliance and legal are different functions, and both need to be in early.']
+    ] },
+    { q: 'An executive update should lead with…', o: [
+      ['A detailed list of every ticket closed.', false, 'Executives need outcomes and decisions, not activity logs.'],
+      ['The headline status and any decision you need from them.', true, 'Put the most important thing first. Many readers stop after the first lines.'],
+      ['The architecture diagram.', false, 'That’s useful for engineers, not for an exec skim.'],
+      ['Thanks to everyone involved.', false, 'Recognition is good, but it shouldn’t push the status out of the first line.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-9', track: 'pm', n: 9, minutes: 10,
+  title: 'Roadmaps', short: 'Roadmaps',
+  sub: 'Now / Next / Later, and why outcome-based roadmaps hold up better than feature lists.',
+  idea: 'A roadmap shows which problems we’ll tackle and in what order, with confidence falling the further out you look. It’s a strategy document, not a delivery schedule.',
+  body: `
+<h3>What a roadmap is for</h3>
+<p>A roadmap aligns people on <strong>direction and priorities</strong> and explains the trade-offs behind them. It is not a promise of dates. When it turns into one, every change becomes a broken commitment.</p>
+<h3>Feature-based vs outcome-based</h3>
+<p>A <strong>feature roadmap</strong> lists features with dates: “Chatbot, Q2. PDF reports, Q3.” It’s easy to read, but it commits to solutions before you’ve learned anything. An <strong>outcome roadmap</strong> lists problems to solve, each with a metric: “Cut review-prep time by 50%”. Features appear underneath as <em>bets</em>. The team is free to find the best solution, and the roadmap survives learning.</p>
+<h3>Now / Next / Later</h3>
+${fig(DIAG.nnl, 'Columns, not dates. Detail and confidence fall from left to right.')}
+<ul>
+  <li><strong>Now</strong>: committed and in progress. Well understood and high confidence.</li>
+  <li><strong>Next</strong>: shaped and likely next. Medium confidence, and could change.</li>
+  <li><strong>Later</strong>: problems we believe matter. Deliberately vague and low confidence.</li>
+</ul>
+<h3>Roadmap, backlog, release plan</h3>
+${table(['Artifact', 'Horizon', 'Answers'], [
+  ['Roadmap', 'Quarters', 'Which problems, in what order, and why?'],
+  ['Product Goal (Scrum)', 'Months', 'What is the next objective the Scrum Team is working towards?'],
+  ['Product Backlog', 'Weeks to months', 'What work, in what order?'],
+  ['Sprint / release plan', 'Days to weeks', 'What ships when?']
+])}
+<p>Real dates do exist. Regulatory deadlines and contractual commitments should appear as <strong>explicit fixed-date items</strong>, scoped with MoSCoW so everyone knows what is negotiable.</p>
+${tip('<p>Keep one roadmap with different views. Engineers need detail, executives need outcomes and metrics, and partners or sales need themes, with no dates beyond “Now”.</p>')}`,
+  example: {
+    title: 'Turning last year’s feature list into an outcome roadmap',
+    html: `
+<p><strong>The old roadmap:</strong> Q1 chatbot · Q2 PDF reports · Q2 SSO · Q3 WhatsApp alerts · Q3 Hindi UI · Q4 goal-planning module.</p>
+${table(['Column', 'Outcome (metric)', 'Current bets'], [
+  ['<strong>Now</strong>', 'Advisors prepare a review in under 15 minutes (median prep time)', 'AI meeting brief, PDF export of the brief'],
+  ['<strong>Now</strong>', 'Enterprise firms pass infosec review (2 blocked deals live)', 'SSO, audit log export'],
+  ['<strong>Next</strong>', 'Advisors act on failed SIPs within 48 hours (80%)', 'Failed-SIP alerts. Channel to be decided: in-app, email or WhatsApp'],
+  ['<strong>Later</strong>', 'Advisors serve clients in their own language', 'Hindi summaries, Hindi UI (needs discovery)'],
+  ['<strong>Later</strong>', 'Clients see progress towards their goals', 'Goal planning (needs discovery)'],
+  ['<em>Removed</em>', 'Generic chatbot', 'No validated problem. Folded into meeting-prep discovery']
+])}
+<p>“WhatsApp alerts” became “act on failed SIPs within 48 hours”. WhatsApp might still be the answer, but now it has to compete with simpler options.</p>`
+  },
+  mistakes: [
+    'Putting precise dates on “Later” items, which sales then repeats to customers as promises.',
+    'Building the roadmap from whichever customer shouted loudest last month.',
+    'Never updating it, or changing it without explaining why.',
+    'Showing one roadmap to every audience.',
+    'Treating the roadmap, the backlog and the Sprint plan as the same thing.'
+  ],
+  tryit: {
+    prompt: '<p>Place each item in Now, Next or Later. Then, in the box, <strong>rewrite each one as an outcome</strong> with a metric.</p>',
+    placeholder: 'SSO → outcome: …\nHindi summaries → …\nFailed-SIP alerts → …\nGoal planning → …\nAI meeting brief → …',
+    classify: {
+      buckets: ['Now', 'Next', 'Later'],
+      items: [
+        ['SSO for enterprise partners. Two signed deals are blocked on it, it’s scoped, and the team is ready.', 0, 'It’s committed and understood, with revenue waiting. That’s Now.'],
+        ['Hindi summaries. Confidence is 50% and a test hasn’t run yet.', 2, 'Low confidence means discovery first, so Later. It moves left once a test shows value.'],
+        ['Failed-SIP alerts. Validated in the Wizard of Oz, but the channel isn’t designed yet.', 1, 'There’s evidence and it’s mostly shaped, so it’s likely next. That’s Next.'],
+        ['Goal-planning module. A few requests and no research yet.', 2, 'It’s a problem worth exploring, not yet a commitment. That’s Later.'],
+        ['AI meeting brief v1. In pilot, with an agreed metric.', 0, 'It’s in progress with a clear outcome, so Now.']
+      ]
+    },
+    model: `<ul><li><strong>SSO</strong> → “Enterprise firms pass infosec review and go live” (2 blocked deals live this quarter).</li>
+<li><strong>Hindi summaries</strong> → “Advisors serving Hindi-speaking clients can share summaries in Hindi” (share rate among those advisors).</li>
+<li><strong>Failed-SIP alerts</strong> → “Advisors act on failed SIPs within 48 hours” (80% actioned within 48 h).</li>
+<li><strong>Goal planning</strong> → “Clients see progress towards their goals” (metric to be defined in discovery).</li>
+<li><strong>AI meeting brief</strong> → “Advisors prepare a review in under 15 minutes” (median prep time).</li></ul>`
+  },
+  quiz: [
+    { q: 'What’s the main advantage of an outcome-based roadmap?', o: [
+      ['It has more precise dates.', false, 'Outcome roadmaps usually have fewer dates, deliberately.'],
+      ['It keeps the team focused on problems and results, and lets them change the solution as they learn.', true, 'The commitment is to the outcome. The feature is a bet that can change.'],
+      ['It’s longer and more detailed.', false, 'Length isn’t a virtue in a roadmap.'],
+      ['Sales can promise features sooner.', false, 'The opposite: it discourages promising specific features.']
+    ] },
+    { q: 'Why avoid specific dates for “Later” items?', o: [
+      ['Dates are bad in general.', false, 'Some dates are real and must be shown, such as regulatory deadlines.'],
+      ['Confidence is low. Dates get repeated as promises, so you end up breaking them or shipping the wrong thing to keep them.', true, 'Precision should match confidence.'],
+      ['Engineers dislike dates.', false, 'This isn’t about preferences.'],
+      ['Roadmap tools don’t support dates.', false, 'They all do, which is part of the problem.']
+    ] },
+    { q: 'Which statement is correct?', o: [
+      ['The roadmap and the Product Backlog are the same thing.', false, 'They work at different levels and horizons.'],
+      ['The roadmap shows direction and priorities over months. The Product Backlog is the ordered list of work the team draws from.', true, 'The roadmap informs the Product Goal and the backlog. The backlog turns direction into concrete work.'],
+      ['The Sprint Backlog contains the roadmap.', false, 'The Sprint Backlog covers a single Sprint.'],
+      ['Roadmaps are only for customers.', false, 'They’re mainly for internal alignment. Customer views are a curated subset.']
+    ] },
+    { q: 'A regulator sets a hard deadline for a new reporting format. How should it appear on the roadmap?', o: [
+      ['Hidden, because roadmaps shouldn’t have dates.', false, 'Hiding a real constraint misleads everyone.'],
+      ['As an explicit fixed-date commitment, scoped with MoSCoW.', true, 'Make the real date visible and the flexible scope clear.'],
+      ['In “Later”.', false, 'A hard deadline coming up is not a Later item.'],
+      ['As an outcome with no date.', false, 'The date is the constraint, so show it.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-10', track: 'pm', n: 10, minutes: 12,
+  title: 'Launches and iteration', short: 'Launches & iteration',
+  sub: 'Release planning, feature flags, staged rollouts, and measuring impact honestly after launch.',
+  idea: 'Launch is where learning starts. Release gradually behind flags, measure against success and guardrail metrics you set in advance, and then decide whether to roll forward, fix or roll back.',
+  body: `
+<h3>Deploy ≠ release</h3>
+<p><strong>Deploying</strong> puts code into production. <strong>Releasing</strong> makes it available to users. <strong>Feature flags</strong> separate the two, so you can ship code safely and choose who sees it, when.</p>
+<ul>
+  <li><strong>Release flags</strong>: hide unfinished work and roll it out gradually.</li>
+  <li><strong>Kill switches</strong>: turn a feature off instantly if it misbehaves.</li>
+  <li><strong>Entitlement flags</strong>: per firm or per plan, such as “AI brief enabled for Firm X”.</li>
+  <li><strong>Experiment flags</strong>: split traffic for a test.</li>
+</ul>
+<p>Remove flags once a rollout finishes. Stale flags are tech debt.</p>
+<h3>Release planning and readiness</h3>
+<p>Before you widen access, check: engineering is done (including monitoring and a rollback plan), compliance has signed off, CS is trained and has FAQs and support macros, help docs are ready, partner admins have been told, and dashboards exist for the metrics you’ll judge it by.</p>
+<h3>Staged rollouts, B2B-style</h3>
+${fig(DIAG.rollout, 'Widen access step by step. Each step has exit criteria you agreed before launch.')}
+<p>In B2B, roll out <strong>by firm</strong>, not to a random 10% of users. Firms train their advisors together and admins need control, and having half a firm on the new flow creates confusion and support tickets.</p>
+<h3>Measure impact honestly</h3>
+<ul>
+  <li>Define <strong>success metrics</strong> and <strong>guardrails</strong> before launch, with decision rules: “Pause the rollout if numeric-error reports exceed 0.5% of briefs.”</li>
+  <li>Simple before/after comparisons are confounded by seasonality (quarter-end review season), market moves and training effects.</li>
+  <li>Use a <strong>comparison group</strong>: firms not enabled yet in a staggered rollout, a holdout, or an A/B test if volume allows. B2B volumes are often small, so combine numbers with interviews.</li>
+</ul>
+<h3>After launch</h3>
+<p>Watch closely for the first 48 hours. Triage feedback and bugs. Review at 30, 60 and 90 days and decide to <strong>iterate, scale or stop</strong>. For AI features, also sample outputs for human review, track drift, cost and latency, and version prompts and models so you can roll back.</p>`,
+  example: {
+    title: 'Rolling out the AI portfolio summary',
+    html: `
+${table(['Stage', 'Who', 'Exit criteria to widen'], [
+  ['0 · Internal', 'CS team + 3 internal advisors, 1 week', 'Zero numeric errors in 100 sampled summaries; p95 latency under 10 s'],
+  ['1 · Pilot', '3 design-partner firms, 2 weeks', '≥60% of eligible reviews use it; edit rate under 30%; compliance spot-check passes'],
+  ['2 · 25% of firms', 'Admin opt-in, 2 weeks', 'Guardrails hold; under 2 support tickets per 100 advisors'],
+  ['3 · GA', 'All firms, with a firm-level admin toggle', 'Ongoing monitoring']
+])}
+<p><strong>Kill switch:</strong> one flag turns off the AI narrative across the platform and falls back to the data-only summary.</p>
+<p><strong>Measuring impact:</strong> Stage 2 firms get the feature weeks before the rest, so you compare the two groups over the same weeks. Illustrative result: prep time fell <strong>50 → 19 min</strong> at enabled firms and <strong>50 → 46 min</strong> at not-yet-enabled firms, a seasonal effect of about 4 minutes. The effect you can attribute to the feature is about <strong>(50−19) − (50−46) = 27 minutes</strong>, not the 31 a naive before/after comparison would claim.</p>`
+  },
+  mistakes: [
+    'Treating “deployed” as “done” and moving on without measuring anything.',
+    'A big-bang launch to every firm in the same week as quarter-end reporting.',
+    'Defining success only after looking at the data.',
+    'Before/after comparisons that ignore seasonality and market movements.',
+    'No kill switch on an AI feature that writes client-facing text.',
+    'Leaving old feature flags in the codebase forever.',
+    'Forgetting the people side: CS training, admin announcements and help docs.'
+  ],
+  tryit: {
+    prompt: '<p>“Failed-SIP alerts” are ready to roll out behind a flag. Write a <strong>launch checklist</strong>, the rollout stages, and your <strong>success and guardrail metrics</strong>.</p>',
+    placeholder: 'Checklist:\n- \nStages:\nSuccess metrics:\nGuardrails:',
+    model: `<p><strong>Checklist:</strong> a per-firm flag plus a global kill switch; monitoring on the RTA feed and its delays; de-duplication so one failure doesn’t send three alerts; compliance review of the alert text; CS training and an FAQ; a help article; an email to partner admins; a metrics dashboard; on-call coverage; a rollback plan.</p>
+<p><strong>Stages:</strong> internal (1 week) → 3 pilot firms (2 weeks) → 30% of firms → GA, each with exit criteria.</p>
+<p><strong>Success:</strong> share of failed SIPs acted on within 48 hours (target 80%); median time to action.</p>
+<p><strong>Guardrails:</strong> false-positive alerts under 2%; notification opt-out rate; support tickets per 100 advisors; RTA feed latency.</p>`
+  },
+  quiz: [
+    { q: 'What’s the difference between deploying and releasing?', o: [
+      ['There’s no difference.', false, 'Treating them as one is what makes launches risky.'],
+      ['Deploying puts code into production. Releasing makes it available to users. Flags let you do them separately.', true, 'Separating the two lets you ship continuously and expose features gradually.'],
+      ['Releasing happens before deploying.', false, 'You can’t release code that isn’t deployed.'],
+      ['Deploying is only for mobile apps.', false, 'Every kind of software is deployed.']
+    ] },
+    { q: 'What is a guardrail metric?', o: [
+      ['The main success metric.', false, 'That’s the success metric. Guardrails sit alongside it.'],
+      ['A metric that must not get worse while you improve the success metric, such as compliance flags or p95 latency.', true, 'Guardrails stop you from “winning” by breaking something else.'],
+      ['A metric only engineers can see.', false, 'Guardrails should be visible to everyone making launch decisions.'],
+      ['A vanity metric.', false, 'They’re the opposite: protective and decision-relevant.']
+    ] },
+    { q: 'Review prep time dropped from 50 to 30 minutes after launch. It’s also quarter-end, and advisors are preparing faster with templates anyway. What’s the best way to estimate the real impact?', o: [
+      ['Report a 20-minute improvement.', false, 'This attributes the seasonal and template effects to your feature.'],
+      ['Compare against firms not yet enabled over the same period, using a holdout or a staggered rollout.', true, 'A comparison group removes effects that hit everyone, like seasonality.'],
+      ['Ask the sales team.', false, 'That’s anecdote, not measurement.'],
+      ['Wait a year.', false, 'Too slow, and new confounders pile up in the meantime.']
+    ] },
+    { q: 'Why roll B2B features out firm by firm instead of to a random 10% of advisors?', o: [
+      ['Random rollouts are illegal.', false, 'They’re not illegal. They just fit B2B poorly.'],
+      ['Firms train and support advisors together and admins need control, so mixed access inside a firm creates confusion and support load.', true, 'The account is the natural unit in B2B.'],
+      ['It’s cheaper to code.', false, 'Cost isn’t the main reason.'],
+      ['There’s no real reason.', false, 'There are strong operational reasons.']
+    ] }
+  ]
+});
+</script>
+
 <!-- @content-end -->
 
 <script>
