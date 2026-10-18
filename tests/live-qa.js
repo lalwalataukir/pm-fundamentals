@@ -149,13 +149,15 @@ const check = (c, m) => c ? ok(m) : bad(m);
   await page.fill('#gl-q', 'zzzz');
   check(await page.$('.empty') !== null, 'empty state for no results');
 
-  console.log('Theme');
-  await page.click('[data-action="theme"][data-v="dark"]');
-  check(await page.evaluate(() => document.documentElement.getAttribute('data-theme')) === 'dark', 'dark theme set');
+  console.log('Design system (purple on black, dark only)');
+  check(await page.$('[data-action="theme"]') === null, 'no theme toggle');
   const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  check(bg === 'rgb(12, 20, 22)', 'dark body background ' + bg);
-  await page.click('[data-action="theme"][data-v="system"]');
-  check(await page.evaluate(() => !document.documentElement.hasAttribute('data-theme')), 'system theme removes attribute');
+  check(bg === 'rgb(9, 7, 15)', 'black body background ' + bg);
+  const btn = await page.evaluate(() => { location.hash = 'home'; return new Promise(r => setTimeout(() => r(getComputedStyle(document.querySelector('.btn-primary')).backgroundColor), 150)); });
+  check(btn === 'rgb(124, 58, 237)', 'primary button is purple ' + btn);
+  await page.emulateMedia({ colorScheme: 'light' });
+  check(await page.evaluate(() => getComputedStyle(document.body).backgroundColor) === 'rgb(9, 7, 15)', 'stays dark when the OS prefers light');
+  await page.emulateMedia({ colorScheme: null });
 
   console.log('Reset');
   await page.click('[data-action="reset"]'); await page.click('[data-action="reset"]');
