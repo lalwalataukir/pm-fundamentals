@@ -39,6 +39,7 @@ img,svg{max-width:100%}
 a{color:var(--accent);text-underline-offset:.18em}
 button{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+#page-title:focus,#scene-title:focus{outline:none}
 .sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ---------- App frame ---------- */
@@ -288,6 +289,32 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
 @media (max-width:640px){.home-grid{grid-template-columns:minmax(0,1fr)}.anatomy{grid-template-columns:repeat(2,minmax(0,1fr))}.anatomy div{border-bottom:1px solid var(--line)}.anatomy div:nth-child(odd){border-right:1px solid var(--line)}.anatomy div:nth-child(even){border-right:0}.anatomy div:nth-child(3){border-right:1px solid var(--line)}.anatomy div:nth-last-child(-n+2){border-bottom:0}.page{padding-block:28px 72px}}
 @media (max-width:420px){.tools{grid-template-columns:minmax(0,1fr)}.pager{grid-template-columns:minmax(0,1fr)}.pager a.next{grid-column:1}}
 
+/* course search */
+.search-trigger{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:8px 10px 8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--muted);font-size:.88rem;cursor:pointer;text-align:left}
+.search-trigger:hover{border-color:var(--accent);color:var(--ink)}
+.search-trigger svg{width:16px;height:16px;flex:none}
+.search-trigger .kbd{margin-left:auto}
+.search-wrap{position:fixed;inset:0;z-index:80;display:flex;justify-content:center;align-items:flex-start;padding:calc(10vh + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+.search-scrim{position:absolute;inset:0;border:0;background:var(--overlay);cursor:default}
+.search-panel{position:relative;width:100%;max-width:680px;max-height:min(72vh,660px);display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.search-head{display:flex;gap:8px;align-items:center;padding:12px;border-bottom:1px solid var(--line)}
+.search-input{flex:1;min-width:0;min-height:46px;border:1px solid var(--line);border-radius:10px;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23A39CB8' stroke-width='2'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cpath d='M14 14l4 4'/%3E%3C/svg%3E") 13px center/17px no-repeat;padding:10px 12px 10px 40px;color:var(--ink);font-size:1rem}
+.search-input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.search-meta{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:10px 14px 2px}
+.search-results{flex:1 1 auto;min-height:0;overflow-y:auto;padding:6px 8px 10px;display:flex;flex-direction:column;gap:4px}
+.sr-item{flex:none;display:grid;gap:4px;padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid transparent;min-height:44px;min-width:0}
+.sr-item[aria-selected="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.sr-item:hover{background:var(--accent-soft)}
+.sr-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sr-where{font-family:var(--f-mono);font-size:.68rem;color:var(--muted);letter-spacing:.03em}
+.sr-title{font-weight:600;font-size:.96rem;line-height:1.3}
+.sr-snip{font-family:var(--f-body);font-size:.9rem;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.search-empty{flex:none;padding:16px 14px 20px;color:var(--muted);font-size:.92rem;display:grid;gap:12px}
+.search-empty p{margin:0}
+mark{background:var(--accent-soft);color:var(--ink);outline:1px solid var(--accent);border-radius:3px;padding:0 1px}
+.sr-snip mark,.sr-title mark{color:var(--ink)}
+@media (max-width:640px){.search-wrap{padding:0}.search-panel{max-width:none;max-height:none;height:100%;border:0;border-radius:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}}
+
 /* glossary */
 .searchbar{display:grid;gap:12px;margin:24px 0 8px;position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0}
 @media (max-width:900px){.searchbar{top:calc(56px + env(safe-area-inset-top,0px))}}
@@ -385,7 +412,7 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
     --f-display:Arial,"Liberation Sans",Helvetica,sans-serif;--f-body:Arial,"Liberation Sans",Helvetica,sans-serif;--f-ui:Arial,"Liberation Sans",Helvetica,sans-serif;--f-mono:"Courier New","Liberation Mono",monospace}
   @page{size:A4;margin:7mm}
   body{font-size:9pt;background:#fff}
-  .topbar,.sidebar,.scrim,.no-print,.lesson-foot,.searchbar{display:none!important}
+  .topbar,.sidebar,.scrim,.no-print,.lesson-foot,.searchbar,.search-wrap{display:none!important}
   .app{display:block}
   main{padding:0!important}
   .page{max-width:none;padding:0}
@@ -408,12 +435,27 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
     </button>
     <a class="brand" href="#home"><span class="brand-name">PM &amp; Scrum Fundamentals</span></a>
     <span class="pct" id="top-pct">0%</span>
+    <button class="iconbtn" type="button" data-action="search-open" aria-label="Search the course">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
   </header>
   <button class="scrim" type="button" data-action="close-menu" aria-label="Close course menu" tabindex="-1"></button>
   <nav class="sidebar" id="sidebar" aria-label="Course"></nav>
   <main id="main" tabindex="-1"></main>
 </div>
 <div id="live" class="sr-only" aria-live="polite"></div>
+<div class="search-wrap" id="search" hidden>
+  <button class="search-scrim" type="button" data-action="search-close" aria-label="Close search" tabindex="-1"></button>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search the course">
+    <div class="search-head">
+      <label class="sr-only" for="search-q">Search the course</label>
+      <input id="search-q" class="search-input" type="search" placeholder="Search lessons, terms, the simulator…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-autocomplete="list">
+      <button type="button" class="btn btn-sm btn-ghost" id="search-close" data-action="search-close">Close</button>
+    </div>
+    <div class="search-meta" id="search-meta" aria-live="polite"></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Search results"></div>
+  </div>
+</div>
 
 <script>
 /* Course data containers. Content scripts below push into these. */
@@ -2756,6 +2798,7 @@ CHEAT = `
     const tool = (id, ico, label, meta) => `<a class="nav-link" href="#${id}"${route === id ? ' aria-current="page"' : ''}><span class="tool-ico">${ico}</span><span>${label}${meta ? `<span class="nav-meta">${meta}</span>` : ''}</span></a>`;
     $('#sidebar').innerHTML = `
       <a class="brand" href="#home">${MARK}<span class="brand-name">PM &amp; Scrum Fundamentals<span class="brand-sub">Field course for a new APM</span></span></a>
+      <button type="button" class="search-trigger" data-action="search-open"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Search the course<span class="kbd" aria-hidden="true">/</span></button>
       <div class="overall">
         <div class="overall-row"><span>Course progress</span><b>${pct}%</b></div>
         <div class="meter" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div>
@@ -3138,6 +3181,201 @@ CHEAT = `
     </div>`;
   }
 
+  /* ---------- Course search ---------- */
+  const stripHTML = html => {
+    const d = document.createElement('div');
+    d.innerHTML = html || '';
+    d.querySelectorAll('svg,style,script,.model').forEach(n => n.remove());
+    return d.textContent.replace(/\s+/g, ' ').trim();
+  };
+  const INDEX = (() => {
+    const out = [];
+    ORDER.forEach(l => {
+      const where = `${TRACKS[l.track].name} · Lesson ${l.n}`;
+      const add = (label, sec, text, key = '') => out.push({ kind: 'lesson', title: l.title, where: label ? `${where} · ${label}` : where, route: l.id, sec, key, text: stripHTML(text) });
+      add('', null, `${l.idea} ${l.sub || ''}`, l.title + ' ' + (l.short || ''));
+      add('Explanation', 's-exp', l.body);
+      add('Worked example', 's-ex', `<p>${l.example.title}</p>${l.example.html}`);
+      add('Common mistakes', 's-mis', l.mistakes.join(' '));
+      add('Try it', 's-try', l.tryit.prompt + ' ' + (l.tryit.classify ? l.tryit.classify.items.map(i => i[0]).join(' ') : ''));
+      add('Quick check', 's-q', l.quiz.map(q => q.q + ' ' + q.o.map(o => o[0]).join(' ')).join(' '));
+    });
+    GLOSSARY.forEach(g => out.push({ kind: 'glossary', title: g.term, where: `Glossary · ${g.track === 'pm' ? 'PM' : 'Scrum'}${g.sg ? ' · Scrum Guide term' : ''}`, route: 'glossary', sec: null, key: g.term + ' ' + (g.aka || ''), text: stripHTML(g.def), term: g.term }));
+    SIM.steps.forEach((st, i) => out.push({ kind: 'simulator', title: st.title, where: `Sprint simulator · Decision ${i + 1} · Day ${st.day}`, route: 'simulator', sec: null, key: st.title, text: stripHTML(st.scene + ' ' + st.options.map(o => o.t).join(' ')) }));
+    const cd = document.createElement('div');
+    cd.innerHTML = CHEAT;
+    cd.querySelectorAll('section').forEach(sec => {
+      const h = sec.querySelector('h2');
+      const title = h ? h.textContent.trim() : 'Cheat sheet';
+      if (h) h.remove();
+      out.push({ kind: 'cheat', title, where: 'Cheat sheet', route: 'cheatsheet', sec: null, key: title, text: sec.textContent.replace(/\s+/g, ' ').trim() });
+    });
+    return out;
+  })();
+  const KIND = { lesson: ['Lesson', 'pm'], glossary: ['Glossary', ''], simulator: ['Simulator', ''], cheat: ['Cheat sheet', ''] };
+  const SR = { q: '', tokens: [], results: [], active: 0, pending: null, opener: null };
+  const tokenize = q => q.toLowerCase().split(/\s+/).map(t => t.trim()).filter(Boolean);
+  const STOP = new Set(['a', 'an', 'and', 'the', 'of', 'to', 'in', 'on', 'for', 'is', 'vs', 'or', 'at', 'by', 'with']);
+  /* What to highlight: the whole phrase where it appears, otherwise the meaningful words. */
+  const hlTerms = tokens => {
+    const words = tokens.filter(t => !STOP.has(t));
+    return words.length ? words : tokens;
+  };
+  function findRanges(str, tokens) {
+    const low = str.toLowerCase();
+    const ranges = [];
+    const phrase = tokens.join(' ');
+    if (tokens.length > 1 && low.includes(phrase)) tokens = [phrase];
+    else tokens = hlTerms(tokens);
+    tokens.forEach(t => { let i = low.indexOf(t); while (i !== -1) { ranges.push([i, i + t.length]); i = low.indexOf(t, i + t.length); } });
+    ranges.sort((a, b) => a[0] - b[0]);
+    const merged = [];
+    ranges.forEach(r => { const last = merged[merged.length - 1]; if (last && r[0] <= last[1]) last[1] = Math.max(last[1], r[1]); else merged.push(r.slice()); });
+    return merged;
+  }
+  function highlight(str, tokens) {
+    const ranges = findRanges(str, tokens);
+    let html = '', pos = 0;
+    ranges.forEach(([a, b]) => { html += esc(str.slice(pos, a)) + '<mark>' + esc(str.slice(a, b)) + '</mark>'; pos = b; });
+    return html + esc(str.slice(pos));
+  }
+  function snippet(text, tokens) {
+    const low = text.toLowerCase();
+    let idx = -1;
+    tokens.forEach(t => { const i = low.indexOf(t); if (i !== -1 && (idx === -1 || i < idx)) idx = i; });
+    if (idx === -1) idx = 0;
+    let start = Math.max(0, idx - 60);
+    if (start > 0) { const sp = text.indexOf(' ', start); if (sp !== -1 && sp < idx) start = sp + 1; }
+    let end = Math.min(text.length, start + 170);
+    if (end < text.length) { const sp = text.lastIndexOf(' ', end); if (sp > idx) end = sp; }
+    return (start > 0 ? '… ' : '') + highlight(text.slice(start, end), tokens) + (end < text.length ? ' …' : '');
+  }
+  function runSearch(q) {
+    const tokens = tokenize(q);
+    SR.tokens = tokens;
+    if (!tokens.length) return [];
+    const phrase = q.trim().toLowerCase();
+    const scored = [];
+    INDEX.forEach((e, order) => {
+      const key = e.key.toLowerCase(), text = e.text.toLowerCase();
+      if (!tokens.every(t => key.includes(t) || text.includes(t))) return;
+      let score = 0;
+      tokens.forEach(t => { if (key.includes(t)) score += 10; if (text.includes(t)) score += 1; });
+      if (key.includes(phrase)) score += 15;
+      if (e.kind === 'glossary' && e.term.toLowerCase() === phrase) score += 25;
+      if (text.includes(phrase)) score += 3;
+      if (e.kind === 'lesson' && !e.sec) score += 2;
+      scored.push({ e, score, order });
+    });
+    scored.sort((a, b) => b.score - a.score || a.order - b.order);
+    return scored.slice(0, 30);
+  }
+  function renderResults() {
+    const box = $('#search-results'), meta = $('#search-meta'), input = $('#search-q');
+    if (!SR.q.trim()) {
+      SR.results = [];
+      meta.textContent = '';
+      box.innerHTML = `<div class="search-empty"><p>Search ${ORDER.length} lessons, ${GLOSSARY.length} glossary terms, the Sprint simulator and the cheat sheet.</p>
+        <div class="chips">${['RICE', 'Sprint Goal', 'Definition of Done', 'velocity', 'North Star', 'feature flag'].map(x => `<button type="button" class="chip" data-action="search-suggest" data-q="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`;
+      input.removeAttribute('aria-activedescendant');
+      return;
+    }
+    SR.results = runSearch(SR.q);
+    if (!SR.results.length) {
+      meta.textContent = 'No results';
+      box.innerHTML = `<div class="search-empty"><p>Nothing matches “${esc(SR.q.trim())}”. Try a shorter word, or check the spelling.</p></div>`;
+      input.removeAttribute('aria-activedescendant');
+      return;
+    }
+    if (SR.active >= SR.results.length) SR.active = 0;
+    meta.textContent = `${SR.results.length}${SR.results.length === 30 ? '+' : ''} result${SR.results.length === 1 ? '' : 's'} · ↑↓ to move · Enter to open`;
+    box.innerHTML = SR.results.map((r, i) => {
+      const e = r.e, k = KIND[e.kind];
+      return `<div class="sr-item" role="option" id="sr-${i}" data-kind="${e.kind}" data-action="search-pick" data-i="${i}" aria-selected="${i === SR.active}">
+        <div class="sr-top"><span class="badge ${k[1]}">${k[0]}</span><span class="sr-where">${esc(e.where)}</span></div>
+        <div class="sr-title">${highlight(e.title, SR.tokens)}</div>
+        <div class="sr-snip">${snippet(e.text, SR.tokens)}</div>
+      </div>`;
+    }).join('');
+    input.setAttribute('aria-activedescendant', 'sr-' + SR.active);
+  }
+  function setActive(i) {
+    if (!SR.results.length) return;
+    SR.active = (i + SR.results.length) % SR.results.length;
+    $$('#search-results .sr-item').forEach((el, j) => el.setAttribute('aria-selected', String(j === SR.active)));
+    const el = $('#sr-' + SR.active);
+    if (el) el.scrollIntoView({ block: 'nearest' });
+    $('#search-q').setAttribute('aria-activedescendant', 'sr-' + SR.active);
+  }
+  function openSearch() {
+    closeMenu();
+    SR.opener = document.activeElement;
+    $('#search').hidden = false;
+    document.body.style.overflow = 'hidden';
+    const input = $('#search-q');
+    input.value = SR.q;
+    SR.active = 0;
+    renderResults();
+    input.focus();
+    input.select();
+  }
+  function closeSearch(restoreFocus = true) {
+    if ($('#search').hidden) return;
+    $('#search').hidden = true;
+    document.body.style.overflow = '';
+    if (restoreFocus && SR.opener && document.contains(SR.opener)) SR.opener.focus({ preventScroll: true });
+  }
+  function pickResult(i) {
+    const r = SR.results[i];
+    if (!r) return;
+    const e = r.e;
+    closeSearch(false);
+    SR.pending = { tokens: SR.tokens.filter(t => t.length >= 2 || SR.tokens.length === 1), sec: e.sec, route: e.route };
+    if (e.route === 'glossary') { G.q = e.term; G.f = 'all'; }
+    if (route() === e.route) navigate(); else location.hash = e.route;
+  }
+  function markHits(root, tokens) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => {
+        const p = n.parentElement;
+        if (!p || p.closest('svg,textarea,input,script,style,mark,[hidden]')) return NodeFilter.FILTER_REJECT;
+        return n.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    let first = null;
+    nodes.forEach(node => {
+      const text = node.nodeValue;
+      const ranges = findRanges(text, tokens);
+      if (!ranges.length) return;
+      const frag = document.createDocumentFragment();
+      let pos = 0;
+      ranges.forEach(([a, b]) => {
+        if (a > pos) frag.appendChild(document.createTextNode(text.slice(pos, a)));
+        const m = document.createElement('mark');
+        m.className = 'hit';
+        m.textContent = text.slice(a, b);
+        frag.appendChild(m);
+        if (!first) first = m;
+        pos = b;
+      });
+      if (pos < text.length) frag.appendChild(document.createTextNode(text.slice(pos)));
+      node.parentNode.replaceChild(frag, node);
+    });
+    return first;
+  }
+  function applyPendingSearch() {
+    const p = SR.pending;
+    SR.pending = null;
+    if (!p || route() !== p.route || !p.tokens.length) return;
+    const first = markHits($('#main'), p.tokens);
+    const label = p.sec ? document.getElementById(p.sec) : null;
+    const section = label ? label.closest('section') : null;
+    const target = (section && section.querySelector('mark.hit')) || section || first;
+    if (target) target.scrollIntoView({ block: target.tagName === 'MARK' ? 'center' : 'start' });
+  }
+
   /* ---------- Router ---------- */
   function route() {
     const h = (location.hash || '').replace(/^#\/?/, '') || 'home';
@@ -3166,6 +3404,7 @@ CHEAT = `
     window.scrollTo(0, 0);
     const h = $('#page-title');
     if (h) h.focus({ preventScroll: true });
+    applyPendingSearch();
   }
 
   /* ---------- Menu (mobile drawer) ---------- */
@@ -3315,7 +3554,11 @@ CHEAT = `
       simRefresh(st.i < SIM.steps.length ? '#scene-title' : '.scene');
     },
     'sim-restart': () => { S.sim = simNew(); persist('sim'); simRefresh('#scene-title'); },
-    print: () => { try { window.print(); } catch (e) { /* print unavailable */ } }
+    print: () => { try { window.print(); } catch (e) { /* print unavailable */ } },
+    'search-open': () => openSearch(),
+    'search-close': () => closeSearch(),
+    'search-pick': el => pickResult(+el.dataset.i),
+    'search-suggest': el => { SR.q = el.dataset.q; const i = $('#search-q'); i.value = SR.q; SR.active = 0; renderResults(); i.focus(); }
   };
   function syncLessonChrome(lesson) {
     const done = S.completed.has(lesson.id);
@@ -3333,6 +3576,7 @@ CHEAT = `
   let draftTimer = null;
   document.addEventListener('input', e => {
     const t = e.target;
+    if (t.id === 'search-q') { SR.q = t.value; SR.active = 0; renderResults(); return; }
     if (t.id === 'gl-q') { G.q = t.value; glossaryList(); return; }
     if (t.classList.contains('draft')) {
       const l = t.dataset.l;
@@ -3344,6 +3588,16 @@ CHEAT = `
     }
   });
   document.addEventListener('keydown', e => {
+    if (!$('#search').hidden) {
+      if (e.key === 'Escape') { e.preventDefault(); closeSearch(); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); setActive(SR.active + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(SR.active - 1); }
+      else if (e.key === 'Enter' && e.target.id === 'search-q') { e.preventDefault(); pickResult(SR.active); }
+      else if (e.key === 'Tab') { e.preventDefault(); (document.activeElement === $('#search-q') ? $('#search-close') : $('#search-q')).focus(); }
+      return;
+    }
+    const typing = /^(input|textarea|select)$/i.test(e.target.tagName || '') || e.target.isContentEditable;
+    if ((e.key === '/' && !typing) || (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); openSearch(); return; }
     if (e.key === 'Escape') closeMenu();
     if (route() !== 'flashcards') return;
     const tag = (e.target.tagName || '').toLowerCase();
