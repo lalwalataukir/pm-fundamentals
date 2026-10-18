@@ -177,7 +177,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var
 svg text{font-family:var(--f-ui);fill:var(--ink)}
 svg .t-sm{font-size:12px} svg .t-xs{font-size:10.5px} svg .t-md{font-size:14px} svg .t-lg{font-size:17px;font-weight:700;font-family:var(--f-display)}
 svg .t-mono{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.04em}
-svg .t-muted{fill:var(--muted)} svg .t-acc{fill:var(--accent)} svg .t-gold{fill:var(--gold)} svg .t-bad{fill:var(--bad)} svg .t-good{fill:var(--good)} svg .t-onacc{fill:var(--accent-ink)}
+svg .t-muted{fill:var(--muted)} svg .t-guide{fill:var(--guide)} svg .t-acc{fill:var(--accent)} svg .t-gold{fill:var(--gold)} svg .t-bad{fill:var(--bad)} svg .t-good{fill:var(--good)} svg .t-onacc{fill:var(--accent-ink)}
 svg .b{font-weight:650}
 .d-surface{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
 .d-soft{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
@@ -524,7 +524,7 @@ DIAG.impactEffort = `<svg viewBox="0 0 560 380" role="img" aria-labelledby="ie-t
   <rect x="300" y="175" width="230" height="155" class="d-bad" fill-opacity=".5"/>
   <text x="82" y="40" class="t-mono t-good">QUICK WINS</text><text x="518" y="40" text-anchor="end" class="t-mono t-gold">BIG BETS</text>
   <text x="82" y="320" class="t-mono t-muted">FILL-INS</text><text x="518" y="320" text-anchor="end" class="t-mono t-bad">MONEY PITS</text>
-  <circle cx="200" cy="80" r="7" class="d-fill-acc"/><text x="212" y="84" class="t-sm b">Bulk KYC upload</text>
+  <circle cx="140" cy="80" r="7" class="d-fill-acc"/><text x="152" y="84" class="t-sm b">Bulk KYC upload</text>
   <circle cx="395" cy="100" r="7" class="d-fill-acc"/><text x="407" y="104" class="t-sm b">SSO (SAML)</text>
   <circle cx="380" cy="245" r="7" class="d-fill-acc"/><text x="392" y="241" class="t-sm b">AI tone control</text><text x="392" y="256" class="t-xs t-muted">low confidence</text>
   <circle cx="160" cy="262" r="7" class="d-fill-acc"/><text x="172" y="266" class="t-sm b">Dark mode</text>
@@ -1599,6 +1599,736 @@ ${table(['Stage', 'Who', 'Exit criteria to widen'], [
       ['Firms train and support advisors together and admins need control, so mixed access inside a firm creates confusion and support load.', true, 'The account is the natural unit in B2B.'],
       ['It’s cheaper to code.', false, 'Cost isn’t the main reason.'],
       ['There’s no real reason.', false, 'There are strong operational reasons.']
+    ] }
+  ]
+});
+</script>
+
+<script>
+/* ================= Module 4 · Scrum lessons 1–7 (per the Scrum Guide, November 2020) ================= */
+DIAG.waterfall = `<svg viewBox="0 0 640 270" role="img" aria-labelledby="wf-t"><title id="wf-t">Waterfall delivers value once at the end; Scrum delivers a usable Increment and feedback every Sprint.</title>
+  <defs><marker id="ah-wf" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <text x="20" y="18" class="t-mono t-muted">PLAN-DRIVEN (WATERFALL)</text>
+  ${['Requirements', 'Design', 'Build', 'Test', 'Release'].map((s, i) => `<rect x="${20 + i * 116}" y="${28 + i * 16}" width="108" height="28" rx="5" class="${i === 4 ? 'd-gold' : 'd-surface'}"/><text x="${74 + i * 116}" y="${47 + i * 16}" text-anchor="middle" class="t-xs b">${s}</text>`).join('')}
+  <text x="620" y="140" text-anchor="end" class="t-xs t-muted">value and real feedback arrive once, at the end</text>
+  <path d="M20 160 H620" class="d-grid"/>
+  <text x="20" y="182" class="t-mono t-muted">EMPIRICAL (SCRUM)</text>
+  ${[0, 1, 2, 3, 4].map(i => `<circle cx="${70 + i * 120}" cy="218" r="24" class="d-soft"/><text x="${70 + i * 120}" y="222" text-anchor="middle" class="t-xs b">Sprint ${i + 1}</text>
+    <rect x="${100 + i * 120}" y="${238 - (i + 1) * 6}" width="12" height="${(i + 1) * 6}" class="d-fill-gold"/>${i < 4 ? `<path d="M${118 + i * 120} 218 H${140 + i * 120}" class="d-line" marker-end="url(#ah-wf)"/>` : ''}`).join('')}
+  <text x="620" y="262" text-anchor="end" class="t-xs t-muted">a usable Increment, and feedback, every Sprint</text>
+</svg>`;
+
+DIAG.artifacts = `<svg viewBox="0 0 600 230" role="img" aria-labelledby="ar-t"><title id="ar-t">Each Scrum artifact has a commitment: Product Backlog and Product Goal, Sprint Backlog and Sprint Goal, Increment and Definition of Done.</title>
+  <defs><marker id="ah-ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <text x="20" y="12" class="t-mono t-muted">ARTIFACT</text><text x="330" y="12" class="t-mono t-muted">ITS COMMITMENT</text>
+  ${[['Product Backlog', 'ordered list of what the product needs', 'Product Goal', 'the long-term objective'],
+     ['Sprint Backlog', 'Sprint Goal + selected items + plan', 'Sprint Goal', 'the single objective for the Sprint'],
+     ['Increment', 'usable, additive, thoroughly verified', 'Definition of Done', 'the quality bar it must meet']].map((r, i) => {
+    const y = 22 + i * 70;
+    return `<rect x="20" y="${y}" width="230" height="58" rx="8" class="d-surface"/>
+    <text x="36" y="${y + 25}" class="t-md b">${r[0]}</text><text x="36" y="${y + 44}" class="t-xs t-muted">${r[1]}</text>
+    <path d="M256 ${y + 29} H322" class="d-line" marker-end="url(#ah-ar)"/>
+    <rect x="330" y="${y}" width="250" height="58" rx="8" class="d-guide"/>
+    <text x="346" y="${y + 25}" class="t-md b">${r[2]}</text><text x="346" y="${y + 44}" class="t-xs t-muted">${r[3]}</text>`;
+  }).join('')}
+</svg>`;
+
+DIAG.scrumCycle = `<svg viewBox="0 0 680 320" role="img" aria-labelledby="sc-t"><title id="sc-t">The Scrum cycle: Product Backlog, Sprint Planning, Sprint Backlog, the Sprint with a Daily Scrum, the Increment, Sprint Review and Sprint Retrospective, then the next Sprint starts immediately.</title>
+  <defs><marker id="ah-sc" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker>
+  <marker id="ah-sc2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-gold"/></marker></defs>
+  <rect x="10" y="122" width="130" height="66" rx="8" class="d-surface"/>
+  <text x="75" y="150" text-anchor="middle" class="t-sm b">Product Backlog</text><text x="75" y="168" text-anchor="middle" class="t-xs t-guide">→ Product Goal</text>
+  <rect x="104" y="58" width="112" height="40" rx="20" class="d-gold"/>
+  <text x="160" y="75" text-anchor="middle" class="t-xs b">Sprint Planning</text><text x="160" y="89" text-anchor="middle" class="t-mono t-muted" style="font-size:9.5px">≤ 8 h</text>
+  <path d="M140 155 H176" class="d-line" marker-end="url(#ah-sc)"/><path d="M160 98 V150" class="d-grid" stroke-dasharray="3 3"/>
+  <rect x="182" y="122" width="126" height="66" rx="8" class="d-surface"/>
+  <text x="245" y="150" text-anchor="middle" class="t-sm b">Sprint Backlog</text><text x="245" y="168" text-anchor="middle" class="t-xs t-guide">→ Sprint Goal</text>
+  <path d="M308 155 H332" class="d-line" marker-end="url(#ah-sc)"/>
+  <circle cx="404" cy="160" r="66" class="d-soft"/>
+  <text x="404" y="156" text-anchor="middle" class="t-md b">Sprint</text><text x="404" y="174" text-anchor="middle" class="t-mono t-acc">≤ 1 MONTH</text>
+  <circle cx="404" cy="44" r="36" class="d-gold"/>
+  <text x="404" y="38" text-anchor="middle" class="t-xs b">Daily</text><text x="404" y="51" text-anchor="middle" class="t-xs b">Scrum</text><text x="404" y="65" text-anchor="middle" class="t-mono t-muted" style="font-size:9.5px">15 min</text>
+  <path d="M372 104 Q352 84 368 62" class="d-goldline" marker-end="url(#ah-sc2)"/><path d="M440 62 Q456 84 436 104" class="d-goldline" marker-end="url(#ah-sc2)"/>
+  <path d="M470 155 H498" class="d-line" marker-end="url(#ah-sc)"/>
+  <rect x="504" y="122" width="150" height="66" rx="8" class="d-surface"/>
+  <text x="579" y="150" text-anchor="middle" class="t-sm b">Increment</text><text x="579" y="168" text-anchor="middle" class="t-xs t-guide">→ Definition of Done</text>
+  <path d="M579 188 V226" class="d-line" marker-end="url(#ah-sc)"/>
+  <rect x="514" y="232" width="130" height="40" rx="20" class="d-gold"/>
+  <text x="579" y="249" text-anchor="middle" class="t-xs b">Sprint Review</text><text x="579" y="263" text-anchor="middle" class="t-mono t-muted" style="font-size:9.5px">≤ 4 h</text>
+  <path d="M514 252 H470" class="d-line" marker-end="url(#ah-sc)"/>
+  <rect x="320" y="232" width="146" height="40" rx="20" class="d-gold"/>
+  <text x="393" y="249" text-anchor="middle" class="t-xs b">Sprint Retrospective</text><text x="393" y="263" text-anchor="middle" class="t-mono t-muted" style="font-size:9.5px">≤ 3 h</text>
+  <path d="M320 252 H75 V194" class="d-line" marker-end="url(#ah-sc)"/>
+  <text x="200" y="292" text-anchor="middle" class="t-xs t-muted">next Sprint starts immediately</text>
+  <text x="664" y="314" text-anchor="end" class="t-xs t-muted">Timeboxes shown are maximums for a one-month Sprint.</text>
+</svg>`;
+
+DIAG.kanban = `<svg viewBox="0 0 680 300" role="img" aria-labelledby="kb-t"><title id="kb-t">A Kanban board with WIP limits. The Review column is at its limit, and a separate support lane has its own limit.</title>
+  ${[['Ready', ''], ['Build', 'WIP 4'], ['Review', 'WIP 2'], ['Test', 'WIP 2'], ['Done', '']].map((c, i) => {
+    const x = 10 + i * 134;
+    return `<rect x="${x}" y="10" width="124" height="196" rx="8" class="${i === 2 ? 'd-gold' : 'd-surface'}" ${i === 2 ? 'fill-opacity=".5"' : ''}/>
+    <text x="${x + 12}" y="32" class="t-sm b">${c[0]}</text>${c[1] ? `<text x="${x + 112}" y="32" text-anchor="end" class="t-mono ${i === 2 ? 't-gold' : 't-muted'}">${c[1]}</text>` : ''}`;
+  }).join('')}
+  ${[[0, 0, 'BRF-31'], [0, 1, 'BRF-33'], [0, 2, 'KYC-40'], [1, 0, 'BRF-27'], [1, 1, 'BRF-29'], [1, 2, 'KYC-38'], [2, 0, 'BRF-24'], [2, 1, 'KYC-35'], [3, 0, 'BRF-21'], [4, 0, 'BRF-18'], [4, 1, 'KYC-30'], [4, 2, 'BRF-19']].map(k => `
+    <rect x="${20 + k[0] * 134}" y="${46 + k[1] * 40}" width="104" height="30" rx="5" class="d-surface"/><text x="${32 + k[0] * 134}" y="${66 + k[1] * 40}" class="t-mono">${k[2]}</text>`).join('')}
+  <text x="290" y="152" class="t-xs t-gold b">At limit:</text><text x="290" y="166" class="t-xs t-gold b">stop starting,</text><text x="290" y="180" class="t-xs t-gold b">help finish</text>
+  <rect x="10" y="218" width="660" height="74" rx="8" class="d-bad" fill-opacity=".45" stroke-dasharray="5 4"/>
+  <text x="22" y="238" class="t-mono t-bad">SUPPORT LANE · WIP 1 · SLE: 85% WITHIN 3 DAYS</text>
+  <rect x="154" y="250" width="104" height="30" rx="5" class="d-surface"/><text x="166" y="270" class="t-mono">SUP-112</text>
+</svg>`;
+
+LESSONS.push({
+  id: 'scrum-1', track: 'scrum', n: 1, minutes: 11,
+  title: 'Agile vs Scrum vs Waterfall: empiricism and values', short: 'Agile, Scrum, Waterfall',
+  sub: 'What “agile” actually means, where Scrum fits, the three pillars of empiricism and the five Scrum Values.',
+  idea: 'Scrum is a lightweight framework for complex work. You make progress in short cycles and use what you observe to decide what to do next.',
+  body: `
+<h3>Three terms people mix up</h3>
+${table(['Term', 'What it is', 'Good fit'], [
+  ['<strong>Waterfall</strong> (plan-driven)', 'Sequential phases: requirements → design → build → test → release', 'Stable, well-understood work, such as implementing a file format a regulator has fully specified'],
+  ['<strong>Agile</strong>', 'A set of values and principles: the <em>Manifesto for Agile Software Development</em> (2001)', 'A mindset, not a process'],
+  ['<strong>Scrum</strong>', 'One specific, lightweight <em>framework</em> defined by the Scrum Guide (Schwaber &amp; Sutherland, latest edition November 2020)', 'Complex work where requirements and solutions emerge as you learn']
+])}
+${fig(DIAG.waterfall, 'Plan-driven work learns at the end. Empirical work learns every Sprint.')}
+<p>The Agile Manifesto values <strong>individuals and interactions</strong> over processes and tools, <strong>working software</strong> over comprehensive documentation, <strong>customer collaboration</strong> over contract negotiation, and <strong>responding to change</strong> over following a plan. It doesn’t say the items on the right are worthless, only that the items on the left are valued more.</p>
+${guide(`<ul>
+  <li>Scrum is “a lightweight framework that helps people, teams and organizations generate value through adaptive solutions for complex problems.”</li>
+  <li>The Guide is <strong>purposefully incomplete</strong>. It defines only the parts required to implement Scrum theory, and teams add their own practices on top.</li>
+  <li>Scrum is founded on <strong>empiricism</strong> (knowledge comes from experience and making decisions based on what is observed) and <strong>lean thinking</strong> (reduce waste, focus on the essentials).</li>
+</ul>`)}
+<h3>The three pillars of empiricism</h3>
+<ul>
+  <li><strong>Transparency</strong>: the process and the work must be visible to those doing the work and those receiving it. In the Guide’s words, inspection without transparency is misleading and wasteful.</li>
+  <li><strong>Inspection</strong>: the artifacts and progress towards agreed goals are inspected frequently and diligently, to detect problems.</li>
+  <li><strong>Adaptation</strong>: if something deviates outside acceptable limits, adjust as soon as possible. Inspection without adaptation is pointless.</li>
+</ul>
+<h3>The five Scrum Values</h3>
+<p><strong>Commitment, Focus, Openness, Respect, Courage.</strong> The team commits to its goals and to supporting each other. It focuses on the work of the Sprint. Team and stakeholders are open about the work and its challenges. Members respect each other as capable, independent people. And they have the courage to do the right thing and work on tough problems, for example telling a stakeholder that the AI brief isn’t ready for clients yet.</p>
+${practice('<p>When companies say “we do Agile”, they often mean “we run two-week Sprints in Jira”. Agile is a set of values, Scrum is one framework, and Jira is a tool. You can use all three and still not be empirical if nobody changes course based on what they learn.</p>', 'In practice')}`,
+  example: {
+    title: 'Two projects in the same company',
+    html: `
+<p><strong>Project A: a regulator-specified report file.</strong> The format is published, the deadline is fixed, and there are few unknowns. A plan-driven approach works well. Even inside a Scrum team, this work will be highly predictable.</p>
+<p><strong>Project B: the AI meeting-prep brief.</strong> You don’t know what advisors will find valuable, and model behavior is uncertain. Empiricism earns its keep here:</p>
+<ul>
+  <li><strong>Transparency:</strong> the Sprint Backlog and the pilot usage dashboard are visible to everyone, CTO included. Known model errors are logged openly, not hidden.</li>
+  <li><strong>Inspection:</strong> at each Sprint Review, two pilot advisors use the latest Increment live, and the team looks at usage data together.</li>
+  <li><strong>Adaptation:</strong> nobody read the “client sentiment” section, so it was dropped. Advisors kept asking about SIP status, so a SIP section went to the top of the Product Backlog.</li>
+</ul>`
+  },
+  mistakes: [
+    'Saying “we’re agile” because the team uses Jira and holds standups.',
+    'Treating Scrum as a full methodology that prescribes everything. It’s deliberately incomplete.',
+    'Forcing Scrum onto simple, predictable or interrupt-driven work just because it’s the company process.',
+    'Inspecting without adapting: reviews and retrospectives that never change anything.',
+    'Hiding bad news, which destroys transparency and makes every later inspection misleading.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> for each situation, decide whether a plan-driven approach fits, or whether it needs empiricism (Scrum).</p>
+<p><strong>Part 2 (box below):</strong> at your Sprint Review the team demos, stakeholders nod, and the Product Backlog never changes. Which pillar is missing, and what would you change?</p>`,
+    placeholder: 'Missing pillar: …\nWhat I would change: …',
+    classify: {
+      buckets: ['Plan-driven fits', 'Needs empiricism'],
+      items: [
+        ['Implementing a regulator-specified file format whose spec is fixed and published', 0, 'The requirements are known and stable, so a plan works.'],
+        ['Building an AI assistant whose usefulness to advisors is still uncertain', 1, 'Both the value and the model behavior are uncertain. You learn by shipping small Increments and inspecting them.'],
+        ['Applying a vendor’s documented, routine security patch across three services', 0, 'It’s simple, known work. A checklist beats a Sprint here.'],
+        ['Redesigning onboarding to cut drop-off when nobody knows the real cause', 1, 'Cause and solution have to be discovered, which makes it complex.'],
+        ['Pricing and packaging AI features for partner firms', 1, 'Market response is uncertain, so experiment and adapt.']
+      ]
+    },
+    model: `<p><strong>Part 1:</strong> plan-driven for the file format and the security patch. Empirical for the AI assistant, the onboarding redesign and the pricing work.</p>
+<p><strong>Part 2:</strong> <strong>adaptation</strong> is missing. Inspection without adaptation is pointless. End every Sprint Review with an explicit “what do we do next?” discussion, and update the Product Backlog in the room: re-order it, add the new insight, remove what no longer matters. If nothing ever changes, also ask whether the right stakeholders are attending.</p>`
+  },
+  quiz: [
+    { q: 'According to the Scrum Guide, what are the three pillars of empiricism?', o: [
+      ['Commitment, Focus, Openness', false, 'These are three of the five Scrum Values, not the pillars.'],
+      ['Transparency, Inspection, Adaptation', true, 'Transparency enables inspection, and inspection enables adaptation.'],
+      ['Plan, Do, Check', false, 'That’s the Deming cycle (PDCA). It’s related in spirit but isn’t Scrum’s wording.'],
+      ['Individuals, Interactions, Working software', false, 'Those phrases come from the Agile Manifesto’s values.']
+    ] },
+    { q: 'Which best describes the relationship between Agile and Scrum?', o: [
+      ['They’re the same thing.', false, 'Agile is broader. Kanban, XP and others are also agile approaches.'],
+      ['Agile is a set of values and principles. Scrum is one lightweight framework that puts them into practice.', true, 'Scrum is one way of working with an agile mindset.'],
+      ['Scrum is the newer version of Agile.', false, 'Scrum (early 1990s) actually predates the 2001 Agile Manifesto.'],
+      ['Agile is a tool and Scrum is software.', false, 'Neither is a tool or software.']
+    ] },
+    { q: 'Which of these is NOT one of the five Scrum Values?', o: [
+      ['Courage', false, 'Courage is a Scrum Value: doing the right thing and working on tough problems.'],
+      ['Respect', false, 'Respect is a Scrum Value.'],
+      ['Velocity', true, 'Velocity isn’t a value, and it doesn’t appear in the Scrum Guide at all. The values are Commitment, Focus, Openness, Respect and Courage.'],
+      ['Openness', false, 'Openness is a Scrum Value.']
+    ] },
+    { q: 'The Scrum Guide calls Scrum “purposefully incomplete”. What does that mean in practice?', o: [
+      ['Teams can skip the parts they dislike.', false, 'The Guide says its elements are immutable. Implementing only parts of it is not Scrum.'],
+      ['It defines only what’s required to implement Scrum theory. Teams add their own practices, such as user stories or story points, on top.', true, 'The framework is minimal by design. Complementary practices fill in the rest.'],
+      ['The Guide is still a draft.', false, 'It’s a finished, versioned document. The current edition is from November 2020.'],
+      ['It only works for software.', false, 'The Guide explicitly says Scrum is used across many domains.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'scrum-2', track: 'scrum', n: 2, minutes: 12,
+  title: 'Scrum accountabilities: Product Owner, Scrum Master, Developers', short: 'Accountabilities',
+  sub: 'Who is accountable for what in a Scrum Team, and where a PM fits.',
+  idea: 'A Scrum Team is one small, self-managing, cross-functional team with three accountabilities: Product Owner, Scrum Master and Developers.',
+  body: `
+${guide(`<ul>
+  <li>A Scrum Team consists of <strong>one Scrum Master, one Product Owner, and Developers</strong>. Within a Scrum Team there are <strong>no sub-teams or hierarchies</strong>. It is a cohesive unit focused on one objective at a time: the Product Goal.</li>
+  <li>Teams are <strong>cross-functional</strong> (they have all the skills needed to create value each Sprint) and <strong>self-managing</strong> (they decide internally who does what, when and how).</li>
+  <li>The team is small enough to stay nimble and large enough to complete significant work within a Sprint: <strong>typically 10 or fewer people</strong>. Larger groups should split into multiple Scrum Teams that share the same Product Goal, Product Backlog and Product Owner.</li>
+  <li>The 2020 Guide uses the word <strong>accountabilities</strong>, not “roles”.</li>
+</ul>`)}
+<h3>The three accountabilities</h3>
+${table(['Accountability', 'Accountable for', 'Key phrases from the Guide'], [
+  ['<strong>Developers</strong>', 'Creating the Sprint Backlog (the plan); instilling quality by adhering to the Definition of Done; adapting the plan each day towards the Sprint Goal; holding each other accountable as professionals', 'The people committed to creating <em>any aspect</em> of a usable Increment each Sprint. That includes designers, QA and data scientists, not only coders.'],
+  ['<strong>Product Owner</strong>', 'Maximizing the value of the product. Effective Product Backlog management: developing and communicating the Product Goal; creating and communicating backlog items; ordering them; keeping the backlog transparent, visible and understood', 'One person, not a committee. They can delegate the work but remain accountable. Those who want to change the backlog do so by convincing the Product Owner.'],
+  ['<strong>Scrum Master</strong>', 'Establishing Scrum as defined in the Guide, and the Scrum Team’s effectiveness. Coaching self-management; causing impediments to be removed; making sure events happen and are positive, productive and within their timebox; serving the PO and the organization', '“True leaders who serve the Scrum Team and the larger organization.”']
+])}
+<p>For Product Owners to succeed, the Guide says, the entire organization must <strong>respect their decisions</strong>. If the CTO, the Head of Sales and the PM each re-order the backlog, nobody is really the Product Owner.</p>
+${practice(`<ul>
+  <li><strong>The PM is the PO.</strong> This is the most common setup. The PM job is broader than the PO accountability, covering discovery, pricing input and go-to-market.</li>
+  <li><strong>A senior PM or the CTO is the PO, and an APM does much of the backlog work.</strong> This is allowed: the PO may delegate the work and stays accountable. Just make it explicit who has the final say on ordering.</li>
+  <li><strong>Engineering managers</strong> aren’t a Scrum accountability. Good EMs support Developers’ growth and engineering health without directing Sprint work.</li>
+  <li><strong>The Scrum Master</strong> is often part-time, for example an EM or an experienced engineer. The Guide says a PO or SM who works on Sprint Backlog items participates as a Developer.</li>
+  <li>The anti-pattern to avoid is the <strong>proxy PO</strong>: someone who carries the title but has no decision rights, so every decision gets escalated.</li>
+</ul>`)}`,
+  example: {
+    title: 'Mapping your real team onto Scrum',
+    html: `
+<p>Your setup: the CTO (your manager), you (APM), an engineering lead, four backend and ML engineers, one frontend engineer, one designer, one QA engineer.</p>
+${table(['Person', 'Scrum accountability', 'Notes'], [
+  ['4 backend/ML engineers, frontend, designer, QA, engineering lead (when building)', '<strong>Developers</strong>', 'Eight people. They own the Sprint plan, and the designer and QA count as Developers.'],
+  ['CTO or you', '<strong>Product Owner</strong>', 'Decide this explicitly. If the CTO makes the final ordering calls, the CTO is the PO and you do delegated PO work: refinement, writing items, stakeholder input.'],
+  ['Engineering lead or a senior engineer (part-time)', '<strong>Scrum Master</strong>', 'Coaches the team and removes impediments. Avoid making yourself both the de facto PO and the SM: it’s hard to coach a team out of an anti-pattern you are causing.'],
+  ['Sales, compliance, ops, partner firms', 'Stakeholders', 'They influence the backlog through the Product Owner.']
+])}
+<p>Team size: 8 Developers plus a PO and an SM is about 10, which is right at the guidance. If the team grows further, split it into two Scrum Teams sharing one Product Backlog and one PO, rather than growing a 14-person “team”.</p>`
+  },
+  mistakes: [
+    'Treating the PO as a ticket-taker for stakeholders rather than the person who decides the order.',
+    'Calling engineers “resources” and assigning their tasks. Developers self-manage the Sprint plan.',
+    'Thinking “Developers” means only coders. Designers and QA are Developers too.',
+    'Turning the Scrum Master into a meeting scheduler or Jira admin.',
+    'Having several people (CTO, sales head, you) quietly acting as PO, each with different priorities.',
+    'Splitting one Scrum Team into internal sub-teams (“backend team”, “frontend team”) with hand-offs.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> assign each responsibility to the accountability the Scrum Guide gives it to.</p>
+<p><strong>Part 2 (box below):</strong> map your real team onto the three accountabilities. Who orders the backlog today? Is that explicit?</p>`,
+    placeholder: 'Developers: …\nProduct Owner: …\nScrum Master: …\nWho orders the backlog today: …',
+    classify: {
+      buckets: ['Product Owner', 'Scrum Master', 'Developers'],
+      items: [
+        ['Ordering Product Backlog items', 0, 'Ordering is part of the PO’s accountability for Product Backlog management.'],
+        ['Creating the plan for the Sprint (the Sprint Backlog)', 2, 'The Sprint Backlog is a plan by and for the Developers.'],
+        ['Coaching team members in self-management and cross-functionality', 1, 'This is one of the ways the Scrum Master serves the Scrum Team.'],
+        ['Developing and explicitly communicating the Product Goal', 0, 'This is part of the PO’s Product Backlog management.'],
+        ['Causing the removal of impediments to the Scrum Team’s progress', 1, 'The Guide words it as the Scrum Master <em>causing</em> the removal of impediments, not necessarily removing them personally.'],
+        ['Instilling quality by adhering to the Definition of Done', 2, 'Quality is built in by the Developers.'],
+        ['Ensuring Scrum events take place and are positive, productive and within the timebox', 1, 'This is the Scrum Master serving the team.']
+      ]
+    },
+    model: `<p><strong>Part 1:</strong> PO: ordering, Product Goal. SM: coaching, impediments, events. Developers: the Sprint plan, Definition of Done.</p>
+<p><strong>Part 2 (example):</strong> “Developers: the 8 people who build, including design and QA. PO: the CTO is accountable today, but nobody has said so out loud. Stakeholders sometimes go straight to the CTO or to engineers. I do most of the refinement and stakeholder intake as delegated PO work. SM: nobody explicitly. Proposal: name the CTO as PO, with me handling day-to-day backlog management; ask the engineering lead to act as Scrum Master; route every request through the PO.”</p>`
+  },
+  quiz: [
+    { q: 'Who can change the order of the Product Backlog?', o: [
+      ['Anyone on the team.', false, 'The Developers influence it, but ordering is part of the Product Owner’s accountability.'],
+      ['The CTO, directly.', false, 'Unless the CTO <em>is</em> the Product Owner, stakeholders change the backlog by convincing the PO.'],
+      ['The Product Owner. Anyone else who wants a change tries to convince the PO.', true, 'This is almost word for word from the Guide. The PO is one person, and the organization must respect their decisions.'],
+      ['The Scrum Master.', false, 'The SM helps the PO with backlog techniques but doesn’t order it.']
+    ] },
+    { q: 'Who owns the Sprint Backlog?', o: [
+      ['The Product Owner.', false, 'The PO owns the Product Backlog. The Sprint Backlog belongs to the Developers.'],
+      ['The Developers. It’s a plan by and for the Developers.', true, 'They create it in Sprint Planning and update it throughout the Sprint.'],
+      ['The Scrum Master.', false, 'The SM coaches. They don’t own the plan.'],
+      ['The stakeholders.', false, 'Stakeholders can see it (transparency) but don’t own it.']
+    ] },
+    { q: 'According to the 2020 Scrum Guide, a Scrum Team is…', o: [
+      ['Exactly 3–9 Developers.', false, 'That was the 2017 Guide. The 2020 edition says “typically 10 or fewer people” for the whole Scrum Team.'],
+      ['Typically 10 or fewer people, with no sub-teams or hierarchies.', true, 'Small, cohesive and focused on one Product Goal.'],
+      ['As large as the product needs.', false, 'Large teams should split into multiple Scrum Teams that share a Product Goal, Product Backlog and PO.'],
+      ['15–20 people, for coverage.', false, 'Communication overhead grows fast with size. The Guide recommends small teams.']
+    ] },
+    { q: 'Your designer asks whether designers count as Developers in Scrum. What’s the accurate answer?', o: [
+      ['No. Developers are software engineers only.', false, 'This is a common misreading.'],
+      ['Yes. Developers are the people in the Scrum Team committed to creating any aspect of a usable Increment each Sprint.', true, 'The Guide’s definition is about contributing to the Increment, not job titles.'],
+      ['Only if they write code.', false, 'Writing code isn’t the criterion.'],
+      ['Designers should sit in a separate design team.', false, 'Scrum Teams are cross-functional. Separate design teams create hand-offs.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'scrum-3', track: 'scrum', n: 3, minutes: 12,
+  title: 'Scrum artifacts and their commitments', short: 'Artifacts & commitments',
+  sub: 'Product Backlog and Product Goal, Sprint Backlog and Sprint Goal, Increment and Definition of Done.',
+  idea: 'Each artifact comes with a commitment that gives it focus. The Product Backlog has the Product Goal, the Sprint Backlog has the Sprint Goal, and the Increment has the Definition of Done.',
+  body: `
+${fig(DIAG.artifacts, 'The 2020 Scrum Guide pairs every artifact with a commitment.')}
+${guide(`<p>Scrum’s artifacts represent work or value and are designed to maximize transparency. Each one contains a commitment that provides focus and something to measure progress against.</p>`)}
+<h3>Product Backlog → Product Goal</h3>
+<p>The Product Backlog is “an emergent, ordered list of what is needed to improve the product”, and the <strong>single source of work</strong> for the Scrum Team. The <strong>Product Goal</strong> describes a future state of the product that the team can plan against. It sits in the Product Backlog, and the rest of the backlog emerges to define what will fulfil it. It is the team’s long-term objective, and the team must <strong>fulfil or abandon one Product Goal before taking on the next</strong>.</p>
+<h3>Sprint Backlog → Sprint Goal</h3>
+<p>The Sprint Backlog is made up of the <strong>Sprint Goal (why)</strong>, the <strong>Product Backlog items selected for the Sprint (what)</strong> and an <strong>actionable plan for delivering the Increment (how)</strong>. It is a plan by and for the Developers, updated throughout the Sprint. The <strong>Sprint Goal</strong> is the single objective for the Sprint. It is a commitment by the Developers, but it leaves flexibility in the exact work needed to reach it. If the work turns out differently than expected, the Developers negotiate scope with the Product Owner <strong>without affecting the Sprint Goal</strong>.</p>
+<h3>Increment → Definition of Done</h3>
+<p>An Increment is a concrete stepping stone towards the Product Goal. It is additive to all prior Increments, thoroughly verified, and <strong>usable</strong>. Several Increments can be created within one Sprint, and an Increment <strong>may be delivered to stakeholders before the Sprint ends</strong>: the Sprint Review is not a gate to releasing value.</p>
+<p>The <strong>Definition of Done</strong> is a formal description of the state of the Increment when it meets the quality measures required for the product. The moment an item meets it, an Increment is born. If an item <strong>doesn’t</strong> meet the Definition of Done, it can’t be released or even presented at the Sprint Review. It returns to the Product Backlog for future consideration. If the organization has a DoD standard, every Scrum Team follows it as a minimum.</p>
+${practice(`${table(['', 'Definition of Done', 'Acceptance criteria'], [
+  ['In the Scrum Guide?', 'Yes, as the Increment’s commitment', 'No. A common complementary practice'],
+  ['Applies to', 'Every item and every Increment', 'One specific backlog item'],
+  ['Example', '“Code reviewed, tests pass, PII masked in logs, audit entry written”', '“Given no previous meeting, the brief compares the last 90 days”']
+])}`)}`,
+  example: {
+    title: 'Goals and Done for the AI meeting-prep brief',
+    html: `
+<p><strong>Product Goal:</strong> “Advisors at partner firms can prepare any client review in under 15 minutes using an AI brief they trust.”</p>
+<p><strong>Sprint Goal (Sprint 14):</strong> “Pilot advisors can generate a brief that accurately shows what changed since the last meeting for clients holding mutual funds.” It is one objective, it explains the value, and it leaves the exact scope flexible.</p>
+<p><strong>Selected items:</strong> change-since-last-meeting calculation, XIRR display, failed-SIP section, the brief generation endpoint, and audit logging.</p>
+<p><strong>Definition of Done (team):</strong></p>
+<ul>
+  <li>Code reviewed by a second Developer; automated tests pass.</li>
+  <li>Golden-set regression: zero numeric mismatches across 50 masked portfolios.</li>
+  <li>PII masked in logs and prompts; data stays in approved regions.</li>
+  <li>Every AI output logged with prompt version, model version and inputs (audit).</li>
+  <li>Compliance-approved disclaimer shown on any AI-generated text.</li>
+  <li>p95 latency measured and within budget; accessibility checks pass.</li>
+  <li>Deployed to production behind a flag; help article updated.</li>
+</ul>
+<p>Because compliance and quality are in the DoD, “Done” is honest. There’s no hidden “hardening” work waiting before a pilot firm can use it.</p>`
+  },
+  mistakes: [
+    'Writing a Sprint Goal that is just a list of tickets, such as “finish BRF-101, 102 and 104”.',
+    'Having no Product Goal, so the backlog is a pile of unrelated requests.',
+    'A Definition of Done that stops at “code merged”, with no tests and no compliance checks, which hides undone work.',
+    'Presenting work that isn’t Done at the Sprint Review “to show progress”.',
+    'Believing you can only release at the end of the Sprint.',
+    'Keeping several backlogs for one product (a sales backlog, a tech backlog) instead of one ordered Product Backlog.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> which artifact commitment, or practice, does each statement belong to?</p>
+<p><strong>Part 2 (box below):</strong> write your own Product Goal and a Definition of Done for an AI KYC-extraction product. Include audit logging and PII masking.</p>`,
+    placeholder: 'Product Goal: …\nDefinition of Done:\n- \n- ',
+    classify: {
+      buckets: ['Product Goal', 'Sprint Goal', 'Definition of Done', 'Acceptance criteria'],
+      items: [
+        ['Every AI-generated output is logged with prompt version and model version.', 2, 'It applies to every item the team delivers, so it belongs in the DoD.'],
+        ['Advisors can prepare any client review in under 15 minutes with a brief they trust.', 0, 'A long-term future state of the product.'],
+        ['This Sprint: pilot advisors can generate an accurate what-changed brief for mutual fund clients.', 1, 'A single objective for one Sprint.'],
+        ['Given no previous meeting is logged, the brief compares the last 90 days and says so.', 3, 'A condition specific to one backlog item.'],
+        ['Golden-set regression: zero numeric mismatches across 50 masked portfolios.', 2, 'A quality bar applied to every Increment.']
+      ]
+    },
+    model: `<p><strong>Product Goal:</strong> “Operations teams at partner firms can onboard a client with complete, accurate KYC in under 10 minutes, without re-typing data from documents.”</p>
+<p><strong>Definition of Done:</strong> code reviewed; unit and integration tests pass; extraction accuracy on the golden set ≥98% on key fields (PAN, name, date of birth, address); PII masked in logs, prompts and analytics; Aadhaar numbers masked in line with regulations; every extraction logged with document hash, model version and the confidence for each field; low-confidence fields flagged for human review; deployed behind a flag; runbook and help article updated.</p>`
+  },
+  quiz: [
+    { q: 'Which commitment belongs to the Sprint Backlog?', o: [
+      ['Definition of Done', false, 'That’s the Increment’s commitment.'],
+      ['Product Goal', false, 'That’s the Product Backlog’s commitment.'],
+      ['Sprint Goal', true, 'The Sprint Goal is the single objective that gives the Sprint Backlog its focus.'],
+      ['Velocity', false, 'Velocity isn’t in the Scrum Guide at all.']
+    ] },
+    { q: 'Can an Increment be released to users before the end of the Sprint?', o: [
+      ['No. Only after the Sprint Review.', false, 'This is a common misconception. The Guide says the Sprint Review should never be considered a gate to releasing value.'],
+      ['Yes. Several Increments can be created within a Sprint, and any of them may be delivered before the Sprint ends.', true, 'The Sprint Review inspects the sum of the Increments. It doesn’t authorize releases.'],
+      ['Only with the CTO’s approval.', false, 'Release decisions are up to your organization. The Guide doesn’t require any particular approval.'],
+      ['Only in the last Sprint of a release.', false, '“Release Sprints” aren’t a Scrum concept.']
+    ] },
+    { q: 'A story is code-complete, but the audit logging required by the Definition of Done isn’t finished. According to the Guide, what happens?', o: [
+      ['Present it at the Sprint Review as 90% done.', false, 'Work that doesn’t meet the DoD can’t even be presented at the Sprint Review.'],
+      ['It isn’t part of the Increment. It can’t be released or presented, and it returns to the Product Backlog for future consideration.', true, 'This keeps “Done” honest and progress transparent.'],
+      ['Count half of its story points.', false, 'Partial credit hides undone work, and story points aren’t a Scrum Guide concept anyway.'],
+      ['Mark it Done and fix it next Sprint.', false, 'That creates hidden debt and breaks transparency.']
+    ] },
+    { q: 'What’s the difference between the Definition of Done and acceptance criteria?', o: [
+      ['They’re the same thing.', false, 'They work at different levels.'],
+      ['The DoD is the quality bar for every Increment. Acceptance criteria are specific to one backlog item, and they aren’t part of the Scrum Guide.', true, 'Both are needed. An item is complete when it meets its own criteria and the DoD.'],
+      ['The Scrum Master sets the acceptance criteria.', false, 'The SM doesn’t own either one.'],
+      ['The DoD is optional.', false, 'The DoD is one of Scrum’s three commitments.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'scrum-4', track: 'scrum', n: 4, minutes: 14,
+  title: 'Scrum events', short: 'Events',
+  sub: 'The Sprint, Sprint Planning, Daily Scrum, Sprint Review and Sprint Retrospective: purpose, timebox, attendees and output.',
+  idea: 'The Sprint is a fixed-length container of one month or less for four events. Each event is a formal chance to inspect and adapt.',
+  body: `
+${fig(DIAG.scrumCycle, 'One Sprint, end to end. Product Backlog refinement isn’t an event. It happens continuously.')}
+${guide(`<ul>
+  <li>The <strong>Sprint</strong> is a container for all other events. Sprints are fixed-length events of <strong>one month or less</strong>, and a new Sprint starts immediately after the previous one ends.</li>
+  <li>During the Sprint: no changes are made that would endanger the Sprint Goal; quality does not decrease; the Product Backlog is refined as needed; and scope may be clarified and renegotiated with the Product Owner as more is learned.</li>
+  <li>A Sprint could be cancelled if the Sprint Goal becomes obsolete. <strong>Only the Product Owner has the authority to cancel the Sprint.</strong></li>
+  <li>Events create regularity and reduce the need for meetings not defined in Scrum. Ideally they are held at the same time and place.</li>
+</ul>`)}
+${table(['Event', 'Purpose', 'Max timebox (1-month Sprint)', 'Who', 'Output'], [
+  ['<strong>Sprint Planning</strong>', 'Lay out the work. Three topics: <em>Why</em> is this Sprint valuable? <em>What</em> can be Done? <em>How</em> will the chosen work get done?', '8 hours', 'Entire Scrum Team. Others may be invited to advise.', 'Sprint Backlog: Sprint Goal + selected items + plan'],
+  ['<strong>Daily Scrum</strong>', 'Inspect progress towards the Sprint Goal and adapt the Sprint Backlog', '15 minutes, every working day', 'The Developers. PO and SM take part as Developers if they’re working on Sprint Backlog items.', 'An adjusted plan for the next day of work'],
+  ['<strong>Sprint Review</strong>', 'Inspect the outcome of the Sprint and decide future adaptations. Progress towards the Product Goal is discussed.', '4 hours', 'Scrum Team + key stakeholders', 'Agreement on what to do next. The Product Backlog may be adjusted.'],
+  ['<strong>Sprint Retrospective</strong>', 'Plan ways to increase quality and effectiveness: individuals, interactions, processes, tools and the Definition of Done', '3 hours', 'Scrum Team', 'The most helpful improvements, which may be added to the next Sprint Backlog']
+])}
+<p>For shorter Sprints, the Guide says the events are “usually shorter”. It gives only the one-month maximums.</p>
+<h3>Details people get wrong</h3>
+<ul>
+  <li>In Sprint Planning, the <strong>whole Scrum Team</strong> collaborates on the Sprint Goal, and it must be finalized before the end of Planning. Developers decide how much to take on. They often break work into pieces of a day or less.</li>
+  <li>The 2020 Guide removed the “three questions” from the Daily Scrum. Developers can use any structure, as long as the focus is progress towards the Sprint Goal. It isn’t the only time they can adjust their plan.</li>
+  <li>The Sprint Review is a <strong>working session</strong>, and the team should avoid limiting it to a presentation.</li>
+  <li>The Retrospective <strong>concludes</strong> the Sprint.</li>
+</ul>
+${practice(`<ul>
+  <li><strong>Two-week Sprints</strong> are the most common choice in industry.</li>
+  <li>Scaling the timeboxes roughly in proportion is a common rule of thumb. For a 2-week Sprint that means Planning ≤ 4 h, Review ≤ 2 h, Retro ≤ 1.5 h. This isn’t in the Guide.</li>
+  <li>Many teams start Sprints mid-week to avoid Monday holidays and Friday releases.</li>
+  <li>Calling the Daily Scrum a “standup” is informal. Standing up isn’t required.</li>
+</ul>`)}`,
+  example: {
+    title: 'A two-week Sprint calendar for your team',
+    html: `
+${table(['When', 'Event', 'Notes for you as APM'], [
+  ['Day 1 (Wed), 10:00–13:00', 'Sprint Planning', 'Come with a proposed Sprint Goal tied to the Product Goal and a refined top of the backlog. The Developers decide how much fits.'],
+  ['Every working day, 10:00, 15 min', 'Daily Scrum', 'It’s for the Developers. Attend only if the team finds it useful, listen, and pick up anything they need from you afterwards.'],
+  ['Days 4 and 8, 60 min', 'Refinement (an activity, not an event)', 'Bring upcoming items with context and draft acceptance criteria. The Developers size them.'],
+  ['Day 10 (Tue), 14:00–15:30', 'Sprint Review', 'Invite two pilot advisors, the CS lead, compliance and the CTO. Use the working Increment, look at usage data, and agree changes to the Product Backlog.'],
+  ['Day 10 (Tue), 16:00–17:00', 'Sprint Retrospective', 'The Scrum Team only. Pick one or two improvements and put the top one in the next Sprint Backlog.']
+])}
+<p>The next Sprint starts on Wednesday morning. A two-week Sprint keeps feedback from pilot advisors flowing every fortnight.</p>`
+  },
+  mistakes: [
+    'Running the Daily Scrum as a status report to the PM or CTO.',
+    'Skipping the Retrospective “because we’re busy”, which is exactly when the team needs it.',
+    'Turning the Sprint Review into a slide show with no stakeholder input and no backlog changes.',
+    'Adding mid-Sprint work that endangers the Sprint Goal without the PO and Developers renegotiating.',
+    'Stretching the Sprint (“let’s extend by three days to finish”). Sprints are fixed length.',
+    'Assuming backlog refinement is a required Scrum event. It’s an ongoing activity.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> which event is each statement describing?</p>
+<p><strong>Part 2 (box below):</strong> from memory, write the maximum timebox for a one-month Sprint and the output of each event.</p>`,
+    placeholder: 'Sprint Planning: timebox … output …\nDaily Scrum: …\nSprint Review: …\nSprint Retrospective: …',
+    classify: {
+      buckets: ['Planning', 'Daily Scrum', 'Review', 'Retro'],
+      items: [
+        ['Developers inspect progress towards the Sprint Goal and adjust the plan for the coming day.', 1, 'That is exactly the Daily Scrum’s purpose.'],
+        ['The team and key stakeholders inspect the outcome and discuss what to do next.', 2, 'The Sprint Review is a working session with stakeholders.'],
+        ['The team agrees one improvement to its code-review process and adds it to the next Sprint Backlog.', 3, 'The Guide says the most impactful improvements can go straight into the next Sprint Backlog.'],
+        ['The team discusses “Why is this Sprint valuable?” and crafts a Sprint Goal.', 0, 'This is topic one of Sprint Planning.'],
+        ['The team inspects whether its Definition of Done should be strengthened.', 3, 'The Retrospective explicitly covers the Definition of Done.'],
+        ['Developers break the selected items into work of one day or less.', 0, 'This is topic three of Sprint Planning (“How?”).']
+      ]
+    },
+    model: `${table(['Event', 'Max timebox (1-month Sprint)', 'Output'], [
+  ['Sprint', '≤ 1 month, fixed length', 'One or more usable Increments'],
+  ['Sprint Planning', '8 h', 'Sprint Backlog (Sprint Goal, selected items, plan)'],
+  ['Daily Scrum', '15 min', 'Updated plan for the next day'],
+  ['Sprint Review', '4 h', 'Agreement on next steps; Product Backlog possibly adjusted'],
+  ['Sprint Retrospective', '3 h', 'Improvements to work on, possibly added to the next Sprint Backlog']
+])}<p>Shorter Sprints usually have shorter events.</p>`
+  },
+  quiz: [
+    { q: 'Who is the Daily Scrum for?', o: [
+      ['The PM, to collect status.', false, 'This is the classic anti-pattern. It isn’t a status meeting for anyone.'],
+      ['The Developers. The PO and SM take part as Developers only if they’re actively working on Sprint Backlog items.', true, 'This matches the 2020 Guide’s wording.'],
+      ['The whole company.', false, 'It’s a 15-minute event for the Developers.'],
+      ['Stakeholders.', false, 'Stakeholders join the Sprint Review, not the Daily Scrum.']
+    ] },
+    { q: 'What best describes the result of a Sprint Review?', o: [
+      ['A signed acceptance document.', false, 'Scrum doesn’t define sign-offs, and the Review isn’t a gate.'],
+      ['A shared view of what was done and what has changed, agreement on what to do next, and often an adjusted Product Backlog.', true, 'The Guide calls it a working session where attendees collaborate on what to do next, and says the Product Backlog may be adjusted.'],
+      ['Performance ratings for the Developers.', false, 'Scrum events aren’t performance reviews.'],
+      ['The next Sprint Goal.', false, 'The Sprint Goal is crafted in Sprint Planning.']
+    ] },
+    { q: 'Who has the authority to cancel a Sprint?', o: [
+      ['The CTO.', false, 'Not under the Guide, unless the CTO is the Product Owner.'],
+      ['The Scrum Master.', false, 'The SM doesn’t have this authority.'],
+      ['Only the Product Owner, if the Sprint Goal becomes obsolete.', true, 'This is a direct statement in the Guide.'],
+      ['Any Developer.', false, 'Developers can raise concerns but can’t cancel.']
+    ] },
+    { q: 'What’s the maximum timebox for Sprint Planning in the Scrum Guide?', o: [
+      ['15 minutes.', false, 'That’s the Daily Scrum.'],
+      ['8 hours for a one-month Sprint, usually shorter for shorter Sprints.', true, 'The Guide gives the one-month maximum and notes that shorter Sprints usually have shorter events.'],
+      ['Always 2 hours.', false, 'The Guide doesn’t prescribe a fixed 2-hour Planning.'],
+      ['There’s no timebox.', false, 'All Scrum events are timeboxed.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'scrum-5', track: 'scrum', n: 5, minutes: 13,
+  title: 'Refinement, user stories, story points, velocity and Definition of Ready', short: 'Refinement & estimation',
+  sub: 'One of these is in the Scrum Guide and the rest are popular add-ons. Learn which is which and how to use them well.',
+  idea: 'Backlog refinement is an ongoing activity in the Scrum Guide. User stories, story points, velocity and Definition of Ready are complementary practices the Guide doesn’t mention, so treat them as tools, not rules.',
+  body: `
+${guide(`<ul>
+  <li>Product Backlog <strong>refinement</strong> is “the act of breaking down and further defining Product Backlog items into smaller more precise items. This is an <strong>ongoing activity</strong> to add details, such as a description, order, and size.”</li>
+  <li>“The Developers who will be doing the work are <strong>responsible for the sizing</strong>. The Product Owner may influence the Developers by helping them understand and select trade-offs.”</li>
+  <li>Items that can be Done by the Scrum Team within one Sprint are deemed <strong>ready for selection</strong> in Sprint Planning.</li>
+  <li>The Guide mentions burn-downs, burn-ups and cumulative flow as forecasting practices that, while useful, “do not replace the importance of empiricism”.</li>
+</ul>`)}
+<h3>In the Guide or not?</h3>
+${table(['Practice', 'In the Scrum Guide?', 'What it is', 'Watch out for'], [
+  ['Backlog refinement', '<span class="badge sg">Yes · activity</span>', 'Ongoing work to break down and clarify items', 'It isn’t an event and has no prescribed timebox'],
+  ['User stories', '<span class="badge np">No</span>', 'A format from Extreme Programming: “As a…, I want…, so that…”', 'Not every item has to be a story; spikes and bugs are fine'],
+  ['Story points', '<span class="badge np">No</span>', 'Relative size estimates (often 1, 2, 3, 5, 8, 13) combining effort, complexity and uncertainty', 'Not hours, and not comparable across teams'],
+  ['Velocity', '<span class="badge np">No</span>', 'Points completed per Sprint, used by the team to forecast', 'Becomes useless as soon as it’s a target (Goodhart’s law)'],
+  ['Definition of Ready', '<span class="badge np">No</span>', 'A team checklist for items before Sprint Planning', 'Can turn into a stage gate, creating mini-waterfall'],
+  ['Planning Poker', '<span class="badge np">No</span>', 'A consensus-based way of estimating', 'Watch for anchoring on the most senior person’s number'],
+  ['Daily Scrum “three questions”', '<span class="badge np">Removed in 2020</span>', 'Yesterday / today / blockers', 'Easily becomes a status report']
+])}
+<h3>Splitting stories well</h3>
+<p>Split <strong>vertically</strong>: each slice is thin but works end to end and delivers something usable. Don’t split <strong>horizontally</strong> by layer (“API”, then “UI”, then “testing”), because nothing is usable until every layer lands. Common split patterns: by workflow step, by data variation (mutual funds first, equities later), by business rule, happy path before edge cases, by user role, or a timeboxed <strong>spike</strong> when something is unknown. Check each slice against <strong>INVEST</strong>.</p>
+<h3>Using points and velocity sensibly</h3>
+<p>If the team completed 27, 31, 29 and 33 points in its last four Sprints, a forecast of <strong>about 30</strong> for the next Sprint is reasonable. Use velocity for forecasting, not as a performance KPI. Teams asked to “increase velocity by 20%” will simply inflate their estimates.</p>`,
+  example: {
+    title: 'Splitting the epic “AI-assisted KYC onboarding”',
+    html: `
+<p><strong>Horizontal split (avoid this):</strong> “build the OCR service”, “build the extraction API”, “build the UI”, “testing”. Nothing works for an ops user until all four are finished.</p>
+<p><strong>Vertical slices:</strong></p>
+${table(['Slice', 'Size (points)'], [
+  ['1. An ops user uploads a PAN card image, PAN and name are pre-filled, and the user confirms', '5'],
+  ['2. Address-proof extraction, with any Aadhaar number masked', '8'],
+  ['3. Low-confidence fields are highlighted for manual review', '3'],
+  ['4. Bulk upload of up to 50 documents with a progress view', '8'],
+  ['Spike: measure extraction accuracy on 200 masked scanned forms (timeboxed to 3 days)', 'timebox'],
+], [1])}
+<p><strong>Forecast:</strong> the team’s recent velocity is about 30. The PO doesn’t spend the whole Sprint on one epic, so slices 1–3 plus the spike (16 points plus the timebox) are a sensible fit for Sprint 15, alongside other priorities. Slice 4 comes next. Each slice is usable and testable on its own, and slice 1 alone already saves ops time.</p>`
+  },
+  mistakes: [
+    'Treating story points as hours, or using them to compare engineers or teams.',
+    'Setting velocity targets. Estimates inflate and the forecast becomes meaningless.',
+    'Making the Definition of Ready so strict that nothing can start until every detail is known.',
+    'Splitting stories horizontally by layer, so nothing usable ships until all of them are done.',
+    'Estimating on the team’s behalf as the PM. The Developers size the work.',
+    'Skipping refinement, so Sprint Planning becomes a four-hour clarification session.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> is each item defined in the Scrum Guide (2020)?</p>
+<p><strong>Part 2 (box below):</strong> split the epic <em>“Advisor can share the AI portfolio summary with the client”</em> into four vertical, INVEST-friendly stories, plus any spike you need.</p>`,
+    placeholder: '1. As an advisor, I want…\n2.\n3.\n4.\nSpike:',
+    classify: {
+      buckets: ['In the Scrum Guide', 'Not in the Scrum Guide'],
+      items: [
+        ['Product Backlog refinement', 0, 'It’s in the Guide, described as an ongoing activity rather than an event.'],
+        ['Story points', 1, 'A popular complementary practice. The Guide talks only about “size”.'],
+        ['Definition of Done', 0, 'One of the three commitments.'],
+        ['Velocity', 1, 'It isn’t mentioned anywhere in the Guide.'],
+        ['Definition of Ready', 1, 'Not in the Guide. The Guide only says items that can be Done within one Sprint are “ready for selection”.'],
+        ['Sprint Goal', 0, 'The Sprint Backlog’s commitment.'],
+        ['User stories', 1, 'A format from Extreme Programming, widely used with Scrum.'],
+        ['The three Daily Scrum questions', 1, 'They appeared in the 2017 Guide and were removed in 2020.']
+      ]
+    },
+    model: `<p><strong>Part 1:</strong> in the Guide: refinement, Definition of Done, Sprint Goal. Not in it: story points, velocity, Definition of Ready, user stories, the three questions.</p>
+<p><strong>Part 2:</strong></p>
+<ol><li>As an advisor, I want to download the summary as a PDF with the compliance disclaimer, so that I can share it myself today.</li>
+<li>As an advisor, I want to edit the narrative before sharing, with edits recorded in the audit log, so that I stay responsible for what the client sees.</li>
+<li>As an advisor, I want to email the summary from the platform to the client’s registered email address, so that I don’t have to download and re-attach it.</li>
+<li>As a client, I want to open the summary through a secure link with an OTP, so that my financial data isn’t sitting in my inbox.</li></ol>
+<p><strong>Spikes:</strong> email deliverability and a data-leak review with infosec. A Hindi version can go back to the backlog for later.</p>`
+  },
+  quiz: [
+    { q: 'Which of these is defined in the Scrum Guide?', o: [
+      ['Story points', false, 'They’re a popular complementary practice, not part of the Guide.'],
+      ['Velocity', false, 'Velocity isn’t mentioned in the Guide.'],
+      ['Product Backlog refinement', true, 'The Guide defines refinement as an ongoing activity, not a formal event.'],
+      ['Definition of Ready', false, 'It’s a team practice. The Guide only describes items as “ready for selection”.']
+    ] },
+    { q: 'According to the Guide, who is responsible for sizing Product Backlog items?', o: [
+      ['The Product Owner.', false, 'The PO may influence sizing by helping the Developers understand trade-offs.'],
+      ['The Developers who will be doing the work.', true, 'The people doing the work size it.'],
+      ['The Scrum Master.', false, 'The SM may facilitate but doesn’t size.'],
+      ['The CTO.', false, 'Managers outside the team don’t size the team’s work.']
+    ] },
+    { q: 'Your CTO wants to compare two teams’ velocities to see which is more productive. What’s the best response?', o: [
+      ['Agree, since higher velocity means more productive.', false, 'Points are relative and specific to each team, so the comparison is meaningless and invites inflation.'],
+      ['Explain that velocity is a forecasting aid for each team, that comparing or targeting it inflates estimates, and suggest outcome metrics instead.', true, 'Steer the conversation to outcomes, such as advisor prep time or cycle time.'],
+      ['Convert points to hours first.', false, 'That defeats the purpose of relative estimation and still doesn’t measure value.'],
+      ['Have both teams use the same estimates.', false, 'Standardizing estimates across teams just creates a different fiction.']
+    ] },
+    { q: 'Which split of “AI-assisted KYC onboarding” is best?', o: [
+      ['Backend first, then the UI, then testing.', false, 'A horizontal split means nothing is usable until every layer is done.'],
+      ['Thin vertical slices: PAN extraction end to end first, then address proof, then low-confidence highlighting, then bulk upload.', true, 'Each slice is usable, testable and delivers value early.'],
+      ['One big story for the whole Sprint.', false, 'Too big to finish reliably, and the feedback comes late.'],
+      ['One story per developer.', false, 'Splitting by person creates hand-offs and nothing usable on its own.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'scrum-6', track: 'scrum', n: 6, minutes: 12,
+  title: 'Common Scrum anti-patterns', short: 'Anti-patterns',
+  sub: 'Status-meeting standups, ticket-list Sprint Goals, skipped retrospectives, order-taker POs, and how to fix them.',
+  idea: 'Most Scrum failures aren’t missing ceremonies. They’re teams going through the events after the purpose has gone.',
+  body: `
+${table(['Anti-pattern', 'Symptom', 'Why it hurts', 'Fix'], [
+  ['<strong>Status-meeting standup</strong>', 'Each Developer reports to the PM or CTO in turn. It runs 30 minutes. Nobody mentions the Sprint Goal.', 'The Daily Scrum is for the Developers to adapt their plan. Reporting replaces self-management.', 'Developers run it and focus on the Sprint Goal (“Are we on track? What’s blocking us?”). Walk the board from right to left. The PM listens, or isn’t there.'],
+  ['<strong>Ticket-list Sprint Goal</strong>', '“Complete BRF-231, 232, 236 and 3 bugs.”', 'No why and no flexibility. The Guide intends the Sprint Goal as one objective that allows the scope to flex.', 'Write one outcome-oriented objective and select the items that serve it.'],
+  ['<strong>Skipped or rushed retrospectives</strong>', '“No time this Sprint.” The same problems keep coming back.', 'You lose Scrum’s formal moment to inspect and adapt how the team works.', 'Keep it short but never skip it. Pick one or two actions, put the top one in the next Sprint Backlog, and check last time’s actions first.'],
+  ['<strong>PO as order-taker, or proxy PO</strong>', 'Every stakeholder request goes to the top. The PO can’t say no. Decisions get escalated.', 'Nobody maximizes value, and the backlog becomes a queue of whoever shouted loudest.', 'The PO owns the ordering and the Product Goal. Stakeholders influence through the PO, and the organization respects those decisions.'],
+  ['<strong>Sprint Review as demo theater</strong>', 'A slide deck, no working product, no stakeholder feedback, a backlog that never changes.', 'Inspection without adaptation is pointless.', 'Run a working session with the real Increment and real stakeholders, and decide together what’s next.'],
+  ['<strong>Undone work and “hardening Sprints”</strong>', 'Work is “done” when merged. QA and compliance checks happen in a stabilization Sprint each quarter.', 'Transparency breaks and risk piles up. Each Sprint should produce a usable Increment.', 'Strengthen the Definition of Done until “Done” really means releasable.'],
+  ['<strong>Mid-Sprint scope bombs</strong>', 'Stakeholders message engineers directly with “quick” requests.', 'It endangers the Sprint Goal, bypasses the PO and hides the trade-off.', 'Route every request through the PO. Renegotiate scope without endangering the Sprint Goal.'],
+  ['<strong>Velocity as a KPI</strong>', '“Increase velocity 20% this quarter.”', 'Point inflation and an end to honest forecasting.', 'Measure outcomes and flow instead: cycle time, and advisor results.']
+])}
+${guide('<p>The Guide’s own words are the best counter-arguments: the Daily Scrum is “for the Developers”; the Sprint Review “is a working session and the Scrum Team should avoid limiting it to a presentation”; during the Sprint “no changes are made that would endanger the Sprint Goal” and “quality does not decrease”; “for Product Owners to succeed, the entire organization must respect their decisions.”', 'The Scrum Guide on these')}`,
+  example: {
+    title: 'Diagnosing Sprint 12',
+    html: `
+<p>What happened in Sprint 12 on your team:</p>
+<ul>
+  <li>The Daily Scrum ran 35 minutes, with each engineer reporting to the CTO.</li>
+  <li>The Sprint Goal was “finish KYC-112, KYC-118, BRF-21, BRF-24, plus bugfixes”.</li>
+  <li>On day 6, the Head of Sales messaged an engineer directly asking for a custom export for a prospect demo. The engineer built it, and BRF-24 slipped.</li>
+  <li>At the Sprint Review the team showed slides. The CTO said “looks good”. Nothing changed in the backlog.</li>
+  <li>The retrospective was cancelled for a partner call.</li>
+</ul>
+<p><strong>Diagnosis:</strong> a status-meeting standup, a ticket-list goal, a mid-Sprint scope bomb, demo theater and a skipped retro. That’s five anti-patterns.</p>
+<p><strong>Where to start:</strong> fix the <strong>Sprint Goal</strong> and the <strong>intake route</strong> first. A real objective gives the Daily Scrum something to inspect and gives the PO a basis for saying “not this Sprint”. A single intake route through the PO stops the scope bombs. Then reinstate the retrospective, and use it to tackle the rest one at a time.</p>`
+  },
+  mistakes: [
+    'Running the Daily Scrum yourself because “someone has to”.',
+    'Accepting stakeholder requests over DM and passing them straight to engineers.',
+    'Writing the Sprint Goal after Planning as a summary of the tickets.',
+    'Treating the retrospective as optional, or as a venting session that produces no actions.',
+    'Marking work Done so the Sprint Review looks good.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> name the anti-pattern in each scenario.</p>
+<p><strong>Part 2 (box below):</strong> choose one scenario and write the first concrete change you would propose to the team, worded as you would actually say it.</p>`,
+    placeholder: 'Scenario: …\nWhat I would say to the team: …',
+    classify: {
+      buckets: ['Status standup', 'Ticket-list goal', 'Order-taker PO', 'Demo theater', 'Undone work'],
+      items: [
+        ['Every morning each engineer tells the CTO what they did yesterday. It takes 30 minutes.', 0, 'Reporting upward, not Developers adapting their plan towards the Sprint Goal.'],
+        ['The Sprint Goal reads “Close JIRA-404, 405, 409 and 3 bugs.”', 1, 'No objective, no why and no flexibility.'],
+        ['The PO puts every request from Sales at the top of the backlog to avoid conflict.', 2, 'Nobody is ordering for value. The PO has become a router.'],
+        ['The Sprint Review is a 12-slide deck. Stakeholders never touch the product.', 3, 'A presentation instead of a working session, so no real inspection happens.'],
+        ['Stories are “done” when merged. QA and compliance checks happen in a “release Sprint” each quarter.', 4, 'A weak Definition of Done hides undone work and piles up risk.']
+      ]
+    },
+    model: `<p><strong>Part 1:</strong> 1 status standup · 2 ticket-list goal · 3 order-taker PO · 4 demo theater · 5 undone work.</p>
+<p><strong>Part 2 (example for scenario 1):</strong> “I’d like to suggest an experiment for the next two Sprints. The Daily Scrum is yours. The CTO and I will skip it, and you run it around the Sprint Goal: are we on track, and what’s in the way? Walk the board from right to left so we finish things before starting new ones. I’ll sync with the CTO separately using the board, so nobody has to report to us. We’ll check at the retro whether it helped.”</p>`
+  },
+  quiz: [
+    { q: 'The Daily Scrum has turned into a status report to you. What’s the best first move?', o: [
+      ['Ask everyone to send written status updates instead.', false, 'That replaces one reporting ritual with another. The Daily Scrum is for the Developers to plan.'],
+      ['Step back and let the Developers run it around progress towards the Sprint Goal. Attend only if it’s useful, and stay quiet.', true, 'You restore its purpose, and you can get status from the board instead.'],
+      ['Extend it to 30 minutes so everyone can report.', false, 'The 15-minute timebox exists for a reason. Longer reporting doesn’t fix anything.'],
+      ['Cancel it.', false, 'It’s a core Scrum event. Fix it rather than removing it.']
+    ] },
+    { q: 'Which is the best Sprint Goal?', o: [
+      ['“Complete stories 231, 232 and 236.”', false, 'That’s a ticket list, with no objective and no flexibility.'],
+      ['“Pilot advisors can generate an accurate brief for mutual fund clients.”', true, 'One objective that explains the value and lets the scope flex.'],
+      ['“Work hard on the brief.”', false, 'There’s no way to tell whether it was achieved.'],
+      ['“Deliver 40 points.”', false, 'Output, not value. It also turns velocity into a target.']
+    ] },
+    { q: 'A stakeholder messages an engineer directly to add a “quick” export mid-Sprint. What should happen?', o: [
+      ['The engineer quietly does it.', false, 'This hides the trade-off and endangers the Sprint Goal.'],
+      ['It goes to the PO. Usually it goes into the Product Backlog. If it serves the Sprint Goal and the Developers agree, scope can be renegotiated.', true, 'Scope may be renegotiated with the PO, but no changes that endanger the Sprint Goal.'],
+      ['The Scrum Master assigns it to someone.', false, 'The SM doesn’t assign work, and the request still bypasses the PO.'],
+      ['Cancel the Sprint.', false, 'Only the PO can cancel a Sprint, and only when the Sprint Goal becomes obsolete. A side request doesn’t do that.']
+    ] },
+    { q: 'The team keeps skipping retrospectives because of deadlines. Why is that risky?', o: [
+      ['It isn’t. Retros are optional.', false, 'The Retrospective is one of Scrum’s formal events and concludes the Sprint.'],
+      ['It removes the formal moment to inspect and adapt how the team works, so problems keep repeating.', true, 'Teams under pressure need it most.'],
+      ['Scrum Masters are paid per retro.', false, 'This isn’t a real concern.'],
+      ['The Guide says retros can be skipped in busy Sprints.', false, 'It says no such thing.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'scrum-7', track: 'scrum', n: 7, minutes: 12,
+  title: 'Kanban basics, and mixing Scrum with Kanban', short: 'Kanban',
+  sub: 'Visualize the work, limit work in progress, manage flow, and know when to combine it with Scrum.',
+  idea: 'Kanban improves the flow of work by visualizing it, limiting work in progress and actively managing items. Scrum teams often add Kanban practices to improve flow inside their Sprints.',
+  body: `
+<h3>Kanban in one paragraph</h3>
+<p>Kanban is a strategy for optimizing the flow of value through a process. The Kanban Guide (Vacanti &amp; Coleman) describes three practices: <strong>defining and visualizing the workflow</strong>, <strong>actively managing items in the workflow</strong> and <strong>improving the workflow</strong>. A team’s “Definition of Workflow” states what counts as work, when work is <em>started</em> and <em>finished</em>, the states in between, the <strong>WIP limits</strong>, and a <strong>service level expectation</strong> (SLE), such as “85% of items finish within 5 days”.</p>
+${fig(DIAG.kanban, 'Columns show workflow states and WIP limits cap each one. When a column is full, people help finish work instead of starting new work.')}
+<h3>Four flow metrics</h3>
+${table(['Metric', 'Meaning'], [
+  ['<strong>WIP</strong>', 'Items started but not finished'],
+  ['<strong>Throughput</strong>', 'Items finished per unit of time'],
+  ['<strong>Work Item Age</strong>', 'Time since an in-progress item started'],
+  ['<strong>Cycle Time</strong>', 'Time from start to finish for completed items']
+])}
+<p class="formula">Little’s Law: average Cycle Time = average WIP ÷ average Throughput</p>
+<p>If 10 feature items are in progress and the team finishes 5 a week, items take about 2 weeks on average, which is a whole Sprint. Halve the WIP to 5 and cycle time drops to about 1 week, with no extra effort.</p>
+<h3>Kanban vs Scrum</h3>
+${table(['', 'Scrum', 'Kanban'], [
+  ['Cadence', 'Fixed-length Sprints of one month or less', 'Continuous flow. Cadences are optional.'],
+  ['Accountabilities', 'PO, SM, Developers', 'None prescribed'],
+  ['Commitment', 'Sprint Goal, Product Goal, Definition of Done', 'WIP limits and SLEs'],
+  ['Best fit', 'Complex product development towards goals', 'Continuous, interrupt-driven streams with service expectations']
+])}
+${practice(`<ul>
+  <li>Scrum.org publishes the <strong>Kanban Guide for Scrum Teams</strong>. Scrum Teams keep all of Scrum (events, artifacts, accountabilities) and add flow practices: a visualized workflow, WIP limits and flow metrics.</li>
+  <li>Flow metrics feed the Scrum events: <strong>throughput</strong> helps forecast in Sprint Planning, <strong>Work Item Age</strong> focuses the Daily Scrum, and the <strong>Retrospective</strong> inspects the workflow and its WIP limits.</li>
+  <li>“Scrumban” is an informal label for this kind of mix, not a defined framework.</li>
+</ul>`)}`,
+  example: {
+    title: 'Support tickets keep eating the Sprint',
+    html: `
+<p>Your team gets 10–15 tickets a week from partner firms: data mismatches, RTA feed issues, report questions. They land on whoever is free, people context-switch all day, feature work stalls, and tickets age without anyone noticing.</p>
+<ul>
+  <li><strong>Visualize:</strong> one board with Ready → Build (WIP 4) → Review (WIP 2) → Test (WIP 2) → Done.</li>
+  <li><strong>A support lane:</strong> WIP 1, an SLE of 85% of P2 tickets resolved within 3 working days, and a weekly rotating “support Developer”. P1 production incidents are expedited immediately.</li>
+  <li><strong>Plan for reality:</strong> support has historically taken about 20% of capacity, so Sprint Planning forecasts feature work with the remaining 80%.</li>
+  <li><strong>Inspect:</strong> the Daily Scrum looks at the oldest items first (Work Item Age). The Retrospective reviews whether the WIP limits are helping.</li>
+</ul>
+<p>Result: feature items stop sitting half-finished for a whole Sprint, and partners get a predictable response time.</p>`
+  },
+  mistakes: [
+    'Thinking Kanban just means “a board with columns”, without WIP limits or explicit policies.',
+    'Setting WIP limits and ignoring them as soon as things get busy.',
+    'Switching from Scrum to Kanban to escape Sprint Goals and discipline rather than for real flow reasons.',
+    'Letting support work silently consume Sprint capacity instead of making it visible.',
+    'Optimizing for utilization (everyone busy) instead of flow (items finished).'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> which flow metric is each statement about?</p>
+<p><strong>Part 2 (box below):</strong> your board has Ready, Build, Review, Test and Done. The team is 5 developers and 1 QA engineer, with 10–15 support tickets a week. Propose WIP limits and a policy for support tickets.</p>`,
+    placeholder: 'Build WIP: …\nReview WIP: …\nTest WIP: …\nSupport policy: …',
+    classify: {
+      buckets: ['WIP', 'Throughput', 'Work Item Age', 'Cycle Time'],
+      items: [
+        ['KYC-212 has been in progress for 9 days.', 2, 'The age of an item that is still in progress.'],
+        ['We finished 14 items last week.', 1, 'Completions per unit of time.'],
+        ['There are 11 items started but not finished.', 0, 'A count of work in progress.'],
+        ['Finished items took a median of 4 days from start to done.', 3, 'Elapsed time for completed items.']
+      ]
+    },
+    model: `<p><strong>Part 1:</strong> Work Item Age · Throughput · WIP · Cycle Time.</p>
+<p><strong>Part 2:</strong> Build WIP 4 (fewer than the 5 developers, which encourages pairing and swarming). Review WIP 2. Test WIP 2, because QA is the likely bottleneck and developers should help test when it’s full. A support lane with WIP 1 and an SLE (85% of P2 tickets within 3 working days), a weekly rotating support Developer, and P1 incidents expedited. Forecast Sprint work with about 80% of throughput to leave room for support. The policy in one line: <strong>stop starting, start finishing</strong>.</p>`
+  },
+  quiz: [
+    { q: 'Average WIP is 12 items and throughput is 6 items a week. Using Little’s Law, what’s the average cycle time?', o: [
+      ['0.5 weeks', false, 'That divides throughput by WIP, which is the wrong way round.'],
+      ['2 weeks', true, 'Cycle Time = WIP ÷ Throughput = 12 ÷ 6 = 2 weeks.'],
+      ['6 weeks', false, 'That’s just the throughput figure.'],
+      ['72 weeks', false, 'That multiplies the two instead of dividing.']
+    ] },
+    { q: 'What does a WIP limit mainly do?', o: [
+      ['Makes developers work longer hours.', false, 'It has nothing to do with hours.'],
+      ['Reduces multitasking and queues, so items finish faster and bottlenecks become visible.', true, 'Less work in progress means shorter cycle times (Little’s Law) and exposes where flow is stuck.'],
+      ['Replaces the Sprint Goal.', false, 'They’re complementary. WIP limits don’t provide an objective.'],
+      ['Limits the size of the Product Backlog.', false, 'WIP limits apply to work that has started, not to the backlog.']
+    ] },
+    { q: 'When does Kanban often fit better than Scrum’s Sprint cadence?', o: [
+      ['Building a new AI product towards an uncertain goal.', false, 'This is classic complex product work, which suits Scrum well.'],
+      ['A continuous, interrupt-driven stream such as partner support tickets with service-level expectations.', true, 'Continuous flow with SLEs suits this kind of work.'],
+      ['Never.', false, 'Many teams use Kanban successfully, especially for operational work.'],
+      ['Whenever the team dislikes meetings.', false, 'Choose based on the nature of the work, not to avoid meetings.']
+    ] },
+    { q: 'A Scrum Team adopts Kanban practices. Which statement is true?', o: [
+      ['They have to drop Sprints.', false, 'Under the Kanban Guide for Scrum Teams, Sprints and all the other Scrum elements remain.'],
+      ['They keep Scrum’s events, artifacts and accountabilities, and add flow practices (visualized workflow, WIP limits, flow metrics).', true, 'The practices complement Scrum. They don’t replace it.'],
+      ['The Product Owner is no longer needed.', false, 'Adding flow practices doesn’t remove any accountability.'],
+      ['The Daily Scrum becomes a weekly sync.', false, 'The Daily Scrum stays. Flow metrics just make it more useful.']
     ] }
   ]
 });
