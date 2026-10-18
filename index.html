@@ -2334,6 +2334,338 @@ ${practice(`<ul>
 });
 </script>
 
+<script>
+/* ================= Module 5 · Glossary (cards marked card:1 feed the flashcard deck) ================= */
+GLOSSARY.push(
+  // ---- PM ----
+  { term: 'Acceptance criteria', track: 'pm', np: 1, card: 1, lesson: 'pm-5', def: 'Pass/fail conditions a backlog item must meet to count as complete, often written as Given/When/Then. Specific to one item, unlike the Definition of Done.' },
+  { term: 'Activation', track: 'pm', card: 1, lesson: 'pm-6', def: 'The moment a user first gets real value from the product, defined as a behavior. Example: an advisor generates and opens 3 briefs within 14 days.' },
+  { term: 'A/B test', track: 'pm', lesson: 'pm-10', def: 'A randomized experiment that compares two variants to measure the effect of a change. Often impractical in B2B because of low volume.' },
+  { term: 'APM (Associate Product Manager)', track: 'pm', card: 1, lesson: 'pm-1', def: 'An entry-level PM who usually owns a slice of the product (a feature area or workflow) under a more senior product leader.' },
+  { term: 'ARR (Annual Recurring Revenue)', track: 'pm', lesson: 'pm-6', def: 'The annualized value of recurring subscription contracts. The core revenue measure for B2B SaaS.' },
+  { term: 'Assumption mapping', track: 'pm', lesson: 'pm-3', def: 'Listing the assumptions behind an idea and ranking them by importance and lack of evidence, so the riskiest get tested first.' },
+  { term: 'Churn (logo vs revenue)', track: 'pm', card: 1, lesson: 'pm-6', def: 'Customers who leave. Logo churn counts the accounts lost. Revenue churn counts the ARR lost. One large firm leaving can matter more than five small ones.' },
+  { term: 'Cohort', track: 'pm', lesson: 'pm-6', def: 'A group of users who share a starting period, such as advisors activated in March. Retention is analyzed by cohort.' },
+  { term: 'Concierge test', track: 'pm', lesson: 'pm-3', def: 'Delivering a service manually to a few customers to learn what they value before automating anything.' },
+  { term: 'Cost of delay', track: 'pm', lesson: 'pm-4', def: 'The value lost by delivering something later. Useful when deadlines, deals or regulatory dates are involved.' },
+  { term: 'Deploy vs release', track: 'pm', card: 1, lesson: 'pm-10', def: 'Deploying puts code into production. Releasing makes it available to users. Feature flags let you do the two separately.' },
+  { term: 'Discovery', track: 'pm', card: 1, lesson: 'pm-3', def: 'Work to decide whether something is worth building and in what shape, by testing value, usability, feasibility and viability.' },
+  { term: 'Delivery', track: 'pm', lesson: 'pm-3', def: 'Building, testing and releasing production-quality software reliably.' },
+  { term: 'Dual-track agile', track: 'pm', card: 1, lesson: 'pm-3', def: 'Running discovery and delivery continuously and in parallel, with validated ideas feeding delivery and usage data feeding discovery.' },
+  { term: 'Edge case', track: 'pm', lesson: 'pm-5', def: 'An unusual condition such as empty data, stale data, huge volumes, missing permissions or an AI failure. In B2B, edge cases are where trust is won or lost.' },
+  { term: 'Fake door test', track: 'pm', card: 1, lesson: 'pm-3', def: 'An entry point for a feature that doesn’t exist yet, used to measure demand. Users who click are told honestly that it’s coming.' },
+  { term: 'Feature flag', track: 'pm', card: 1, lesson: 'pm-10', def: 'A switch that controls who can see a feature without redeploying. Used for gradual rollouts, kill switches, per-firm entitlements and experiments.' },
+  { term: 'Four product risks', track: 'pm', card: 1, lesson: 'pm-3', def: 'Value (will they use it?), usability (can they use it?), feasibility (can we build it?), viability (does it work for the business, including compliance?).' },
+  { term: 'Funnel', track: 'pm', card: 1, lesson: 'pm-6', def: 'A sequence of steps with a conversion rate at each, such as invited → logged in → first brief → activated. It shows where users drop off.' },
+  { term: 'Golden set', track: 'pm', card: 1, lesson: 'pm-5', def: 'A curated set of real (masked) example inputs with known good outputs, used as an acceptance test for AI prompts and models.' },
+  { term: 'Guardrail metric', track: 'pm', card: 1, lesson: 'pm-6', def: 'A metric that must not get worse while you improve the success metric, such as compliance flags, latency, cost or error reports.' },
+  { term: 'Hallucination', track: 'pm', card: 1, lesson: 'pm-5', def: 'AI output that sounds plausible but is false, such as a wrong XIRR figure. Mitigate by computing numbers outside the model and checking against a golden set.' },
+  { term: 'Holdout group', track: 'pm', lesson: 'pm-10', def: 'Users or firms deliberately left without a feature for a while, so its impact can be measured against them.' },
+  { term: 'Impact/effort matrix', track: 'pm', lesson: 'pm-4', def: 'A 2×2 that sorts ideas into quick wins, big bets, fill-ins and money pits. Fast, but vague about impact and optimistic about effort.' },
+  { term: 'Input metric', track: 'pm', card: 1, lesson: 'pm-6', def: 'A driver the team can move directly, such as activation or briefs per advisor, which in turn moves output metrics like revenue.' },
+  { term: 'Output metric', track: 'pm', lesson: 'pm-6', def: 'A result that many teams and factors influence, such as ARR, NRR or AUM. It moves slowly.' },
+  { term: 'INVEST', track: 'pm', card: 1, lesson: 'pm-5', def: 'A checklist for good backlog items: Independent, Negotiable, Valuable, Estimable, Small, Testable.' },
+  { term: 'Iron triangle', track: 'pm', lesson: 'pm-7', def: 'The trade-off between scope, time and resources. When time and the team are fixed, scope flexes. Quality should not.' },
+  { term: 'Jobs-to-be-Done (JTBD)', track: 'pm', card: 1, lesson: 'pm-2', def: 'The idea that people “hire” products to make progress in a situation: “When [situation], I want to [motivation], so I can [outcome].”' },
+  { term: 'Kano model', track: 'pm', card: 1, lesson: 'pm-4', def: 'Classifies features as basic (expected), performance (more is better) or delighters (unexpected and loved). Delighters decay into basics over time.' },
+  { term: 'Kill switch', track: 'pm', lesson: 'pm-10', def: 'A flag that instantly disables a feature in production if it misbehaves. Essential for AI features that write client-facing text.' },
+  { term: 'Lagging indicator', track: 'pm', card: 1, lesson: 'pm-6', def: 'A metric that confirms results after the fact, such as renewals, churn or NRR.' },
+  { term: 'Leading indicator', track: 'pm', card: 1, lesson: 'pm-6', def: 'A metric that predicts future results, such as early activation, weekly active ratio or time-to-value.' },
+  { term: 'MoSCoW', track: 'pm', card: 1, lesson: 'pm-4', def: 'Must, Should, Could, Won’t (this time). Best for scoping a fixed-date release.' },
+  { term: 'MVP (Minimum Viable Product)', track: 'pm', card: 1, lesson: 'pm-3', def: 'The smallest product or experiment that lets you learn whether an idea delivers value. It isn’t a low-quality version 1.' },
+  { term: 'Non-goals', track: 'pm', card: 1, lesson: 'pm-5', def: 'What a spec explicitly leaves out of scope, such as “no investment recommendations in v1”. Non-goals prevent scope creep.' },
+  { term: 'North Star metric', track: 'pm', card: 1, lesson: 'pm-6', def: 'The one metric that best captures the value customers get and predicts long-term success. Example: client reviews prepared with the brief per week.' },
+  { term: 'NRR (Net Revenue Retention)', track: 'pm', card: 1, lesson: 'pm-6', def: '(Starting ARR + expansion − contraction − churn) ÷ starting ARR. Above 100% means existing customers are growing.' },
+  { term: 'Now / Next / Later', track: 'pm', card: 1, lesson: 'pm-9', def: 'A roadmap format of columns instead of dates. Confidence and detail fall from Now to Later.' },
+  { term: 'Outcome-based roadmap', track: 'pm', card: 1, lesson: 'pm-9', def: 'A roadmap built around problems to solve and metrics to move, with features shown as bets that can change.' },
+  { term: 'p95 latency', track: 'pm', lesson: 'pm-5', def: 'The response time that 95% of requests come in under. A more honest performance target than the average.' },
+  { term: 'Power/interest grid', track: 'pm', lesson: 'pm-8', def: 'A stakeholder map. Manage high-power, high-interest people closely, keep high-power people satisfied, and keep high-interest people informed.' },
+  { term: 'PRD', track: 'pm', aka: 'product requirements document', card: 1, lesson: 'pm-5', def: 'Product requirements document: problem, goals, non-goals, scenarios, requirements, edge cases, constraints, open questions and rollout plan.' },
+  { term: 'Problem statement', track: 'pm', card: 1, lesson: 'pm-2', def: '“[Segment] needs a way to [job] because [insight]. Today they [workaround], which costs [impact]. Solved when [measurable outcome].” It names no solution.' },
+  { term: 'Product Manager', track: 'pm', lesson: 'pm-1', def: 'Accountable for product outcomes: which problems to solve, for whom, and how success is measured. Owns the why and the what.' },
+  { term: 'Product trio', track: 'pm', card: 1, lesson: 'pm-1', def: 'A PM, a design lead and a tech lead doing discovery together, so value, usability and feasibility are considered at the same time.' },
+  { term: 'RACI', track: 'pm', card: 1, lesson: 'pm-8', def: 'Responsible (does the work), Accountable (one person makes the final call), Consulted (input before), Informed (told after).' },
+  { term: 'Retention', track: 'pm', card: 1, lesson: 'pm-6', def: 'The share of a cohort still active after N weeks. A healthy retention curve flattens instead of falling to zero.' },
+  { term: 'RICE', track: 'pm', card: 1, lesson: 'pm-4', def: '(Reach × Impact × Confidence) ÷ Effort. Useful for ranking a backlog, but misleading when B2B value is concentrated in one deal or deadline.' },
+  { term: 'Seat activation rate', track: 'pm', lesson: 'pm-6', def: 'The share of licensed seats whose users reached activation. Unused paid seats are a renewal risk.' },
+  { term: 'Staged rollout', track: 'pm', card: 1, lesson: 'pm-10', def: 'Widening access step by step (internal → pilot firms → a percentage of firms → everyone), with exit criteria at each step.' },
+  { term: 'Stakeholder', track: 'pm', lesson: 'pm-8', def: 'Anyone with an interest in or influence over the product: leadership, sales, operations, compliance, partner firms.' },
+  { term: 'Technical debt', track: 'pm', card: 1, lesson: 'pm-7', def: 'The future cost of shortcuts or outdated design. It slows future work and causes incidents. Make it visible and frame it by business impact.' },
+  { term: 'Time-to-value', track: 'pm', card: 1, lesson: 'pm-6', def: 'How long a new customer takes to get its first real outcome, such as days from contract signature to the firm’s first AI brief.' },
+  { term: 'User story', track: 'pm', np: 1, card: 1, lesson: 'pm-5', def: '“As a [user], I want [capability], so that [benefit].” A placeholder for a conversation. Common with Scrum, but not part of the Scrum Guide.' },
+  { term: 'Vanity metric', track: 'pm', card: 1, lesson: 'pm-6', def: 'A number that looks good but doesn’t guide decisions, such as total sign-ups or page views.' },
+  { term: 'Wizard of Oz test', track: 'pm', card: 1, lesson: 'pm-3', def: 'Users interact with what looks like a working system while humans produce the output behind the scenes. It tests value before you build the technology.' },
+  // ---- Scrum (official Scrum Guide terms) ----
+  { term: 'Scrum', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-1', def: 'A lightweight framework that helps people, teams and organizations generate value through adaptive solutions for complex problems. Defined by the Scrum Guide (November 2020).' },
+  { term: 'Empiricism', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-1', def: 'The idea that knowledge comes from experience and that decisions should be based on what is observed. Scrum’s foundation, together with lean thinking.' },
+  { term: 'Lean thinking', track: 'scrum', sg: 1, lesson: 'scrum-1', def: 'Reducing waste and focusing on the essentials. Named in the Scrum Guide alongside empiricism.' },
+  { term: 'Transparency', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-1', def: 'A pillar of empiricism. The work and the process are visible to those doing it and those receiving it. It enables inspection.' },
+  { term: 'Inspection', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-1', def: 'A pillar of empiricism. Artifacts and progress are inspected frequently to detect problems. It enables adaptation.' },
+  { term: 'Adaptation', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-1', def: 'A pillar of empiricism. Adjusting as soon as possible when something deviates outside acceptable limits.' },
+  { term: 'Scrum Values', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-1', def: 'Commitment, Focus, Openness, Respect and Courage.' },
+  { term: 'Scrum Team', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-2', def: 'One Scrum Master, one Product Owner and Developers, typically 10 or fewer people, with no sub-teams or hierarchies. Cross-functional and self-managing.' },
+  { term: 'Accountability', track: 'scrum', sg: 1, lesson: 'scrum-2', def: 'The 2020 Scrum Guide’s word for Product Owner, Scrum Master and Developers. It replaced “roles”.' },
+  { term: 'Product Owner', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-2', def: 'Accountable for maximizing the value of the product and for effective Product Backlog management. One person, not a committee.' },
+  { term: 'Scrum Master', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-2', def: 'Accountable for establishing Scrum as defined in the Guide and for the Scrum Team’s effectiveness. “True leaders who serve” the team and the organization.' },
+  { term: 'Developers', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-2', def: 'The people in the Scrum Team committed to creating any aspect of a usable Increment each Sprint. Includes designers and QA, not only coders.' },
+  { term: 'Self-managing', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-2', def: 'The Scrum Team decides internally who does what, when and how. The 2020 Guide uses this term instead of “self-organizing”.' },
+  { term: 'Cross-functional', track: 'scrum', sg: 1, lesson: 'scrum-2', def: 'The team has all the skills needed to create value each Sprint.' },
+  { term: 'Impediment', track: 'scrum', sg: 1, lesson: 'scrum-2', def: 'Anything blocking the Scrum Team’s progress. The Scrum Master causes impediments to be removed.' },
+  { term: 'Product Backlog', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-3', def: 'An emergent, ordered list of what is needed to improve the product. The single source of work for the Scrum Team. Its commitment is the Product Goal.' },
+  { term: 'Product Goal', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-3', def: 'A future state of the product the team plans against, and the Scrum Team’s long-term objective. It must be fulfilled or abandoned before taking on the next one.' },
+  { term: 'Sprint Backlog', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-3', def: 'The Sprint Goal (why), the selected Product Backlog items (what) and an actionable plan (how). A plan by and for the Developers.' },
+  { term: 'Sprint Goal', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-3', def: 'The single objective for the Sprint. A commitment by the Developers that leaves flexibility in the exact work needed. Created during Sprint Planning.' },
+  { term: 'Increment', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-3', def: 'A concrete, usable stepping stone towards the Product Goal, additive to prior Increments. Several can be created in a Sprint, and they may be delivered before it ends.' },
+  { term: 'Definition of Done', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-3', def: 'A formal description of the state of the Increment when it meets the required quality measures. Work that doesn’t meet it can’t be released or presented at the Sprint Review.' },
+  { term: 'Commitments', track: 'scrum', sg: 1, lesson: 'scrum-3', def: 'The focus each artifact carries: Product Goal (Product Backlog), Sprint Goal (Sprint Backlog), Definition of Done (Increment).' },
+  { term: 'Sprint', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-4', def: 'A fixed-length event of one month or less that contains all the other events. The next one starts immediately after the previous one ends.' },
+  { term: 'Sprint Planning', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-4', def: 'Starts the Sprint. The whole Scrum Team covers why the Sprint is valuable, what can be Done and how. Max 8 hours for a one-month Sprint.' },
+  { term: 'Daily Scrum', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-4', def: 'A 15-minute event for the Developers to inspect progress towards the Sprint Goal and adapt the Sprint Backlog. Held every working day.' },
+  { term: 'Sprint Review', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-4', def: 'The Scrum Team and key stakeholders inspect the Sprint’s outcome and decide what to do next. A working session, not just a presentation. Max 4 hours for a one-month Sprint.' },
+  { term: 'Sprint Retrospective', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-4', def: 'The Scrum Team plans ways to increase quality and effectiveness, including changes to the Definition of Done. It concludes the Sprint. Max 3 hours for a one-month Sprint.' },
+  { term: 'Timebox', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-4', def: 'A maximum duration for an event. Scrum’s events are timeboxed, and shorter Sprints usually have shorter events.' },
+  { term: 'Sprint cancellation', track: 'scrum', sg: 1, lesson: 'scrum-4', def: 'A Sprint can be cancelled if its Sprint Goal becomes obsolete. Only the Product Owner has the authority to cancel it.' },
+  { term: 'Product Backlog refinement', track: 'scrum', sg: 1, card: 1, lesson: 'scrum-5', def: 'An ongoing activity, not an event, of breaking down and adding detail (description, order, size) to Product Backlog items.' },
+  // ---- Scrum-adjacent practices NOT in the Scrum Guide ----
+  { term: 'Story points', track: 'scrum', np: 1, card: 1, lesson: 'scrum-5', def: 'Relative size estimates (often 1, 2, 3, 5, 8, 13) combining effort, complexity and uncertainty. Specific to each team and not convertible to hours.' },
+  { term: 'Velocity', track: 'scrum', np: 1, card: 1, lesson: 'scrum-5', def: 'Story points completed per Sprint, used by a team to forecast. It stops being useful as soon as it becomes a target.' },
+  { term: 'Definition of Ready', track: 'scrum', np: 1, card: 1, lesson: 'scrum-5', def: 'A team checklist an item should meet before Sprint Planning. Can become a stage gate if applied rigidly.' },
+  { term: 'Burndown chart', track: 'scrum', np: 1, lesson: 'scrum-5', def: 'A chart of remaining work over time. The Guide mentions burn-downs only as one forecasting practice that doesn’t replace empiricism.' },
+  { term: 'Planning Poker', track: 'scrum', np: 1, card: 1, lesson: 'scrum-5', def: 'A consensus estimation technique where everyone reveals an estimate at the same time, to avoid anchoring.' },
+  { term: 'Backlog grooming', track: 'scrum', np: 1, lesson: 'scrum-5', def: 'An older name for Product Backlog refinement. The Scrum Guide uses “refinement”.' },
+  { term: 'Standup', track: 'scrum', np: 1, lesson: 'scrum-4', def: 'An informal name for the Daily Scrum. Standing up isn’t required.' },
+  { term: 'Epic', track: 'scrum', np: 1, card: 1, lesson: 'scrum-5', def: 'A large backlog item that needs splitting into smaller items before it can be Done within a Sprint.' },
+  { term: 'Spike', track: 'scrum', np: 1, card: 1, lesson: 'scrum-5', def: 'A timeboxed research item that reduces uncertainty, such as measuring model accuracy on 200 sample documents.' },
+  { term: 'Vertical slice', track: 'scrum', np: 1, card: 1, lesson: 'scrum-5', def: 'A thin piece of functionality that works end to end and delivers usable value, as opposed to a horizontal slice of one technical layer.' },
+  { term: 'Proxy Product Owner', track: 'scrum', np: 1, lesson: 'scrum-2', def: 'An anti-pattern: someone with the PO title but no real decision rights, so every decision gets escalated.' },
+  { term: 'Hardening Sprint', track: 'scrum', np: 1, lesson: 'scrum-6', def: 'An anti-pattern: a Sprint set aside for stabilizing “done” work. A sign the Definition of Done is too weak.' },
+  { term: 'Scrumban', track: 'scrum', np: 1, lesson: 'scrum-7', def: 'An informal label for mixing Scrum with Kanban practices. Not a defined framework.' },
+  // ---- Agile / Kanban ----
+  { term: 'Agile Manifesto', track: 'scrum', card: 1, lesson: 'scrum-1', def: 'The 2001 statement of four values (individuals and interactions, working software, customer collaboration, responding to change) and twelve principles.' },
+  { term: 'Waterfall', track: 'scrum', card: 1, lesson: 'scrum-1', def: 'A plan-driven approach with sequential phases. It works for stable, well-understood work, and learns late on complex work.' },
+  { term: 'Kanban', track: 'scrum', card: 1, lesson: 'scrum-7', def: 'A strategy for optimizing flow: define and visualize the workflow, actively manage items in it, and improve it. Uses WIP limits and flow metrics.' },
+  { term: 'WIP limit', track: 'scrum', card: 1, lesson: 'scrum-7', def: 'A cap on how many items can be in a workflow state at once. It reduces multitasking and exposes bottlenecks.' },
+  { term: 'Work in progress (WIP)', track: 'scrum', lesson: 'scrum-7', def: 'Items that have started but aren’t finished.' },
+  { term: 'Throughput', track: 'scrum', card: 1, lesson: 'scrum-7', def: 'The number of items finished per unit of time.' },
+  { term: 'Cycle time', track: 'scrum', card: 1, lesson: 'scrum-7', def: 'The elapsed time from when an item starts to when it finishes.' },
+  { term: 'Work Item Age', track: 'scrum', card: 1, lesson: 'scrum-7', def: 'How long an in-progress item has been in progress. The best early warning that something is stuck.' },
+  { term: 'Little’s Law', track: 'scrum', card: 1, lesson: 'scrum-7', def: 'Average cycle time = average WIP ÷ average throughput. Less WIP means faster delivery.' },
+  { term: 'Service Level Expectation (SLE)', track: 'scrum', card: 1, lesson: 'scrum-7', def: 'A forecast of how long items should take, such as “85% of support tickets resolved within 3 working days”.' }
+);
+
+/* ================= Module 6 · Sprint simulator ================= */
+SIM.title = 'Sprint simulator';
+SIM.intro = `<p>You’re the APM, and your CTO, Vikram, has made you <strong>Product Owner</strong> for the AI meeting-prep brief. The Scrum Team: Arjun (tech lead, acting as Scrum Master), four engineers, Meera (designer) and a QA engineer. Sprints are <strong>two weeks (10 working days)</strong>.</p>
+<p><strong>Product Goal:</strong> “Advisors can prepare any client review in under 15 minutes using an AI brief they trust.” Make eight decisions. Each one moves three gauges, and you get feedback with a reference to the Scrum Guide.</p>`;
+SIM.ratings = [
+  { min: 85, title: 'Scrum-fluent Sprint', text: 'You protected the Sprint Goal, kept stakeholders close without letting them steer the Sprint, and kept “Done” honest. This is what a healthy PO looks like.' },
+  { min: 60, title: 'Solid, with a few bruises', text: 'Most calls were sound. Check the decisions where a stronger option existed: they’re usually about who decides what, and about transparency.' },
+  { min: 30, title: 'A bumpy Sprint', text: 'Several decisions traded long-term health for short-term comfort. Revisit the linked lessons on events, commitments and anti-patterns, then run it again.' },
+  { min: 0, title: 'The Sprint got away from you', text: 'That’s fine, it’s why simulators exist. Start with Scrum lessons 3, 4 and 6, then try again.' }
+];
+SIM.steps = [
+  { day: 1, phase: 'Sprint Planning', lesson: 'scrum-3', title: 'Choose the Sprint Goal',
+    scene: `<p>Sprint 14 starts. You arrive at Sprint Planning with the refined top of the Product Backlog: the “what changed since last meeting” calculation, XIRR display, a failed-SIP section, the brief generation endpoint, PDF export, Hindi summaries and a client-sharing flow.</p><p>The team asks you to propose why this Sprint matters. Which Sprint Goal do you put forward?</p>`,
+    options: [
+      { t: '“Finish BRF-21, BRF-24, BRF-27, BRF-29 and the open bugs.”', s: 2, fx: { goal: -5 }, fb: 'This is a ticket list, not an objective. It doesn’t explain why the Sprint is valuable, and it leaves no room to renegotiate scope when something turns out harder than expected.', ref: 'Scrum Guide: “The Sprint Goal is the single objective for the Sprint.”' },
+      { t: '“Pilot advisors can generate an accurate ‘what changed since our last meeting’ brief for mutual fund clients.”', s: 10, fx: { goal: 15, team: 5, trust: 5 }, fb: 'One clear objective that ties to the Product Goal, explains the value, and lets the Developers flex the exact work. Everyone can tell on day 10 whether it was achieved.', ref: 'Scrum Guide: the Sprint Goal is a commitment by the Developers, but “it provides flexibility in terms of the exact work needed to achieve it.”' },
+      { t: '“Ship the full brief, PDF export, Hindi summaries and client sharing.”', s: 0, fx: { goal: -15, team: -10, trust: 5 }, fb: 'Four objectives in one Sprint means no focus. It pleases stakeholders today and disappoints them on day 10. A Sprint Goal is a single objective.', ref: 'Scrum Guide: “The Sprint Goal is the single objective for the Sprint.”' },
+      { t: 'Let the Developers pick whatever they like and write a goal at the end.', s: 0, fx: { goal: -10, team: -5 }, fb: 'The PO proposes how the product could increase its value, and the whole Scrum Team crafts the goal together. It has to exist before the work starts, or the Daily Scrum has nothing to inspect.', ref: 'Scrum Guide: “The Sprint Goal must be finalized prior to the end of Sprint Planning.”' }
+    ] },
+  { day: 1, phase: 'Sprint Planning', lesson: 'scrum-4', title: 'The forecast is bigger than the team',
+    scene: `<p>The items that best serve the goal add up to <strong>45 points</strong>. The team completed 28, 31, 30 and 33 points in its last four Sprints. Vikram has dropped into Planning:</p>
+<div class="who"><span class="av">VK</span><div><b>Vikram · CTO</b>“Let’s stretch this time. The pilot firms are waiting.”</div></div><p>What do you do?</p>`,
+    options: [
+      { t: 'Take all 45 points and ask the team to put in extra hours.', s: 0, fx: { goal: -15, team: -15, trust: 5 }, fb: 'Overloading a Sprint almost guarantees a missed goal, cut corners and a tired team. Stakeholders are happy until day 10.', ref: 'Scrum Guide: the more the Developers know about their past performance, upcoming capacity and Definition of Done, the more confident their forecasts will be.' },
+      { t: 'The Developers select what they can get Done (about 30 points) that best serves the goal. The rest stays ordered in the backlog, and you tell Vikram what’s in and what comes next.', s: 10, fx: { goal: 10, team: 10, trust: 5 }, fb: 'The Developers own the forecast, the goal stays achievable, and Vikram gets a transparent picture of what’s coming. Saying “not this Sprint” with a reason builds more trust than over-promising.', ref: 'Scrum Guide: “Through discussion with the Product Owner, the Developers select items from the Product Backlog to include in the current Sprint.”' },
+      { t: 'Take 45 points but quietly skip the golden-set regression to go faster.', s: 0, fx: { goal: -5, team: -5, trust: -10 }, fb: 'Lowering quality in secret is the most expensive shortcut there is, especially with client numbers in an AI brief.', ref: 'Scrum Guide: during the Sprint, “quality does not decrease.”' },
+      { t: 'Pick 30 points yourself and assign tasks to each engineer.', s: 4, fx: { goal: 5, team: -10 }, fb: 'Right amount, wrong owner. Choosing how much to take on and planning how to do it are the Developers’ job. Assigning tasks undermines self-management.', ref: 'Scrum Guide: the Sprint Backlog “is a plan by and for the Developers.”' }
+    ] },
+  { day: 3, phase: 'Daily Scrum', lesson: 'scrum-6', title: 'The CTO turns the Daily Scrum into a status meeting',
+    scene: `<p>Vikram joins the Daily Scrum and asks each engineer, one by one, what they did yesterday. It runs 25 minutes. Nobody mentions the Sprint Goal. Afterwards Arjun looks at you.</p>`,
+    options: [
+      { t: 'Join in. It’s useful for you to hear status too.', s: 0, fx: { team: -10, goal: -5, trust: 5 }, fb: 'This reinforces the anti-pattern. The Developers stop planning together and start performing for management.', ref: 'Scrum Guide: “The Daily Scrum is a 15-minute event for the Developers of the Scrum Team.”' },
+      { t: 'Afterwards, talk to Vikram privately. Explain the event’s purpose, offer the board link and a 10-minute weekly sync with you, and ask Arjun to coach the format.', s: 10, fx: { team: 10, goal: 5, trust: 5 }, fb: 'You get Vikram the visibility they want another way, and you restore the event’s purpose. The Scrum Master helps stakeholders understand an empirical approach and removes barriers.', ref: 'Scrum Guide: the Scrum Master serves the organization by “removing barriers between stakeholders and Scrum Teams.”' },
+      { t: 'Tell Vikram, in front of everyone, to leave the meeting.', s: 3, fx: { team: 5, trust: -15 }, fb: 'Right principle, damaging delivery. A private conversation and the Scrum Master’s coaching get the same result without embarrassing your manager.', ref: 'Scrum Values: Respect and Courage go together.' },
+      { t: 'Cancel Daily Scrums this Sprint and switch to Slack updates.', s: 0, fx: { goal: -10, team: -5 }, fb: 'Removing the team’s daily inspect-and-adapt point to dodge an awkward conversation makes things worse.', ref: 'Scrum Guide: Daily Scrums “improve communications, identify impediments, promote quick decision-making.”' }
+    ] },
+  { day: 4, phase: 'Mid-Sprint', lesson: 'scrum-3', title: 'Compliance raises a blocker',
+    scene: `<div class="who"><span class="av">FA</span><div><b>Farah · Compliance</b>“Before pilot advisors see AI-written text, it needs our approved disclaimer and an audit log of the prompt, model version and inputs.”</div></div><p>The team didn’t plan for the audit log. It’s about 5 points of work.</p>`,
+    options: [
+      { t: 'Ignore it for now. The pilot advisors are friendly, so add it later.', s: 0, fx: { trust: -15, goal: -5 }, fb: 'A viability risk in a regulated business. An Increment that compliance can’t approve isn’t usable, and you’d be burning trust with the person whose sign-off you need.', ref: 'Lesson: viability and compliance belong in discovery and in the Definition of Done.' },
+      { t: 'With Farah and the Developers, treat it as required for a usable Increment (and add it to the DoD from now on). Move a lower-value item, like the “top gainers” chart, back to the Product Backlog to make room, and keep the Sprint Goal intact.', s: 10, fx: { goal: 5, team: 5, trust: 10 }, fb: 'This is renegotiating scope with the PO as you learn, which Scrum expects. The goal survives, quality goes up, and compliance becomes a partner.', ref: 'Scrum Guide: Developers “collaborate with the Product Owner to negotiate the scope of the Sprint Backlog within the Sprint without affecting the Sprint Goal.”' },
+      { t: 'Ask the team to absorb it by working the weekend.', s: 2, fx: { team: -15, goal: 5, trust: 5 }, fb: 'It might work once, but it hides the real trade-off and burns the team. Renegotiate scope instead.', ref: 'Scrum Guide: “Scope may be clarified and renegotiated with the Product Owner as more is learned.”' },
+      { t: 'Cancel the Sprint, because the plan changed.', s: 0, fx: { goal: -15, trust: -5 }, fb: 'The Sprint Goal is still valid, so cancelling is wasteful. Plans are expected to change inside a Sprint.', ref: 'Scrum Guide: a Sprint could be cancelled “if the Sprint Goal becomes obsolete. Only the Product Owner has the authority to cancel the Sprint.”' }
+    ] },
+  { day: 6, phase: 'Mid-Sprint', lesson: 'scrum-6', title: 'Sales asks for a demo feature mid-Sprint',
+    scene: `<div class="who"><span class="av">KB</span><div><b>Kabir · Head of Sales</b>“A prospect with ₹500 Cr AUM is seeing a demo on Monday. I need a custom PDF report with their logo and a ‘model portfolio comparison’ page. Can the team add it this Sprint? It’s maybe two days.”</div></div><p>Kabir has also messaged one of the engineers directly.</p>`,
+    options: [
+      { t: 'Say yes and ask an engineer to start right away. It’s revenue.', s: 0, fx: { goal: -20, team: -10, trust: 10 }, fb: 'This endangers the Sprint Goal and bypasses the team’s plan. It also teaches Sales that messaging engineers directly works.', ref: 'Scrum Guide: during the Sprint, “no changes are made that would endanger the Sprint Goal.”' },
+      { t: 'Flat no: “The Sprint is locked. Put it in Jira.”', s: 3, fx: { goal: 5, trust: -15 }, fb: 'It protects the goal but damages the relationship and ignores a real business need. Scrum gives you room to find out what Kabir needs and offer an option.', ref: 'Scrum Values: Openness and Respect.' },
+      { t: 'Find out what the demo really needs. With the Developers, check what fits without endangering the goal (for example, demoing the brief on a masked sample client). Put the comparison page in the Product Backlog in order, and tell Kabir what they get and when.', s: 10, fx: { goal: 5, trust: 10, team: 5 }, fb: 'You act as the single point of intake, protect the Sprint Goal, and still serve the business. The comparison page competes on value in the backlog instead of jumping the queue. You also ask Kabir to come to you instead of the engineers.', ref: 'Scrum Guide: “Those wanting to change the Product Backlog can do so by trying to convince the Product Owner.”' },
+      { t: 'Cancel the Sprint and replan around the demo.', s: 0, fx: { goal: -20, team: -10, trust: 5 }, fb: 'One demo request doesn’t make the Sprint Goal obsolete. Cancelling throws away work in progress and destroys focus.', ref: 'Scrum Guide: cancellation only when “the Sprint Goal becomes obsolete.”' }
+    ] },
+  { day: 9, phase: 'Mid-Sprint', lesson: 'scrum-3', title: 'A story isn’t meeting the Definition of Done',
+    scene: `<p>BRF-27, the failed-SIP section, is code-complete and looks great. But the golden-set regression found <strong>2 numeric mismatches</strong> in 50 portfolios, so it doesn’t meet the Definition of Done. The Sprint Review is tomorrow.</p>`,
+    options: [
+      { t: 'Show it as done at the review. Stakeholders will love it, and you’ll fix it next Sprint.', s: 0, fx: { trust: -10, goal: -5 }, fb: 'This breaks transparency. Stakeholders make decisions based on a false picture, and the team learns that “Done” is negotiable.', ref: 'Scrum Guide: work not meeting the DoD “cannot be released or even presented at the Sprint Review.”' },
+      { t: 'Be transparent. It isn’t Done, so it isn’t part of the Increment or demoed as such. It returns to the Product Backlog, probably at the top for next Sprint, and you say plainly at the review that it didn’t make it.', s: 10, fx: { trust: 5, team: 5 }, fb: 'Honest and calm. The DoD exists so that “Done” means usable, which matters even more when the output is client numbers.', ref: 'Scrum Guide: “Instead, it returns to the Product Backlog for future consideration.”' },
+      { t: 'Relax the DoD for this item. 48 out of 50 correct is 96% accurate.', s: 0, fx: { trust: -10, team: -5, goal: -5 }, fb: 'Two wrong numbers in a client brief is two potential complaints. Lowering the bar mid-Sprint to look good is exactly what the DoD prevents.', ref: 'Scrum Guide: during the Sprint, “quality does not decrease.”' },
+      { t: 'Ask a developer to stay late and hard-code fixes for those two test cases.', s: 2, fx: { team: -10, goal: 5 }, fb: 'Making the test pass without fixing the root cause games the DoD and leaves the bug in production.', ref: 'Scrum Guide: Developers instil quality “by adhering to a Definition of Done.”' }
+    ] },
+  { day: 10, phase: 'Sprint Review', lesson: 'scrum-4', title: 'How do you run the Sprint Review?',
+    scene: `<p>The Increment works for mutual fund clients: an accurate what-changed brief, with the disclaimer and audit log. Two pilot advisors, Farah, Kabir and Vikram are free this afternoon.</p>`,
+    options: [
+      { t: 'Present a 20-slide deck summarizing tickets closed and velocity.', s: 0, fx: { trust: -5 }, fb: 'This is demo theater. A deck about output gives stakeholders nothing to inspect and no way to shape what comes next.', ref: 'Scrum Guide: the Scrum Team “should avoid limiting it to a presentation.”' },
+      { t: 'Run a working session. Pilot advisors use the Increment on masked client data, you look at usage data and what changed (the compliance requirement, Kabir’s request), decide together what’s next, and adjust the Product Backlog in the room.', s: 10, fx: { trust: 15, goal: 5 }, fb: 'This is empiricism working: real product, real users, real decisions. Kabir sees the comparison page placed in the backlog for a reason, and Farah sees the audit log working.', ref: 'Scrum Guide: “Based on this information, attendees collaborate on what to do next. The Product Backlog may also be adjusted to meet new opportunities.”' },
+      { t: 'Skip the review and send a release-notes email.', s: 0, fx: { trust: -10 }, fb: 'You lose Scrum’s main moment to inspect the product with stakeholders and adapt the plan.', ref: 'Scrum Guide: the Sprint Review’s purpose is “to inspect the outcome of the Sprint and determine future adaptations.”' },
+      { t: 'Demo only to Vikram to save everyone else’s time.', s: 3, fx: { trust: -5 }, fb: 'The review is for key stakeholders. The advisors, compliance and Sales each bring information the CTO doesn’t have.', ref: 'Scrum Guide: “The Scrum Team presents the results of their work to key stakeholders.”' }
+    ] },
+  { day: 10, phase: 'Sprint Retrospective', lesson: 'scrum-6', title: 'The team wants to skip the retrospective',
+    scene: `<p>Everyone is tired. Someone suggests skipping the retrospective because the next Sprint starts tomorrow anyway.</p>`,
+    options: [
+      { t: 'Skip it this once.', s: 0, fx: { team: -10 }, fb: '“This once” becomes a habit. The compliance surprise and the Daily Scrum problem would happen again next Sprint.', ref: 'Scrum Guide: the Retrospective concludes the Sprint and plans ways to increase quality and effectiveness.' },
+      { t: 'Hold a short, focused retro, well inside the timebox. Discuss what went well and what didn’t (the late compliance requirement, the CTO at the Daily Scrum), pick one or two improvements, and put the top one in the next Sprint Backlog.', s: 10, fx: { team: 15, goal: 5 }, fb: 'A short retro that produces one real change beats a long one that produces a list. Adding compliance checks to the DoD and to refinement directly prevents this Sprint’s biggest surprise.', ref: 'Scrum Guide: the most impactful improvements “may even be added to the Sprint Backlog for the next Sprint.”' },
+      { t: 'Use it to work out who caused the BRF-27 miss.', s: 0, fx: { team: -20 }, fb: 'Blame destroys openness, and then the retro stops surfacing real problems. Inspect the process, not people.', ref: 'Scrum Values: Openness, Respect.' },
+      { t: 'Hold it, list 12 action items, and assign them all to the Scrum Master.', s: 3, fx: { team: 0 }, fb: 'Twelve actions means none get done, and improvements belong to the whole team. Pick the most impactful one or two.', ref: 'Scrum Guide: the team “identifies the most helpful changes to improve its effectiveness.”' }
+    ] }
+];
+
+/* ================= Module 7 · Cheat sheet ================= */
+CHEAT = `
+<section>
+  <h2>The PM job</h2>
+  <ul>
+    <li><b>PM</b> owns the <b>why/what</b>: which problem, for whom, how success is measured. <b>Engineering</b> owns the how. <b>Design</b> owns the experience.</li>
+    <li><b>Four risks:</b> value · usability · feasibility · viability (incl. SEBI/compliance).</li>
+    <li><b>JTBD:</b> <code>When [situation], I want to [motivation], so I can [outcome].</code></li>
+    <li><b>Problem statement:</b> segment · job · insight · workaround · cost · measurable outcome. No solution inside.</li>
+    <li><b>Interviews:</b> past behavior, specifics (“show me”), no pitching, listen for workarounds.</li>
+  </ul>
+</section>
+<section>
+  <h2>Discovery</h2>
+  <ul>
+    <li>Run discovery and delivery <b>in parallel</b>. Test the riskiest assumption first.</li>
+    <li><b>Cheap tests:</b> interviews · prototype · fake door · Wizard of Oz · concierge · tech spike · compliance review of a mock.</li>
+    <li>Set <b>success criteria before</b> the test. Output: evidence and a decision.</li>
+  </ul>
+</section>
+<section>
+  <h2>Prioritization</h2>
+  <ul>
+    <li><b>RICE</b> = (Reach × Impact × Confidence) ÷ Effort. Impact 3/2/1/0.5/0.25, Confidence 100/80/50%. <em>Misleads</em> on concentrated B2B value.</li>
+    <li><b>MoSCoW</b>: Must/Should/Could/Won’t. For fixed-date scope.</li>
+    <li><b>Kano</b>: basic · performance · delighter (delighters decay into basics).</li>
+    <li><b>Impact/effort</b>: quick wins · big bets · fill-ins · money pits.</li>
+    <li>Framework first cut, then judgment, then <b>write down the why</b>.</li>
+  </ul>
+</section>
+<section>
+  <h2>Specs</h2>
+  <ul>
+    <li><b>Lean PRD:</b> problem · goals/metrics · non-goals · scenarios · stories + AC · edge cases · constraints · open questions · rollout.</li>
+    <li><b>Story:</b> <code>As a…, I want…, so that…</code> · <b>INVEST</b>.</li>
+    <li><b>AC:</b> <code>Given… when… then…</code>. Pass/fail only.</li>
+    <li><b>Edge cases:</b> empty · stale · scale · permissions · AI failure (timeout, low confidence, hallucination, PII).</li>
+    <li>AI: a <b>golden set</b> of 30–50 masked examples.</li>
+  </ul>
+</section>
+<section>
+  <h2>Metrics</h2>
+  <ul>
+    <li><b>North Star</b> = value delivered (e.g. reviews prepared with the brief per week).</li>
+    <li><b>Input</b> (team can move) vs <b>output</b> (results). <b>Leading</b> (predicts) vs <b>lagging</b> (confirms).</li>
+    <li><b>Activation</b> = first-value behavior. <b>Retention</b> by cohort should flatten.</li>
+    <li><code>NRR = (Start ARR + expansion − contraction − churn) ÷ Start ARR</code></li>
+    <li>Always pair success metrics with <b>guardrails</b>. Match the window to the product’s natural cadence.</li>
+  </ul>
+</section>
+<section>
+  <h2>People &amp; communication</h2>
+  <ul>
+    <li>Negotiate <b>scope</b>, never the estimate. Quality doesn’t flex.</li>
+    <li><b>No, but…</b> acknowledge · trade-off · alternative · recommendation.</li>
+    <li><b>Weekly update:</b> headline status · progress vs goal · done/next · risks &amp; asks.</li>
+    <li><b>RACI:</b> exactly one Accountable. Bad news early, privately, with options.</li>
+    <li>Compliance in <b>discovery</b>, not at launch.</li>
+  </ul>
+</section>
+<section>
+  <h2>Roadmaps &amp; launches</h2>
+  <ul>
+    <li><b>Now / Next / Later</b>, outcomes not features. Dates only for real fixed deadlines.</li>
+    <li><b>Deploy ≠ release.</b> Flags: release · kill switch · entitlement · experiment.</li>
+    <li><b>Staged rollout</b> by firm: internal → pilot → % of firms → GA, with exit criteria.</li>
+    <li>Measure against a <b>comparison group</b>, not just before/after.</li>
+  </ul>
+</section>
+<section>
+  <h2>Empiricism &amp; values</h2>
+  <ul>
+    <li><b>Pillars:</b> Transparency → Inspection → Adaptation.</li>
+    <li><b>Values:</b> Commitment · Focus · Openness · Respect · Courage.</li>
+    <li>Scrum is a <b>lightweight, purposefully incomplete framework</b> (Scrum Guide, Nov 2020).</li>
+  </ul>
+</section>
+<section class="span">
+  <h2>Scrum events (timeboxes are maximums for a one-month Sprint)</h2>
+  ${table(['Event', 'Purpose', 'Timebox', 'Who', 'Output'], [
+    ['Sprint', 'Container for all events; turn ideas into value', '≤ 1 month, fixed length', 'Scrum Team', 'Usable Increment(s)'],
+    ['Sprint Planning', 'Why · What · How', '8 h', 'Scrum Team (+ invited advisors)', 'Sprint Backlog with Sprint Goal'],
+    ['Daily Scrum', 'Inspect progress towards Sprint Goal, adapt plan', '15 min', 'Developers', 'Adjusted plan for the day'],
+    ['Sprint Review', 'Inspect outcome, decide future adaptations', '4 h', 'Scrum Team + key stakeholders', 'Agreed next steps; backlog may be adjusted'],
+    ['Sprint Retrospective', 'Improve quality and effectiveness (incl. DoD)', '3 h', 'Scrum Team', 'Improvements, possibly in next Sprint Backlog']
+  ])}
+  <p>Only the <b>Product Owner</b> can cancel a Sprint, and only if the Sprint Goal becomes obsolete. During the Sprint: no changes that endanger the Sprint Goal, quality doesn’t decrease, scope may be renegotiated with the PO.</p>
+</section>
+<section>
+  <h2>Accountabilities</h2>
+  <ul>
+    <li><b>Product Owner</b>: maximizes value. Product Goal, backlog items, ordering, transparency. One person.</li>
+    <li><b>Scrum Master</b>: Scrum as defined and the team’s effectiveness. Coaching, impediments, events.</li>
+    <li><b>Developers</b>: Sprint Backlog, quality via DoD, daily adaptation. Includes designers and QA.</li>
+    <li>Team: typically ≤ 10 people, no sub-teams, self-managing, cross-functional.</li>
+  </ul>
+</section>
+<section>
+  <h2>Artifacts → commitments</h2>
+  <ul>
+    <li><b>Product Backlog</b> → <b>Product Goal</b> (fulfil or abandon before the next).</li>
+    <li><b>Sprint Backlog</b> (why + what + how) → <b>Sprint Goal</b> (single objective).</li>
+    <li><b>Increment</b> → <b>Definition of Done</b>. Not Done means not released, not presented, back to the backlog.</li>
+    <li>Increments may be released <b>before</b> the Sprint ends.</li>
+  </ul>
+</section>
+<section>
+  <h2>In the Scrum Guide, or not?</h2>
+  <p><b>In:</b> refinement (an ongoing activity), Product Goal, Sprint Goal, DoD, the five events, three accountabilities.</p>
+  <p><b>Not in:</b> user stories · story points · velocity · Definition of Ready · Planning Poker · burndowns (mentioned only as forecasting practices) · the “three questions” (removed in 2020) · acceptance criteria · epics · spikes.</p>
+</section>
+<section>
+  <h2>Anti-patterns → fixes</h2>
+  <ul>
+    <li>Status standup → Developers run it around the Sprint Goal.</li>
+    <li>Ticket-list goal → one outcome-oriented objective.</li>
+    <li>Skipped retro → short but never skipped; top action goes into the next Sprint.</li>
+    <li>Order-taker PO → PO owns the ordering; stakeholders go through the PO.</li>
+    <li>Demo theater → working session; adjust the backlog.</li>
+    <li>Undone work / hardening Sprints → stronger DoD.</li>
+    <li>Velocity as KPI → outcome and flow metrics.</li>
+  </ul>
+</section>
+<section>
+  <h2>Kanban</h2>
+  <ul>
+    <li>Practices: define &amp; visualize workflow · actively manage items · improve the workflow.</li>
+    <li>Flow metrics: <b>WIP · Throughput · Work Item Age · Cycle Time</b>.</li>
+    <li><code>Little’s Law: Cycle Time = WIP ÷ Throughput</code></li>
+    <li>WIP limits: stop starting, start finishing. SLE, e.g. 85% within 3 days.</li>
+    <li>Scrum + Kanban: keep all of Scrum and add flow practices.</li>
+  </ul>
+</section>`;
+</script>
+
 <!-- @content-end -->
 
 <script>
