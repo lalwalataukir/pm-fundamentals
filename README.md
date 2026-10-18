@@ -6,6 +6,12 @@ An interactive course in Product Management and Scrum fundamentals, written for 
 
 Download `index.html` and double-click it, or open it in any modern browser. Progress is saved in your browser's localStorage. If storage is blocked, the course still works, but progress lasts only for the session.
 
+## Live site
+
+Deployed with GitHub Pages: https://lalwalataukir.github.io/pm-fundamentals/
+
+Every push to the default branch runs `.github/workflows/pages.yml`. It deploys `index.html`, then runs the end-to-end browser tests in `tests/live-qa.js` against the live URL. To run the same tests locally, use `node tests/live-qa.js` (it needs `playwright`).
+
 ## What's inside
 
 - **Track 1 · PM Fundamentals (10 lessons):** role, users and problems, discovery, prioritization, specs, metrics, working with engineering and design, stakeholders, roadmaps, launches
