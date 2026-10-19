@@ -20,3 +20,4 @@ Every push to the default branch runs `.github/workflows/pages.yml`. It deploys 
 - **Every lesson:** the idea in one line, an explanation, a worked example, common mistakes, a Try-it exercise with a model answer, and a quiz with an explanation for every option
 - **Search:** one search bar (press `/` or Ctrl/Cmd + K) across every lesson, glossary term, simulator step and the cheat sheet, with matches highlighted on the page
 - **Tools:** a Sprint simulator (8 decisions), flashcards (114 cards), a searchable glossary (159 terms), and a cheat sheet that prints on one A4 page
+- **Design:** the Agent Field Guides design system in [`design-system/`](design-system/README.md): its colour tokens, Bricolage Grotesque, Atkinson Hyperlegible and IBM Plex Mono, and its component rules. Dark is the default; the theme button in the sidebar switches to light, and the choice is shared with the Agent Field Guides
