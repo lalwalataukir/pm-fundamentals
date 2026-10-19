@@ -14,8 +14,8 @@ Every push to the default branch runs `.github/workflows/pages.yml`. It deploys 
 
 ## What's inside
 
-- **Track 1 · PM Fundamentals (10 lessons):** role, users and problems, discovery, prioritization, specs, metrics, working with engineering and design, stakeholders, roadmaps, launches
+- **Track 1 · PM Fundamentals (13 lessons):** role, users and problems, discovery, prioritization, specs, metrics, working with engineering and design, stakeholders, roadmaps, launches, building AI products, product analytics & experimentation, product strategy & B2B business models
 - **Track 2 · Scrum Fundamentals (7 lessons):** follows the Scrum Guide (November 2020) and separates what the Guide says from common practice
 - **Every lesson:** the idea in one line, an explanation, a worked example, common mistakes, a Try-it exercise with a model answer, and a quiz with an explanation for every option
 - **Search:** one search bar (press `/` or Ctrl/Cmd + K) across every lesson, glossary term, simulator step and the cheat sheet, with matches highlighted on the page
-- **Tools:** a Sprint simulator (8 decisions), flashcards (79 cards), a searchable glossary (110 terms), and a cheat sheet that prints on one A4 page
+- **Tools:** a Sprint simulator (8 decisions), flashcards (97 cards), a searchable glossary (133 terms), and a cheat sheet that prints on one A4 page

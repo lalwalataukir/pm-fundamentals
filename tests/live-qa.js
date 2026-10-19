@@ -24,7 +24,7 @@ const check = (c, m) => c ? ok(m) : bad(m);
   const go = async h => { await page.evaluate(x => { location.hash = x; }, h); await page.waitForTimeout(120); };
   const ids = await page.evaluate(() => LESSONS.map(l => l.id));
   console.log('Lessons:', ids.length);
-  check(ids.length === 17, '17 lessons loaded');
+  check(ids.length === 20, `${ids.length} lessons loaded (expected 20)`);
 
   console.log('Quizzes + completion');
   for (const id of ids) {
@@ -49,7 +49,7 @@ const check = (c, m) => c ? ok(m) : bad(m);
   }
   ok('all quizzes answered; explanations for every option; locking works');
   const doneCount = await page.$$eval('.nav-link.done', e => e.length);
-  check(doneCount === 17, `sidebar shows ${doneCount}/17 completed`);
+  check(doneCount === ids.length, `sidebar shows ${doneCount}/${ids.length} completed`);
   const pct = await page.$eval('.overall-row b', e => e.textContent);
   check(pct === '100%', 'overall progress 100% (' + pct + ')');
 
@@ -88,7 +88,7 @@ const check = (c, m) => c ? ok(m) : bad(m);
 
   console.log('Persistence after reload');
   await page.reload(); await page.waitForTimeout(200);
-  check(await page.$$eval('.nav-link.done', e => e.length) === 17, 'completion persists');
+  check(await page.$$eval('.nav-link.done', e => e.length) === ids.length, 'completion persists');
   await go('pm-2');
   check(await page.$eval('#draft-pm-2', e => e.value) === 'My JTBD draft', 'draft persists');
   await go('pm-4');
@@ -128,11 +128,12 @@ const check = (c, m) => c ? ok(m) : bad(m);
   const pos1 = await page.$eval('.fc-pos', e => e.textContent);
   await page.click('[data-action="fc-know"]');
   const pos2 = await page.$eval('.fc-pos', e => e.textContent);
-  check(pos1 !== pos2 && pos2.includes('1/79 known'), 'know-it advances and counts: ' + pos2);
+  const nCards = await page.evaluate(() => GLOSSARY.filter(g => g.card).length);
+  check(pos1 !== pos2 && pos2.includes(`1/${nCards} known`), 'know-it advances and counts: ' + pos2);
   await page.keyboard.press('ArrowRight');
   check((await page.$eval('.fc-pos', e => e.textContent)).startsWith('Card 3'), 'arrow key moves');
   await page.click('[data-action="fc-filter"][data-v="learning"]');
-  check((await page.$eval('.fc-pos', e => e.textContent)).includes('/ 78'), 'still-learning deck excludes known');
+  check((await page.$eval('.fc-pos', e => e.textContent)).includes(`/ ${nCards - 1}`), 'still-learning deck excludes known');
   await page.click('[data-action="fc-shuffle"]');
   check(await page.$('#fc-card') !== null, 'shuffle keeps a card on screen');
 
@@ -187,7 +188,7 @@ const check = (c, m) => c ? ok(m) : bad(m);
     await go(r);
     const res = await page.evaluate(() => {
       const links = [...document.querySelectorAll('#main a.tool-link')];
-      const re = /(?<![A-Za-z0-9])(Scrum Guide|Kanban Guide|Agile Manifesto|Scrum\.org|Jira|Figma|Slack|Postgres|WhatsApp|Excel|CAMS|KFintech|SEBI)(?![A-Za-z0-9])/;
+      const re = /(?<![A-Za-z0-9])(Scrum Guide|Kanban Guide|Agile Manifesto|Scrum\.org|Jira|Figma|Slack|Postgres|WhatsApp|Excel|CAMS|KFintech|SEBI|Mixpanel|Amplitude|Google Analytics)(?![A-Za-z0-9])/;
       const skip = 'a,button,input,textarea,select,svg,script,style,h1,h2,.badge,.section-label,.q-n,.opt-flag,.fb-h,.tag,.kbd';
       const w = document.createTreeWalker(document.querySelector('#main'), NodeFilter.SHOW_TEXT); const miss = [];
       while (w.nextNode()) { const n = w.currentNode; if (re.test(n.nodeValue) && !n.parentElement.closest(skip)) miss.push(n.nodeValue.trim().slice(0, 60)); }
@@ -240,6 +241,13 @@ const check = (c, m) => c ? ok(m) : bad(m);
   check(sn > 0, 'multi-word query highlights both words in results');
   await page.click('.search-scrim', { position: { x: 5, y: 5 } });
   check(!(await page.isVisible('#search-q')), 'clicking outside closes search');
+
+  await page.click('.sidebar [data-action="search-open"]');
+  await page.fill('#search-q', 'eval'); await page.waitForTimeout(100);
+  check(await page.$('.sr-item[data-kind="lesson"] .sr-title') !== null && (await page.$$eval('.sr-item .sr-title', e => e.map(x => x.textContent))).some(t => t.includes('Building AI products')), 'search "eval" finds the AI products lesson');
+  await page.fill('#search-q', 'tracking plan'); await page.waitForTimeout(100);
+  check((await page.$$eval('.sr-item .sr-title', e => e.map(x => x.textContent))).some(t => t.includes('Product analytics')), 'search "tracking plan" finds the analytics lesson');
+  await page.keyboard.press('Escape');
 
   console.log('Reset');
   await page.click('[data-action="reset"]'); await page.click('[data-action="reset"]');

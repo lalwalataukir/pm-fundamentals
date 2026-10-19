@@ -225,6 +225,7 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
 .rice-bar{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
 .rice-bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
 .rice-rank{font-size:.9rem;color:var(--ink);margin:0}
+.codeblock{font-family:var(--f-mono);font-size:.82rem;line-height:1.6;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:0 0 1em;overflow-x:auto;white-space:pre;color:var(--ink);font-variant-ligatures:none}
 .formula{font-family:var(--f-mono);font-size:.95rem;background:var(--surface-2);border-radius:8px;padding:12px 14px;margin:0 0 1em;overflow-x:auto;white-space:nowrap}
 @media (max-width:560px){.rice-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
@@ -2704,6 +2705,385 @@ CHEAT = `
 </section>`;
 </script>
 
+<script>
+/* ================= Module 8 · PM lessons 11–13: AI products, analytics, strategy ================= */
+DIAG.aiLoop = `<svg viewBox="0 0 640 330" role="img" aria-labelledby="ail-t"><title id="ail-t">The AI quality loop: golden set, offline evals, human review, ship behind a flag, monitor in production, and feed new failure cases back into the golden set.</title>
+  <defs><marker id="ah-ail" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <circle cx="320" cy="165" r="118" class="d-grid" stroke-dasharray="4 5"/>
+  <text x="320" y="160" text-anchor="middle" class="t-mono t-acc">AI QUALITY LOOP</text>
+  <text x="320" y="180" text-anchor="middle" class="t-xs t-muted">every prompt or model change</text>
+  <text x="320" y="194" text-anchor="middle" class="t-xs t-muted">goes round again</text>
+  ${[[320, 22, '1 · Golden set', '50–200 real, masked cases', 'd-soft'], [520, 105, '2 · Offline evals', 'scored against pass bars', 'd-surface'], [460, 268, '3 · Human review', 'experts grade a sample', 'd-surface'], [180, 268, '4 · Ship behind a flag', 'staged rollout, kill switch', 'd-gold'], [120, 105, '5 · Monitor in production', 'edits, error reports, cost', 'd-surface']].map(n => `
+    <rect x="${n[0] - 92}" y="${n[1]}" width="184" height="52" rx="10" class="${n[4]}"/>
+    <text x="${n[0]}" y="${n[1] + 22}" text-anchor="middle" class="t-sm b">${n[2]}</text>
+    <text x="${n[0]}" y="${n[1] + 39}" text-anchor="middle" class="t-xs t-muted">${n[3]}</text>`).join('')}
+  <path d="M412 52 C 470 60, 505 80, 515 100" class="d-line" marker-end="url(#ah-ail)"/>
+  <path d="M540 160 C 545 200, 530 240, 515 262" class="d-line" marker-end="url(#ah-ail)"/>
+  <path d="M368 294 H 278" class="d-line" marker-end="url(#ah-ail)"/>
+  <path d="M120 262 C 100 230, 98 190, 110 162" class="d-line" marker-end="url(#ah-ail)"/>
+  <path d="M150 103 C 170 70, 200 55, 226 50" class="d-line" marker-end="url(#ah-ail)"/>
+  <text x="18" y="46" class="t-xs t-acc">new failures</text><text x="18" y="59" class="t-xs t-acc">become test cases</text>
+</svg>`;
+
+DIAG.analytics = `<svg viewBox="0 0 680 250" role="img" aria-labelledby="an-t"><title id="an-t">From raw events to a funnel to a cohort retention table.</title>
+  <defs><marker id="ah-an" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <rect x="10" y="10" width="200" height="230" rx="10" class="d-surface"/>
+  <text x="24" y="34" class="t-mono t-acc">1 · RAW EVENTS</text>
+  ${[['A-104', 'brief_generated', '09:02'], ['A-104', 'brief_opened', '09:03'], ['A-221', 'brief_generated', '09:10'], ['A-104', 'brief_shared', '09:15'], ['A-388', 'login', '09:21'], ['A-221', 'brief_opened', '09:40']].map((r, i) => `
+    <text x="22" y="${62 + i * 28}" class="t-mono t-muted" style="font-size:9.5px">${r[0]}</text><text x="62" y="${62 + i * 28}" class="t-mono" style="font-size:9.5px">${r[1]}</text><text x="200" y="${62 + i * 28}" text-anchor="end" class="t-mono t-muted" style="font-size:9.5px">${r[2]}</text>`).join('')}
+  <path d="M214 125 H 236" class="d-line" marker-end="url(#ah-an)"/>
+  <rect x="240" y="10" width="200" height="230" rx="10" class="d-surface"/>
+  <text x="254" y="34" class="t-mono t-acc">2 · FUNNEL</text>
+  ${[['Generated', 170, '100%'], ['Opened', 138, '81%'], ['Used in review', 102, '60%'], ['Shared', 46, '27%']].map((r, i) => `
+    <text x="254" y="${64 + i * 44}" class="t-xs">${r[0]}</text>
+    <rect x="254" y="${70 + i * 44}" width="${r[1]}" height="14" rx="3" class="d-fill-acc" fill-opacity="${0.95 - i * 0.18}"/>
+    <text x="426" y="${64 + i * 44}" text-anchor="end" class="t-mono t-muted">${r[2]}</text>`).join('')}
+  <path d="M444 125 H 466" class="d-line" marker-end="url(#ah-an)"/>
+  <rect x="470" y="10" width="200" height="230" rx="10" class="d-surface"/>
+  <text x="484" y="34" class="t-mono t-acc">3 · COHORT RETENTION</text>
+  <text x="484" y="58" class="t-xs t-muted">week →</text>
+  ${['W0', 'W1', 'W2', 'W3'].map((w, j) => `<text x="${548 + j * 30}" y="58" text-anchor="middle" class="t-mono t-muted">${w}</text>`).join('')}
+  ${[['Mar', [100, 64, 55, 52]], ['Apr', [100, 70, 61, 58]], ['May', [100, 74, 66, 0]], ['Jun', [100, 77, 0, 0]]].map((row, i) => `
+    <text x="484" y="${86 + i * 34}" class="t-mono">${row[0]}</text>
+    ${row[1].map((v, j) => v ? `<rect x="${534 + j * 30}" y="${70 + i * 34}" width="28" height="26" rx="3" class="d-fill-acc" fill-opacity="${(v / 100 * 0.85 + 0.1).toFixed(2)}"/><text x="${548 + j * 30}" y="${87 + i * 34}" text-anchor="middle" class="t-mono" style="font-size:9.5px">${v}</text>` : '').join('')}`).join('')}
+  <text x="484" y="228" class="t-xs t-muted">% still active, by start month</text>
+</svg>`;
+
+DIAG.strategyStack = `<svg viewBox="0 0 640 290" role="img" aria-labelledby="ss-t"><title id="ss-t">Vision, strategy, roadmap, product backlog and Sprint, from the longest horizon to the shortest.</title>
+  ${[['Vision', 'Where we want the world to be', '5–10 years', 600], ['Strategy', 'Where we play and how we win', '1–3 years', 520], ['Roadmap', 'Which problems, in what order', 'quarters', 440], ['Product Backlog', 'What work, in what order', 'weeks–months', 360], ['Sprint', 'What we finish now', 'days–weeks', 280]].map((r, i) => {
+    const w = r[3], x = (640 - w) / 2, y = 10 + i * 55;
+    return `<rect x="${x}" y="${y}" width="${w}" height="46" rx="8" class="${i === 1 ? 'd-soft' : 'd-surface'}"/>
+      <text x="${x + 16}" y="${y + 20}" class="t-sm b">${r[0]}</text><text x="${x + 16}" y="${y + 36}" class="t-xs t-muted">${r[1]}</text>
+      <text x="${x + w - 16}" y="${y + 28}" text-anchor="end" class="t-mono t-acc">${r[2]}</text>`;
+  }).join('')}
+</svg>`;
+
+LESSONS.push({
+  id: 'pm-11', track: 'pm', n: 11, minutes: 14,
+  title: 'Building AI products', short: 'Building AI products',
+  sub: 'How AI features differ from normal software, and how to make them good enough, safe enough and cheap enough to ship.',
+  idea: 'AI output is probabilistic, so “done” can’t mean “it worked in the demo”. Define quality as measurable evals, ground every fact in your own systems, and keep a human where mistakes are costly.',
+  body: `
+<h3>What changes when the feature is AI</h3>
+<p>Normal software is <strong>deterministic</strong>: the same input gives the same output, and a test either passes or fails. An LLM is <strong>probabilistic</strong>. The same prompt can give different answers, and an answer can be fluent, confident and wrong. Your job shifts from specifying exact behavior to specifying <strong>acceptable behavior</strong>, measuring it, and designing for the times it fails.</p>
+<p>Use AI where variety helps and small errors are cheap to catch: drafting, summarizing, classifying, extracting. Don’t use it where an exact answer is required. Portfolio values, XIRR and tax figures should come from your calculation engine, every time.</p>
+<h3>Grounding: numbers from systems, words from the model</h3>
+<p>The most important design rule for a wealth-tech AI feature: <strong>the model never invents facts</strong>. Fetch the facts (holdings, returns, SIP status) from your systems, pass them in, and ask the model only to explain and summarize them. Then check the output against the inputs. This is called <strong>grounding</strong>, and it removes most of the hallucination risk that matters.</p>
+<h3>Evals: how you define “good enough”</h3>
+<p>An <strong>eval</strong> is a repeatable test of AI output against explicit criteria, run on a fixed set of cases called the <strong>golden set</strong>. Typical eval types:</p>
+${table(['Eval type', 'What it checks', 'Example'], [
+  ['Deterministic check', 'Facts and format, by code', 'Every number in the brief matches the calculation engine'],
+  ['Rubric + human review', 'Quality that needs judgment', 'Advisors score clarity 1–5 on 50 sampled briefs'],
+  ['LLM-as-judge', 'Rubric scoring at scale, by another model', 'Flags advice-like phrasing. Calibrate it against human labels first'],
+  ['Red-team / adversarial', 'Misuse and attacks', 'An uploaded PDF containing “ignore your instructions…” (prompt injection)'],
+  ['Regression', 'Nothing got worse', 'Rerun the whole golden set on every prompt or model change']
+])}
+${fig(DIAG.aiLoop, 'Quality is a loop, not a launch checklist. Every production failure becomes a new test case.')}
+<h3>Human-in-the-loop</h3>
+<p>Decide how much the AI is allowed to do on its own. <strong>Suggest</strong>: the AI drafts and a human approves. <strong>Act with review</strong>: the AI acts and a human can undo. <strong>Act alone</strong>. In client-facing financial work, start with “suggest”: the advisor reviews every AI-written message before a client sees it. Move further only when the evals and production data justify it.</p>
+<h3>Cost, latency, quality</h3>
+<p>Every call costs money (priced per token) and time. Bigger models are usually better and slower and pricier. Typical levers: use a smaller model for simple steps, cache repeated work, generate in the background before the advisor opens the page, and stream text so it feels fast. Put a <strong>cost per output</strong> and a <strong>p95 latency</strong> target in the spec, next to the quality bar.</p>
+<h3>Version everything, and measure in production</h3>
+<ul>
+  <li>Log the <strong>prompt version, model version and inputs</strong> for every output. You’ll need this for debugging, rollback and audit.</li>
+  <li>AI-specific product metrics: <strong>acceptance and edit rate</strong> (did people use it as is?), <strong>error reports per 1,000 outputs</strong>, <strong>fallback rate</strong>, <strong>cost per output</strong>, p95 latency.</li>
+  <li>Be open about it: label AI-generated text, show what data it used and its “as of” date, and make reporting an error a one-tap action.</li>
+</ul>`,
+  example: {
+    title: 'The AI brief: from “the demo works” to “safe for 900 advisors”',
+    html: `
+<p>The demo impressed the CTO, but on 200 real (masked) client portfolios, version 3 of the prompt got some numbers wrong and occasionally said “consider switching to fund X”, which is advice. The team defined a scorecard and a launch gate:</p>
+${table(['Criterion', 'How it’s checked', 'Pass bar', 'v3', 'v4'], [
+  ['Numeric accuracy', 'Code compares every figure with the calculation engine', '100%', '97.5%', '<strong>100%</strong>'],
+  ['Completeness', 'Rubric: failed SIPs, maturities, changes all present', '≥ 95%', '91%', '<strong>96%</strong>'],
+  ['No advice language', 'Phrase list + compliance review of 50 samples', '0 violations', '3', '<strong>0</strong>'],
+  ['Clarity', 'Advisor rubric 1–5, 50 samples', '≥ 4.0', '3.8', '<strong>4.2</strong>'],
+  ['p95 latency / cost', 'Production-like load test', '≤ 10 s · ≤ ₹4', '12 s · ₹9', '<strong>8 s · ₹3</strong>']
+])}
+<p><strong>What changed in v4:</strong> numbers are now computed by the engine and passed in as fields (grounding). The prompt forbids recommendations and the phrase check runs on every output. The narrative moved to a smaller model, with briefs generated the night before meetings.</p>
+<p><strong>Launch gate:</strong> all bars met on the golden set, then one week of internal use with zero numeric errors, then the staged rollout from Lesson 10. Advisor edits and error reports flow back into the golden set every week.</p>`
+  },
+  mistakes: [
+    'Judging an AI feature by a great demo instead of by evals on real, messy cases.',
+    'Letting the model produce numbers or facts it could get wrong, instead of passing them in from your systems.',
+    'Changing a prompt to fix one complaint without rerunning the full golden set, then breaking three other things.',
+    'Shipping client-facing AI text with no human approval step in a regulated business.',
+    'Leaving cost and latency out of the spec until the first month’s bill arrives.',
+    'Not logging prompt and model versions, so nobody can explain or reproduce a bad output.'
+  ],
+  tryit: {
+    prompt: `<p>Your team is building <strong>AI-drafted client emails</strong>: after a review meeting, the AI drafts a follow-up email for the advisor to send. Write <strong>5 eval criteria</strong>. For each, give how you would check it and a pass bar. Then say what the human-in-the-loop step should be.</p>`,
+    placeholder: '1. Criterion — how checked — pass bar\n2.\n3.\n4.\n5.\nHuman-in-the-loop:',
+    model: `<ol>
+<li><strong>Factual accuracy:</strong> every figure and fund name matches the meeting record and portfolio data. Checked by code against the inputs. <em>Pass: 100%.</em></li>
+<li><strong>No investment advice beyond what was agreed:</strong> no new recommendations or return promises. Checked with a phrase list plus compliance review of a sample. <em>Pass: 0 violations in 100 drafts.</em></li>
+<li><strong>Completeness:</strong> includes the agreed action items, next meeting date and required disclaimers. Rubric check. <em>Pass: ≥ 95%.</em></li>
+<li><strong>Privacy:</strong> mentions only this client’s data, with no other client names or IDs. Automated check. <em>Pass: 0 leaks.</em></li>
+<li><strong>Tone and clarity:</strong> professional, plain language, under 200 words. Advisor rubric 1–5. <em>Pass: average ≥ 4.0.</em></li></ol>
+<p><strong>Human-in-the-loop:</strong> the AI only drafts. The advisor must review and press Send, and the sent version plus any edits are logged. Edit rate becomes the key production metric.</p>`
+  },
+  quiz: [
+    { q: 'What’s the most reliable way to make sure numbers in an AI-written portfolio brief are correct?', o: [
+      ['Use the largest, most expensive model.', false, 'Bigger models still make arithmetic and recall errors, just less often. “Less often” isn’t good enough for client numbers.'],
+      ['Compute the numbers in your own systems, pass them in, have the model only write the narrative, and check the output against the inputs.', true, 'This is grounding. The model explains facts but never produces them, and code can verify every figure.'],
+      ['Add “be accurate” to the prompt.', false, 'Instructions help tone and format. They don’t guarantee facts.'],
+      ['Ask advisors to report errors after launch.', false, 'Feedback is important, but you’d be using clients’ trust to find bugs you could have prevented.']
+    ] },
+    { q: 'What is an “eval” in AI product work?', o: [
+      ['A one-time demo for leadership.', false, 'A demo shows the best case. Evals measure typical and worst cases.'],
+      ['A repeatable test of AI output against explicit criteria, run on a fixed set of real cases.', true, 'Evals turn “is it good?” into numbers you can track across prompt and model versions.'],
+      ['A user survey.', false, 'Surveys measure perception. Evals measure output quality directly.'],
+      ['The model provider’s benchmark score.', false, 'General benchmarks don’t tell you how the model does on your task and your data.']
+    ] },
+    { q: 'A prompt change makes the brief’s tone much better. What should happen before it ships?', o: [
+      ['Ship it. Tone was the main complaint.', false, 'Prompt changes often have side effects on accuracy, completeness or compliance.'],
+      ['Rerun the full golden-set regression, covering accuracy, compliance, completeness, latency and cost, and ship only if every bar still passes.', true, 'Treat a prompt like code: version it, test it, then release it behind a flag.'],
+      ['Test it on three examples by hand.', false, 'Three examples can’t reveal a 2% regression.'],
+      ['Ask the model whether the new prompt is better.', false, 'Self-assessment isn’t evidence. Use your eval set.']
+    ] },
+    { q: 'Which metric best shows whether advisors trust the AI brief in production?', o: [
+      ['Number of API calls.', false, 'That measures cost and volume, not trust.'],
+      ['Acceptance / edit rate: how often briefs are used as is or with light edits.', true, 'Heavy edits or abandonment show the output isn’t meeting the bar, even when nobody complains.'],
+      ['Tokens per request.', false, 'A cost driver, not a quality signal.'],
+      ['Server uptime.', false, 'Necessary, but it says nothing about output quality.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-12', track: 'pm', n: 12, minutes: 14,
+  title: 'Product analytics & experimentation', short: 'Analytics & experiments',
+  sub: 'Tracking plans, funnels and cohorts, reading data without fooling yourself, A/B tests, and enough SQL to work with your data team.',
+  idea: 'Decide the questions first, track the events that answer them, and before you celebrate a number, check whether it could just be noise, seasonality or a definition change.',
+  body: `
+<h3>Start with a tracking plan</h3>
+<p>Analytics tools such as Mixpanel, Amplitude and Google Analytics only show what you send them. A <strong>tracking plan</strong> is the agreed list of events your product records. Write it with engineering before the feature is built, not after launch.</p>
+${table(['Event', 'When it fires', 'Key properties', 'Owner'], [
+  ['<code>brief_generated</code>', 'A brief is created (by the advisor or in the background)', 'trigger, client_segment, latency_ms, prompt_version', 'Backend'],
+  ['<code>brief_opened</code>', 'The advisor opens a brief', 'minutes_before_meeting', 'Frontend'],
+  ['<code>brief_edited</code>', 'The advisor changes the AI text', 'chars_changed_pct', 'Frontend'],
+  ['<code>brief_error_reported</code>', 'The advisor taps “Report an error”', 'error_type', 'Frontend']
+])}
+<ul>
+  <li>Use one naming pattern, such as <code>object_action</code> in the past tense, and write it down.</li>
+  <li>Send IDs, not personal data. <strong>Never send client names, PAN or phone numbers to an analytics tool.</strong></li>
+  <li>Every event has an owner and is tested before release, just like a feature.</li>
+</ul>
+<h3>From events to answers</h3>
+${fig(DIAG.analytics, 'Raw events become funnels (where do people drop?) and cohorts (do they keep coming back?).')}
+<p>A <strong>funnel</strong> counts how many users complete each step in order. A <strong>cohort</strong> table groups users by when they started and shows what share is still active each week. Cohorts are how you tell whether a product is getting better: here, each month’s new advisors retain better than the month before.</p>
+<h3>Read data without fooling yourself</h3>
+<ul>
+  <li><strong>Distributions, not just averages:</strong> “average 12 briefs per advisor” can mean everyone uses it, or five power users and 800 who never do.</li>
+  <li><strong>Seasonality:</strong> quarter-end review season, market falls and festivals all move usage on their own.</li>
+  <li><strong>Definition changes:</strong> when a number jumps overnight, check first whether tracking or a definition changed.</li>
+  <li><strong>Survivorship:</strong> “active users love it” ignores the users who already left.</li>
+</ul>
+<h3>A/B tests in plain English</h3>
+<p>Randomly split users into control (A) and variant (B), change one thing, and compare a <strong>primary metric</strong> chosen in advance while watching <strong>guardrails</strong>. Before starting, write the hypothesis and the <strong>minimum detectable effect</strong> (the smallest improvement worth detecting), then work out the sample size. A common rule of thumb, for 80% power and 5% significance, is:</p>
+<p class="formula">n per group ≈ 16 × p × (1 − p) ÷ δ²   (p = baseline rate, δ = absolute change to detect)</p>
+<p>To detect a 6-point lift on a 36% activation rate, you need about 16 × 0.36 × 0.64 ÷ 0.06² ≈ <strong>1,000 users per group</strong>. Then run the test for whole weeks and don’t stop early just because the numbers look good on day three.</p>
+${tip('<p><strong>B2B reality check:</strong> with 900 advisors at 60 firms you often can’t reach the sample size, and splitting advisors inside one firm causes confusion. Use staggered rollouts by firm (compare enabled vs not-yet-enabled firms over the same weeks), holdout firms, and qualitative evidence from interviews and session recordings. Then say plainly how confident you are.</p>')}
+<h3>Enough SQL to work with your data team</h3>
+<p>You don’t need to be an analyst, but reading a simple query lets you check definitions yourself:</p>
+<pre class="codeblock">SELECT firm_id,
+       COUNT(DISTINCT advisor_id) AS weekly_active_advisors
+FROM events
+WHERE event = 'brief_opened'
+  AND event_time >= CURRENT_DATE - INTERVAL '7 days'
+GROUP BY firm_id
+ORDER BY weekly_active_advisors DESC;</pre>
+<p><code>SELECT</code> picks columns, <code>WHERE</code> filters rows, <code>COUNT(DISTINCT …)</code> counts unique people rather than events, <code>GROUP BY</code> makes one row per firm, and <code>JOIN</code> (not shown) combines tables, for example events with firm details.</p>`,
+  example: {
+    title: '“The new onboarding lifted activation by 17%!” Is it real?',
+    html: `
+<p>For two weeks, a random half of newly invited advisors got a new guided onboarding. The dashboard shows:</p>
+${table(['Group', 'New advisors', 'Activated (3+ briefs in 14 days)', 'Rate'], [
+  ['A · old onboarding', '150', '54', '36%'],
+  ['B · guided onboarding', '150', '63', '42%']
+], [1, 2, 3])}
+<p>B is 6 points higher, a 17% relative lift. But with 150 advisors per group, a gap that size happens by chance fairly often. A standard two-proportion test gives p ≈ 0.29, far above the usual 0.05 threshold. The rule of thumb above says you’d need about 1,000 advisors per group to reliably detect a 6-point lift.</p>
+<p><strong>What you tell the CTO:</strong> “The direction is encouraging, but the result isn’t conclusive at this sample size. Session recordings show advisors in B finish setup faster, and none of the guardrails got worse (support tickets, time-to-first-brief). Since it’s cheap and low-risk, I recommend rolling it out to all new firms and tracking activation by monthly cohort, rather than waiting months for a significant A/B result.”</p>`
+  },
+  mistakes: [
+    'Shipping a feature first and asking “what should we track?” afterwards.',
+    'Sending client personal data (names, PAN, phone numbers) into analytics tools.',
+    'Celebrating a jump without checking for tracking or definition changes, or seasonality.',
+    'Stopping an A/B test the day it looks significant (“peeking”), which inflates false positives.',
+    'Calling a small-sample difference a “win”, or calling it a “failure” when the test simply couldn’t detect anything.',
+    'Using averages only, which hides that most users never adopted the feature.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> write <strong>6 tracking-plan events</strong> for the <em>failed-SIP alerts</em> feature. Give each a name, when it fires and its key properties. Remember: no client personal data.</p>
+<p><strong>Part 2:</strong> a test of a new alert design shows 48% vs 45% “acted on within 48 hours”, with 80 advisors per group. Is it conclusive? What would you do?</p>`,
+    placeholder: 'Part 1\n1. sip_alert_created — when… — properties…\n2.\n3.\n4.\n5.\n6.\n\nPart 2:',
+    model: `<p><strong>Part 1:</strong></p>
+<ul><li><code>sip_alert_created</code>: an RTA file shows a failed instalment. Properties: failure_reason, sip_amount_band, days_since_failure.</li>
+<li><code>sip_alert_viewed</code>: the advisor sees the alert. Properties: channel (in-app or email), hours_since_created.</li>
+<li><code>sip_alert_actioned</code>: the advisor takes an action. Properties: action_type (call logged, nudge sent, mandate re-registration), hours_since_created.</li>
+<li><code>sip_alert_dismissed</code>: the advisor dismisses it. Properties: dismiss_reason.</li>
+<li><code>sip_alert_false_positive_reported</code>: the advisor says the alert was wrong. Property: reason.</li>
+<li><code>sip_resolved</code>: the next instalment succeeds. Property: days_to_resolution.</li></ul>
+<p>Use client_id and advisor_id only. No names, PAN or phone numbers.</p>
+<p><strong>Part 2:</strong> not conclusive. A 3-point gap with 80 per group is well within noise (rough sample size needed: 16 × 0.46 × 0.54 ÷ 0.03² ≈ 4,400 per group). Decide on qualitative grounds and risk. If the new design is no worse on guardrails (false-positive reports, opt-outs) and advisors prefer it in interviews, roll it out and keep tracking the 48-hour action rate by monthly cohort.</p>`
+  },
+  quiz: [
+    { q: 'When should the tracking plan for a new feature be written?', o: [
+      ['After launch, once we know what questions people ask.', false, 'By then the data from the most important weeks is gone for good.'],
+      ['Before it’s built, agreed with engineering, as part of the spec.', true, 'Events are requirements. They need owners, names and testing like any other feature work.'],
+      ['Only if leadership asks for a dashboard.', false, 'Without tracking you can’t tell whether the feature worked at all.'],
+      ['Never. Analytics tools capture everything automatically.', false, 'Auto-capture records clicks, not meaningful product events or their properties.']
+    ] },
+    { q: 'Overnight, “briefs generated” doubles. What should you check first?', o: [
+      ['Nothing. Celebrate the growth.', false, 'Sudden jumps are often tracking or definition changes, not real behavior.'],
+      ['Whether tracking, definitions or automation changed, such as briefs now being auto-generated for every meeting.', true, 'Rule out measurement changes before you interpret a jump as real.'],
+      ['Whether the marketing team sent an email.', false, 'Possible, but check your own instrumentation first.'],
+      ['The average session length.', false, 'Not relevant to explaining a jump in this event.']
+    ] },
+    { q: 'An A/B test with 150 advisors per group shows 42% vs 36% activation (p ≈ 0.29). What’s the honest summary?', o: [
+      ['The variant wins by 17%.', false, 'The difference could easily be chance at this sample size.'],
+      ['The variant lost, because it isn’t significant.', false, 'Not significant means inconclusive. It doesn’t mean worse.'],
+      ['Inconclusive: the direction is encouraging, but the test was too small to detect a 6-point lift reliably.', true, 'State the uncertainty clearly, then decide using risk, cost and other evidence.'],
+      ['Run it again until it becomes significant.', false, 'Re-running until you get the answer you want is a form of p-hacking.']
+    ] },
+    { q: 'Why are classic A/B tests often hard in B2B products like an advisor platform?', o: [
+      ['B2B users don’t like experiments.', false, 'That isn’t the core issue.'],
+      ['Small user numbers make sample sizes hard to reach, and splitting users inside one firm creates confusion and support load.', true, 'Use staggered rollouts by firm, holdouts and qualitative evidence instead.'],
+      ['Regulators ban A/B tests.', false, 'They don’t, though changes to client-facing communication may need compliance review.'],
+      ['Analytics tools don’t support B2B.', false, 'They do, including grouping by account.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'pm-13', track: 'pm', n: 13, minutes: 14,
+  title: 'Product strategy & B2B business models', short: 'Strategy & business models',
+  sub: 'Vision, strategy, positioning, pricing, unit economics and build vs buy: why your feature matters to the business.',
+  idea: 'A strategy is a diagnosis of the challenge, a guiding policy for meeting it, and a few coherent actions. Pricing and unit economics decide whether winning customers actually builds a business.',
+  body: `
+<h3>From vision to Sprint</h3>
+${fig(DIAG.strategyStack, 'Each layer answers a different question over a different time horizon. A roadmap without a strategy is just a list.')}
+<h3>What a strategy actually is</h3>
+<p>A useful definition, from Richard Rumelt’s <em>Good Strategy / Bad Strategy</em>, is the <strong>strategy kernel</strong>:</p>
+<ul>
+  <li><strong>Diagnosis:</strong> what’s really going on, and what the critical challenge is.</li>
+  <li><strong>Guiding policy:</strong> the overall approach to meeting it, which also rules things out.</li>
+  <li><strong>Coherent actions:</strong> a few coordinated steps that carry out the policy.</li>
+</ul>
+<p>“Be the best AI platform for wealth managers” is a goal, not a strategy. A strategy says where you’ll play, how you’ll win there, and what you’ll deliberately <em>not</em> do.</p>
+<h3>Positioning</h3>
+<p>Positioning is how buyers place you relative to the alternatives, including “do nothing and use Excel”. A simple template: <em>For [target customer] who [need], [product] is a [category] that [key benefit]. Unlike [main alternative], we [key difference].</em></p>
+<h3>B2B pricing models</h3>
+${table(['Model', 'How it works', 'Good for', 'Watch out for'], [
+  ['Per seat', 'A fee per advisor per month', 'Predictable revenue; easy for buyers to budget', 'Firms share logins, and it charges junior advisors the same as senior ones'],
+  ['Per AUM (basis points)', 'A fee as a % of assets serviced; 1 bp = 0.01%', 'Aligns price with the value delivered to bigger books', 'Revenue falls when markets fall; harder to audit'],
+  ['Usage-based', 'A fee per brief, document or API call', 'Tracks your cost (useful for AI); cheap to start', 'Unpredictable bills; can discourage use'],
+  ['Tiered / hybrid', 'A platform fee or seats with an included allowance, plus overage', 'Predictable for buyers, while protecting your margin', 'Allowances need tuning; more to explain']
+])}
+<h3>Unit economics in five terms</h3>
+<ul>
+  <li><strong>ARPA:</strong> average revenue per account (firm) per year.</li>
+  <li><strong>Gross margin:</strong> (revenue − cost to serve) ÷ revenue. AI features add a real cost to serve: model calls.</li>
+  <li><strong>CAC:</strong> customer acquisition cost, meaning sales and marketing spend ÷ new customers won.</li>
+  <li><strong>LTV:</strong> lifetime value ≈ ARPA × gross margin ÷ annual churn rate.</li>
+  <li><strong>CAC payback:</strong> months of gross profit needed to recover CAC. Common rules of thumb: LTV:CAC of at least 3, and payback within about 18–24 months.</li>
+</ul>
+<p class="formula">LTV ≈ ARPA × gross margin ÷ annual churn   ·   CAC payback (months) = CAC ÷ (monthly ARPA × gross margin)</p>
+<h3>Build, buy or partner</h3>
+<p><strong>Build</strong> what differentiates you, such as the AI brief that knows your data. <strong>Buy</strong> commodities, such as e-signature, email delivery or generic OCR. <strong>Partner</strong> for regulated or network rails, such as KRAs, RTAs and payment mandates. Decide by asking: is this a reason customers choose us, and could we do it meaningfully better than a specialist?</p>`,
+  example: {
+    title: 'How should we price the AI copilot?',
+    html: `
+<p>Assume 900 advisors at 60 firms, about ₹50 Cr AUM per advisor (₹45,000 Cr in total), and about 38,000 AI briefs a month at an LLM cost of about ₹4 per brief (₹18 L a year in total).</p>
+${table(['Option', 'Annual revenue', 'AI cost share', 'Trade-off'], [
+  ['Per seat: ₹2,500 / advisor / month', '₹2.7 Cr', '~7%', 'Predictable, but heavy users cost the same as light users'],
+  ['Per AUM: 0.5 bp / year on assets serviced', '₹2.25 Cr', '~8%', 'Grows with books, but drops in a market fall'],
+  ['Usage: ₹40 per brief', '₹1.8 Cr', '10%', 'Matches cost, but bills are unpredictable and advisors may avoid using it']
+], [1, 2])}
+<p><strong>Recommendation:</strong> a <strong>hybrid</strong> model, per seat with a generous included allowance (say 60 briefs per advisor per month, well above today’s average of about 42) and a small overage fee. Buyers get a predictable budget, advisors aren’t discouraged from using it, and the overage protects margin if usage grows sharply.</p>
+<p><strong>Unit-economics check for a typical 15-advisor firm:</strong> ARPA ₹4.5 L/year, overall gross margin 80%, annual churn 10%. LTV ≈ 4.5 L × 0.8 ÷ 0.10 = <strong>₹36 L</strong>. With CAC of ₹9 L, LTV:CAC is <strong>4</strong> (healthy), but payback is 9 L ÷ (₹37,500 × 0.8) ≈ <strong>30 months</strong>, which is slow. That points the strategy towards cheaper acquisition, such as partner referrals and self-serve onboarding, more than towards a price change.</p>`
+  },
+  mistakes: [
+    'Confusing goals (“be #1”) or long feature lists with a strategy.',
+    'A strategy that doesn’t rule anything out.',
+    'Pricing AI features without counting the cost of model calls in gross margin.',
+    'Looking only at LTV:CAC and ignoring payback period and cash.',
+    'Building commodity features in-house because it feels like progress, while the differentiator waits.',
+    'Positioning against named competitors only, and forgetting the real alternative: Excel and WhatsApp.'
+  ],
+  tryit: {
+    prompt: `<p>Write a one-paragraph strategy, using the kernel (<strong>diagnosis, guiding policy, three coherent actions</strong>), for winning <strong>mid-size mutual fund distributor firms</strong> (10–50 advisors) over the next 12 months. Then add one sentence on what you would deliberately <em>not</em> do.</p>`,
+    placeholder: 'Diagnosis: …\nGuiding policy: …\nActions:\n1.\n2.\n3.\nWe will not: …',
+    model: `<p><strong>Diagnosis:</strong> mid-size MFD firms want to grow AUM per advisor, but their advisors lose hours to manual review prep and SIP follow-up. Enterprise wealth platforms are too expensive and complex for them, and their real alternative is Excel plus WhatsApp.</p>
+<p><strong>Guiding policy:</strong> be the fastest way for a mid-size firm’s advisors to get more done for each client. Win on time-to-value and trust, not on feature breadth.</p>
+<p><strong>Coherent actions:</strong> (1) self-serve onboarding with bulk client import, so firms go live in under a week; (2) make the AI meeting brief and failed-SIP alerts excellent and demonstrably accurate, with a visible eval scorecard; (3) a simple hybrid price per seat with an included AI allowance, plus a referral program through AMC and industry networks to cut CAC.</p>
+<p><strong>We will not:</strong> build custom enterprise features (bespoke reports, on-premise deployment) for one-off large deals this year.</p>`
+  },
+  quiz: [
+    { q: 'Which of these is a strategy rather than a goal?', o: [
+      ['“Become the #1 AI platform for wealth managers.”', false, 'That’s an aspiration. It doesn’t diagnose the challenge or say how to win.'],
+      ['“Mid-size firms lose hours to manual prep and can’t afford enterprise tools, so we’ll win on time-to-value with self-serve onboarding and two excellent AI workflows, and skip bespoke enterprise work.”', true, 'It has a diagnosis, a guiding policy, coherent actions and an explicit trade-off.'],
+      ['“Grow ARR by 50%.”', false, 'A target, not a plan for reaching it.'],
+      ['“Ship 20 features this year.”', false, 'Output, not strategy.']
+    ] },
+    { q: 'What does “1 basis point on AUM” mean?', o: [
+      ['1% of assets per year.', false, '1% is 100 basis points.'],
+      ['0.01% of assets, usually per year.', true, '1 bp = 0.01%. So 0.5 bp on ₹45,000 Cr is about ₹2.25 Cr a year.'],
+      ['₹1 per client.', false, 'Basis points are a percentage, not a fixed fee.'],
+      ['One point of NPS.', false, 'Unrelated.']
+    ] },
+    { q: 'A firm’s LTV:CAC is 4, but CAC payback is 30 months. What’s the right reading?', o: [
+      ['Everything is great, since LTV:CAC is above 3.', false, 'The ratio is healthy, but a 30-month payback ties up cash and makes the business sensitive to churn.'],
+      ['Profitable over the customer’s lifetime but slow to pay back, so look at cheaper acquisition, faster onboarding or upfront annual billing.', true, 'Use both metrics: one says whether it’s worth it, the other how quickly the cash comes back.'],
+      ['Raise prices immediately.', false, 'Possibly one lever, but the payback problem may be driven by CAC rather than price.'],
+      ['Stop acquiring customers.', false, 'The economics are positive. The issue is timing and cash.']
+    ] },
+    { q: 'Your team wants to build its own e-signature system for client forms. What’s the best guidance?', o: [
+      ['Build it, because owning everything is safer.', false, 'E-signature is a commodity with legal and compliance complexity. Building it diverts effort from what differentiates you.'],
+      ['Buy or integrate a specialist provider, and spend team time on differentiators like the AI brief.', true, 'Build what makes customers choose you. Buy commodities, and partner for regulated rails.'],
+      ['Ask the AI to write it.', false, 'The question is strategic fit, not who writes the code.'],
+      ['Skip e-signature entirely.', false, 'Clients still need to sign forms. The question is how to provide it.']
+    ] }
+  ]
+});
+
+GLOSSARY.push(
+  { term: 'Eval (evaluation)', track: 'pm', card: 1, lesson: 'pm-11', def: 'A repeatable test of AI output against explicit criteria (accuracy, compliance, tone), run on a fixed set of real cases on every prompt or model change.' },
+  { term: 'Grounding', track: 'pm', card: 1, lesson: 'pm-11', def: 'Giving the model facts from your own systems and asking it only to explain them, then checking its output against those facts. The main defense against hallucinated numbers.' },
+  { term: 'Human-in-the-loop', track: 'pm', card: 1, lesson: 'pm-11', def: 'A design where a person reviews or approves AI output before it takes effect, e.g. the advisor approves every AI-drafted client message.' },
+  { term: 'LLM-as-judge', track: 'pm', card: 1, lesson: 'pm-11', def: 'Using one model to score another model’s output against a rubric. Useful at scale once calibrated against human ratings.' },
+  { term: 'Prompt injection', track: 'pm', card: 1, lesson: 'pm-11', def: 'An attack where text the model reads (e.g. an uploaded document) contains instructions meant to override yours. Test for it in red-team evals.' },
+  { term: 'Prompt versioning', track: 'pm', lesson: 'pm-11', def: 'Treating prompts like code: numbered versions, logged with every output, tested before release, and easy to roll back.' },
+  { term: 'Acceptance / edit rate', track: 'pm', card: 1, lesson: 'pm-11', def: 'How often AI output is used as is or with light edits. The clearest production signal of whether users trust it.' },
+  { term: 'Tracking plan', track: 'pm', card: 1, lesson: 'pm-12', def: 'The agreed list of analytics events a product sends, with names, when they fire, properties and owners. Written before the feature is built.' },
+  { term: 'Event (analytics)', track: 'pm', lesson: 'pm-12', def: 'A recorded user or system action with a timestamp and properties, e.g. brief_opened with minutes_before_meeting.' },
+  { term: 'Cohort analysis', track: 'pm', card: 1, lesson: 'pm-12', def: 'Grouping users by when they started and tracking each group over time. It shows whether retention is improving release by release.' },
+  { term: 'Statistical significance', track: 'pm', card: 1, lesson: 'pm-12', def: 'How unlikely a result would be if there were no real difference. A common bar is p < 0.05. Not significant means inconclusive, not “no effect”.' },
+  { term: 'Minimum detectable effect', track: 'pm', card: 1, lesson: 'pm-12', def: 'The smallest change a test is designed to detect. Smaller effects need much larger samples: roughly n ≈ 16·p(1−p)/δ² per group.' },
+  { term: 'Peeking', track: 'pm', lesson: 'pm-12', def: 'Checking an A/B test repeatedly and stopping as soon as it looks significant. It inflates false positives.' },
+  { term: 'Strategy kernel', track: 'pm', card: 1, lesson: 'pm-13', def: 'Richard Rumelt’s definition of strategy: a diagnosis of the challenge, a guiding policy for meeting it, and coherent actions to carry it out.' },
+  { term: 'Positioning', track: 'pm', card: 1, lesson: 'pm-13', def: 'How target buyers see your product relative to the alternatives, including “do nothing / use Excel”, and the key difference you own.' },
+  { term: 'Basis point (bp)', track: 'pm', card: 1, lesson: 'pm-13', def: '0.01%. AUM-based pricing is often quoted in basis points per year, e.g. 0.5 bp on ₹45,000 Cr ≈ ₹2.25 Cr.' },
+  { term: 'Usage-based pricing', track: 'pm', lesson: 'pm-13', def: 'Charging per unit of use (per brief, document or API call). Matches AI costs but makes bills less predictable.' },
+  { term: 'ARPA', track: 'pm', lesson: 'pm-13', def: 'Average revenue per account (customer firm), usually per year.' },
+  { term: 'Gross margin', track: 'pm', card: 1, lesson: 'pm-13', def: '(Revenue − cost to serve) ÷ revenue. For AI features, model-call costs come straight out of gross margin.' },
+  { term: 'CAC (customer acquisition cost)', track: 'pm', card: 1, lesson: 'pm-13', def: 'Sales and marketing spend divided by the number of new customers won in the same period.' },
+  { term: 'LTV (lifetime value)', track: 'pm', card: 1, lesson: 'pm-13', def: 'Approximately ARPA × gross margin ÷ annual churn. Compared with CAC: an LTV:CAC of 3 or more is a common health rule of thumb.' },
+  { term: 'CAC payback', track: 'pm', card: 1, lesson: 'pm-13', def: 'Months of gross profit needed to recover the cost of acquiring a customer: CAC ÷ (monthly ARPA × gross margin).' },
+  { term: 'Build vs buy vs partner', track: 'pm', card: 1, lesson: 'pm-13', def: 'Build what differentiates you, buy commodities (e-signature, email delivery), and partner for regulated or network rails (KRAs, RTAs, payment mandates).' }
+);
+
+CHEAT += `
+<section>
+  <h2>AI · Data · Strategy</h2>
+  <ul>
+    <li><b>AI:</b> ground facts in your systems (the model writes words, not numbers) · golden set + evals before launch and on every change · human approval for client-facing text · log prompt and model versions · track edit rate, errors per 1k, cost per output.</li>
+    <li><b>Data:</b> tracking plan before build (event_name, properties, owner, no PII) · funnels and cohorts · A/B: hypothesis, primary + guardrails, <code>n ≈ 16·p(1−p)/δ²</code> per group, no peeking · B2B: staggered rollouts and holdouts.</li>
+    <li><b>Strategy:</b> kernel = diagnosis · guiding policy · coherent actions · pricing: seat · AUM (bp) · usage · hybrid · <code>LTV ≈ ARPA × GM ÷ churn</code>, LTV:CAC ≥ 3, payback ≲ 18–24 months · build the core, buy commodities, partner for rails.</li>
+  </ul>
+</section>`;
+</script>
+
 <!-- @content-end -->
 
 <script>
@@ -2967,7 +3347,7 @@ CHEAT = `
     };
     return `<div class="page wide">
       <section class="hero">
-        <p class="eyebrow"><span>Field course</span><span class="dot"></span><span>${ORDER.length} lessons</span><span class="dot"></span><span>~3 hours</span></p>
+        <p class="eyebrow"><span>Field course</span><span class="dot"></span><span>${ORDER.length} lessons</span><span class="dot"></span><span>~${Math.round(ORDER.reduce((a, l) => a + (l.minutes || 10), 0) / 30) / 2} hours</span></p>
         <h1 tabindex="-1" id="page-title">PM &amp; Scrum Fundamentals</h1>
         <p class="lead">How product management and Scrum work day to day, for an APM shipping AI features to wealth managers and partners. Every example comes from B2B wealth-tech: advisor workflows, compliance, AUM in ₹&nbsp;crore, and models that sometimes get things wrong.</p>
         <div class="btnrow" style="margin-top:22px">
@@ -3401,7 +3781,10 @@ CHEAT = `
     { name: 'Microsoft Excel', match: ['Excel'], url: 'https://www.microsoft.com/microsoft-365/excel', desc: 'Microsoft’s spreadsheet app, part of Microsoft 365.' },
     { name: 'CAMS', match: ['CAMS'], url: 'https://www.camsonline.com/', desc: 'Computer Age Management Services: India’s largest mutual fund registrar and transfer agent (RTA).' },
     { name: 'KFintech', match: ['KFintech'], url: 'https://www.kfintech.com/', desc: 'KFin Technologies: mutual fund registrar and transfer agent (RTA) in India.' },
-    { name: 'SEBI', match: ['SEBI'], url: 'https://www.sebi.gov.in/', desc: 'Securities and Exchange Board of India, the securities market regulator.' }
+    { name: 'SEBI', match: ['SEBI'], url: 'https://www.sebi.gov.in/', desc: 'Securities and Exchange Board of India, the securities market regulator.' },
+    { name: 'Mixpanel', match: ['Mixpanel'], url: 'https://mixpanel.com/', desc: 'Product analytics for events, funnels, cohorts and retention.' },
+    { name: 'Amplitude', match: ['Amplitude'], url: 'https://amplitude.com/', desc: 'Product analytics and experimentation platform.' },
+    { name: 'Google Analytics', match: ['Google Analytics'], url: 'https://marketingplatform.google.com/about/analytics/', desc: 'Google’s web and app analytics service.' }
   ];
   const TOOLMAP = Object.fromEntries(TOOLS.map(t => [t.name, t]));
   const TOOL_BY_MATCH = {};
