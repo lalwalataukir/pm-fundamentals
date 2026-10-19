@@ -179,6 +179,44 @@ svg .b{font-weight:650}
 .d-guideline{fill:none;stroke:var(--guide);stroke-width:2.2}
 .d-venn{fill-opacity:.5;stroke-width:1.5}
 
+/* HTML visual blocks (flow, cards, contrast, scale): reflow on small screens and stay searchable */
+.v-acc{--tc:var(--accent);--ts:var(--accent-soft)} .v-gold{--tc:var(--gold);--ts:var(--gold-soft)} .v-good{--tc:var(--good);--ts:var(--good-soft)}
+.v-bad{--tc:var(--bad);--ts:var(--bad-soft)} .v-guide{--tc:var(--guide);--ts:var(--guide-soft)} .v-muted{--tc:var(--muted);--ts:var(--surface-2)}
+.vis{margin:1.4em 0;padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);font-family:var(--f-ui);font-size:.88rem;line-height:1.45}
+.vis figcaption{font-size:.8rem;color:var(--muted);margin-top:12px}
+.vis b{display:block;font-weight:650;color:var(--ink)}
+.vis .vis-k{display:block;font-family:var(--f-mono);font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tc);margin-bottom:4px}
+.vis .vis-t{display:block;color:var(--muted);margin-top:3px}
+.prose .vis ol,.prose .vis ul{margin:0}
+.prose .vis li{margin:0}
+.vis-flow ol{list-style:none;padding:0;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:22px;counter-reset:vf}
+.vis-flow li{position:relative;padding:10px 12px 12px;border-radius:8px;background:var(--ts);border-top:3px solid var(--tc);counter-increment:vf}
+.vis-flow li::before{content:counter(vf,decimal-leading-zero);display:block;font-family:var(--f-mono);font-size:.66rem;font-weight:600;letter-spacing:.08em;color:var(--tc);margin-bottom:4px}
+.vis-flow li:not(:last-child)::after{content:"";position:absolute;right:-16px;top:50%;width:9px;height:9px;border-top:2px solid var(--muted);border-right:2px solid var(--muted);transform:translateY(-50%) rotate(45deg)}
+.vis-grid{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:10px}
+.vis-card{padding:11px 13px 12px;border-radius:8px;background:var(--ts);border-left:3px solid var(--tc)}
+.vis-vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.vis-vs>div{padding:11px 14px 12px;border-radius:8px;background:var(--ts);border-top:3px solid var(--tc)}
+.vis-vs ul{padding-left:1.15em}
+.prose .vis-vs li{margin:.35em 0 0;color:var(--ink)}
+.vis-vs li::marker{color:var(--tc)}
+.vis-scale .vis-ends{display:flex;justify-content:space-between;gap:12px;font-family:var(--f-mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.vis-scale ol{list-style:none;padding:0;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:12px}
+.vis-scale ol::before{content:"";position:absolute;left:7px;right:7px;top:6px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--line),var(--accent))}
+.vis-scale li{position:relative;padding-top:22px}
+.vis-scale li>i{position:absolute;top:0;left:0;width:15px;height:15px;border-radius:50%;background:var(--tc);box-shadow:0 0 0 3px var(--surface)}
+@media (max-width:640px){
+  .vis-flow ol{grid-template-columns:minmax(0,1fr);gap:20px}
+  .vis-flow li:not(:last-child)::after{right:auto;left:50%;top:auto;bottom:-15px;transform:translateX(-50%) rotate(135deg)}
+  .vis-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .vis-vs{grid-template-columns:minmax(0,1fr)}
+  .vis-scale ol{grid-template-columns:minmax(0,1fr);gap:14px;padding-left:26px}
+  .vis-scale ol::before{left:6px;right:auto;top:7px;bottom:7px;width:3px;height:auto;background:linear-gradient(180deg,var(--line),var(--accent))}
+  .vis-scale li{padding-top:0}
+  .vis-scale li>i{left:-26px;top:2px}
+}
+@media (max-width:420px){.vis-grid{grid-template-columns:minmax(0,1fr)}}
+
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:10px 16px;font-size:.92rem;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;line-height:1.2}
 .btn:hover{border-color:var(--muted)}
@@ -484,6 +522,16 @@ const guide = (html, label = 'What the Scrum Guide says') => `<div class="callou
 const practice = (html, label = 'Common practice · not in the Scrum Guide') => `<div class="callout practice"><p class="callout-h">${ICON_TOOL}${label}</p>${html}</div>`;
 const tip = (html, label = 'APM tip') => `<div class="callout tip"><p class="callout-h">${ICON_TIP}${label}</p>${html}</div>`;
 const fig = (svg, caption, cls = '') => `<figure class="diagram ${cls}">${svg}${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+/* HTML visual blocks. Tones: acc, gold, good, bad, guide, muted. */
+const visCap = caption => caption ? `<figcaption>${caption}</figcaption>` : '';
+/* flow([[title, text, tone], …], caption): numbered steps joined by arrows. */
+const flow = (steps, caption = '') => `<figure class="vis vis-flow"><ol style="--n:${steps.length}">${steps.map(([t, d, tone = 'acc']) => `<li class="v-${tone}"><b>${t}</b>${d ? `<span class="vis-t">${d}</span>` : ''}</li>`).join('')}</ol>${visCap(caption)}</figure>`;
+/* cards([[label, title, text, tone], …], caption, cols): a grid of tiles for parallel ideas. */
+const cards = (items, caption = '', cols = Math.min(items.length, 3)) => `<figure class="vis vis-cards"><div class="vis-grid" style="--cols:${cols}">${items.map(([k, t, d, tone = 'acc']) => `<div class="vis-card v-${tone}">${k ? `<span class="vis-k">${k}</span>` : ''}<b>${t}</b>${d ? `<span class="vis-t">${d}</span>` : ''}</div>`).join('')}</div>${visCap(caption)}</figure>`;
+/* contrast([heading, [items], tone], [heading, [items], tone], caption): two panels side by side. */
+const contrast = ([lh, li, lt = 'bad'], [rh, ri, rt = 'good'], caption = '') => `<figure class="vis vis-vs-wrap"><div class="vis-vs">${[[lh, li, lt], [rh, ri, rt]].map(([h, items, tone]) => `<div class="v-${tone}"><span class="vis-k">${h}</span><ul>${items.map(i => `<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>${visCap(caption)}</figure>`;
+/* scale([[title, text, tone], …], [leftEnd, rightEnd], caption): stops along a spectrum. */
+const scale = (stops, ends, caption = '') => `<figure class="vis vis-scale"><div class="vis-ends"><span>${ends[0]}</span><span>${ends[1]}</span></div><ol style="--n:${stops.length}">${stops.map(([t, d, tone = 'acc']) => `<li class="v-${tone}"><i></i><b>${t}</b>${d ? `<span class="vis-t">${d}</span>` : ''}</li>`).join('')}</ol>${visCap(caption)}</figure>`;
 const table = (head, rows, numCols = []) => `<div class="tablewrap"><table><thead><tr>${head.map((h, i) => `<th${numCols.includes(i) ? ' class="num"' : ''}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${numCols.includes(i) ? ' class="num"' : ''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 </script>
 
@@ -569,6 +617,126 @@ DIAG.impactEffort = `<svg viewBox="0 0 560 380" role="img" aria-labelledby="ie-t
   <circle cx="160" cy="262" r="7" class="d-fill-acc"/><text x="172" y="266" class="t-sm b">Dark mode</text>
   <text x="300" y="356" text-anchor="middle" class="t-sm t-muted">Effort →</text>
   <text x="34" y="175" text-anchor="middle" transform="rotate(-90 34 175)" class="t-sm t-muted">Impact →</text>
+</svg>`;
+
+DIAG.trio = `<svg viewBox="0 0 640 250" role="img" aria-labelledby="trio-t"><title id="trio-t">Left: work handed from PM to design to engineering, so each risk is checked one after another. Right: the product trio of PM, design lead and tech lead doing discovery together.</title>
+  <defs><marker id="ah-trio" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <text x="130" y="24" text-anchor="middle" class="t-mono t-bad">HANDOVER IN SEQUENCE</text>
+  <rect x="14" y="100" width="64" height="44" rx="8" class="d-surface"/><text x="46" y="127" text-anchor="middle" class="t-sm b">PM</text>
+  <rect x="98" y="100" width="64" height="44" rx="8" class="d-surface"/><text x="130" y="127" text-anchor="middle" class="t-sm b">Design</text>
+  <rect x="182" y="100" width="64" height="44" rx="8" class="d-surface"/><text x="214" y="127" text-anchor="middle" class="t-sm b">Eng</text>
+  <path d="M79 122 H93" class="d-line" marker-end="url(#ah-trio)"/><path d="M163 122 H177" class="d-line" marker-end="url(#ah-trio)"/>
+  <text x="130" y="176" text-anchor="middle" class="t-xs t-muted">value, usability, feasibility</text>
+  <text x="130" y="191" text-anchor="middle" class="t-xs t-muted">checked one after another</text>
+  <path d="M272 16 V234" class="d-grid"/>
+  <text x="460" y="24" text-anchor="middle" class="t-mono t-acc">PRODUCT TRIO</text>
+  <path d="M440 84 L372 188 M480 84 L548 188 M412 211 H508" class="d-line"/>
+  <rect x="400" y="38" width="120" height="46" rx="8" class="d-soft"/><text x="460" y="58" text-anchor="middle" class="t-sm b">PM</text><text x="460" y="74" text-anchor="middle" class="t-xs t-muted">valuable · viable</text>
+  <rect x="292" y="188" width="120" height="46" rx="8" class="d-gold"/><text x="352" y="208" text-anchor="middle" class="t-sm b">Design lead</text><text x="352" y="224" text-anchor="middle" class="t-xs t-muted">usable</text>
+  <rect x="508" y="188" width="120" height="46" rx="8" class="d-guide"/><text x="568" y="208" text-anchor="middle" class="t-sm b">Tech lead</text><text x="568" y="224" text-anchor="middle" class="t-xs t-muted">feasible</text>
+  <text x="460" y="136" text-anchor="middle" class="t-sm b">Discovery</text>
+  <text x="460" y="152" text-anchor="middle" class="t-sm b">together</text>
+  <text x="460" y="172" text-anchor="middle" class="t-xs t-muted">all three risks</text>
+  <text x="460" y="186" text-anchor="middle" class="t-xs t-muted">at once</text>
+</svg>`;
+
+DIAG.buyers = `<svg viewBox="0 0 640 280" role="img" aria-labelledby="buy-t"><title id="buy-t">Four people decide whether a B2B feature succeeds: the advisor who uses it, the COO who buys it, compliance who approves it and operations who administer it.</title>
+  <path d="M320 140 L220 60 M320 140 L420 60 M320 140 L220 220 M320 140 L420 220" class="d-line"/>
+  <circle cx="320" cy="140" r="50" class="d-soft"/>
+  <text x="320" y="137" text-anchor="middle" class="t-sm b">Your</text><text x="320" y="153" text-anchor="middle" class="t-sm b">feature</text>
+  ${[[20, 28, 'd-surface', 'USER', 'Advisor / RM', 'speed, client trust'], [420, 28, 'd-gold', 'BUYER', 'Head of advisory / COO', 'productivity, cost per advisor'],
+     [20, 188, 'd-guide', 'APPROVER', 'Compliance officer', 'audit trails, approved language'], [420, 188, 'd-surface', 'ADMIN', 'Operations', 'bulk actions, fewer manual errors']].map(n => `
+  <rect x="${n[0]}" y="${n[1]}" width="200" height="64" rx="8" class="${n[2]}"/>
+  <text x="${n[0] + 14}" y="${n[1] + 20}" class="t-mono t-muted">${n[3]}</text>
+  <text x="${n[0] + 14}" y="${n[1] + 38}" class="t-sm b">${n[4]}</text>
+  <text x="${n[0] + 14}" y="${n[1] + 54}" class="t-xs t-muted">${n[5]}</text>`).join('')}
+  <text x="320" y="240" text-anchor="middle" class="t-xs t-bad">fails compliance → won’t ship</text>
+  <text x="320" y="258" text-anchor="middle" class="t-xs t-bad">advisors ignore it → won’t renew</text>
+</svg>`;
+
+DIAG.assumptions = `<svg viewBox="0 0 560 360" role="img" aria-labelledby="as-t"><title id="as-t">Assumption map: importance against lack of evidence. The three assumptions from the worked example are plotted; the important, low-evidence ones get tested first.</title>
+  <rect x="70" y="20" width="230" height="150" class="d-good" fill-opacity=".5"/>
+  <rect x="300" y="20" width="230" height="150" class="d-gold" fill-opacity=".6"/>
+  <rect x="70" y="170" width="230" height="150" class="d-surface"/>
+  <rect x="300" y="170" width="230" height="150" class="d-surface"/>
+  <text x="82" y="40" class="t-mono t-good">KNOWN · BUILD ON IT</text><text x="518" y="40" text-anchor="end" class="t-mono t-gold">TEST FIRST</text>
+  <text x="82" y="310" class="t-mono t-muted">LOW STAKES</text><text x="518" y="310" text-anchor="end" class="t-mono t-muted">TEST LATER</text>
+  <circle cx="390" cy="62" r="7" class="d-fill-acc"/><text x="402" y="66" class="t-sm b">Advisors act on it</text><text x="402" y="81" class="t-xs t-muted">value · no evidence</text>
+  <circle cx="360" cy="124" r="7" class="d-fill-acc"/><text x="372" y="128" class="t-sm b">Stays out of advice</text><text x="372" y="143" class="t-xs t-muted">viability · unchecked</text>
+  <circle cx="250" cy="100" r="7" class="d-fill-acc"/><text x="238" y="104" text-anchor="end" class="t-sm b">Data is good enough</text><text x="238" y="119" text-anchor="end" class="t-xs t-muted">feasibility · some evidence</text>
+  <text x="300" y="346" text-anchor="middle" class="t-sm t-muted">Less evidence →</text>
+  <text x="34" y="170" text-anchor="middle" transform="rotate(-90 34 170)" class="t-sm t-muted">More important →</text>
+</svg>`;
+
+DIAG.wozResult = `<svg viewBox="0 0 560 120" role="img" aria-labelledby="woz-t"><title id="woz-t">52 percent of suggestions were acted on within 48 hours, above the 40 percent bar set before the test.</title>
+  <text x="10" y="20" class="t-mono t-muted">SUGGESTIONS ACTED ON WITHIN 48 HOURS</text>
+  <rect x="10" y="34" width="540" height="32" rx="6" class="d-surface"/>
+  <rect x="10" y="34" width="280.8" height="32" rx="6" class="d-fill-acc" fill-opacity=".85"/>
+  <text x="280" y="55" text-anchor="end" class="t-sm b t-onacc">52%</text>
+  <path d="M226 26 V74" class="d-goldline" stroke-dasharray="4 3"/>
+  <text x="226" y="90" text-anchor="middle" class="t-xs t-gold">40% bar, set before the test</text>
+  <text x="10" y="112" class="t-xs t-muted">0%</text><text x="550" y="112" text-anchor="end" class="t-xs t-muted">100%</text>
+</svg>`;
+
+DIAG.moscow = `<svg viewBox="0 0 640 210" role="img" aria-labelledby="mo-t"><title id="mo-t">MoSCoW against a fixed release date. Healthy scope fits Musts, Shoulds and Coulds before the date and leaves Won’ts out. When everything is a Must, scope overflows the date.</title>
+  <text x="470" y="16" text-anchor="middle" class="t-mono t-muted">FIXED DATE</text>
+  <text x="10" y="40" class="t-mono t-good">HEALTHY SCOPE</text>
+  <rect x="10" y="48" width="210" height="48" rx="6" class="d-soft"/><text x="22" y="68" class="t-sm b">Must</text><text x="22" y="85" class="t-xs t-muted">the release fails without it</text>
+  <rect x="224" y="48" width="120" height="48" rx="6" class="d-gold"/><text x="236" y="68" class="t-sm b">Should</text><text x="236" y="85" class="t-xs t-muted">important</text>
+  <rect x="348" y="48" width="116" height="48" rx="6" class="d-surface"/><text x="360" y="68" class="t-sm b">Could</text><text x="360" y="85" class="t-xs t-muted">if time allows</text>
+  <rect x="480" y="48" width="150" height="48" rx="6" class="d-surface" stroke-dasharray="5 4"/><text x="492" y="68" class="t-sm b t-muted">Won’t</text><text x="492" y="85" class="t-xs t-muted">not this time</text>
+  <text x="10" y="130" class="t-mono t-bad">EVERYTHING IS A MUST</text>
+  <rect x="10" y="138" width="600" height="48" rx="6" class="d-bad"/><text x="22" y="158" class="t-sm b">Must · Must · Must · Must</text><text x="22" y="175" class="t-xs t-muted">no order inside the bucket</text>
+  <text x="482" y="166" class="t-xs t-bad b">past the date</text>
+  <path d="M470 22 V198" class="d-line" stroke-dasharray="4 3"/>
+</svg>`;
+
+DIAG.riceDecision = `<svg viewBox="0 0 640 262" role="img" aria-labelledby="rd-t"><title id="rd-t">RICE ranked Bulk KYC, dark mode, tone control, then SSO. After B2B context, Bulk KYC and SSO go into this quarter, dark mode is a fill-in and tone control goes back to discovery.</title>
+  <text x="20" y="20" class="t-mono t-muted">RICE ORDER</text><text x="410" y="20" class="t-mono t-acc">DECISION</text>
+  ${[['Bulk KYC upload', 160, 36], ['Dark mode', 90, 92], ['AI summary tone control', 37.5, 148], ['SSO (SAML)', 30, 204]].map((r, i) => {
+    const w = r[1] / 160 * 200;
+    return `<text x="20" y="${r[2] + 14}" class="t-sm b">${i + 1}. ${r[0]}</text>
+  <rect x="20" y="${r[2] + 22}" width="${w.toFixed(1)}" height="10" rx="3" class="d-fill-acc" fill-opacity=".85"/>
+  <text x="${(28 + w).toFixed(1)}" y="${r[2] + 31}" class="t-mono t-muted">${r[1]}</text>`;
+  }).join('')}
+  <path d="M262 56 C 334 56, 334 72, 406 72" class="d-line"/>
+  <path d="M262 112 C 334 112, 334 160, 406 160" class="d-line"/>
+  <path d="M262 168 C 334 168, 334 220, 406 220" class="d-line"/>
+  <path d="M262 224 C 334 224, 334 100, 406 100" class="d-goldline"/>
+  <text x="20" y="254" class="t-xs t-gold">SSO: two deals worth ₹1.2 Cr ARR need it</text>
+  <rect x="410" y="34" width="220" height="88" rx="8" class="d-good"/>
+  <text x="424" y="54" class="t-mono t-good">THIS QUARTER</text><text x="424" y="76" class="t-sm b">Bulk KYC upload</text><text x="424" y="96" class="t-sm b">SSO (SAML)</text><text x="424" y="112" class="t-xs t-muted">a Must for the enterprise release</text>
+  <rect x="410" y="136" width="220" height="48" rx="8" class="d-surface"/>
+  <text x="424" y="154" class="t-mono t-muted">FILL-IN IF CAPACITY</text><text x="424" y="173" class="t-sm b">Dark mode</text>
+  <rect x="410" y="196" width="220" height="48" rx="8" class="d-gold"/>
+  <text x="424" y="214" class="t-mono t-gold">BACK TO DISCOVERY</text><text x="424" y="233" class="t-sm b">Tone control · Hindi test</text>
+</svg>`;
+
+DIAG.prd = `<svg viewBox="0 0 640 270" role="img" aria-labelledby="prd-t"><title id="prd-t">Anatomy of a lean PRD: why (problem, goals, non-goals), what (users, requirements, edge cases), and guardrails and plan (constraints, open questions, rollout).</title>
+  <rect x="8" y="8" width="624" height="254" rx="10" class="d-surface"/>
+  <text x="24" y="32" class="t-mono t-muted">LEAN PRD · 1–3 PAGES</text>
+  <path d="M8 44 H632" class="d-grid"/>
+  ${[[22, 'WHY', 't-acc', 'd-soft', [['1  Problem & evidence', 'who hurts, and how you know'], ['2  Goals & metrics', 'the outcome you’ll measure'], ['3  Non-goals', 'explicitly out of scope']]],
+     [226, 'WHAT', 't-gold', 'd-gold', [['4  Users & scenarios', 'who, in which situations'], ['5  Requirements', 'stories + acceptance criteria'], ['6  Edge cases', 'and error states']]],
+     [430, 'GUARDRAILS & PLAN', 't-guide', 'd-guide', [['7  Constraints', 'compliance, security, AI'], ['8  Open questions', 'each with an owner'], ['9  Rollout plan', 'and how you’ll measure']]]].map(c => `
+  <text x="${c[0]}" y="66" class="t-mono ${c[2]}">${c[1]}</text>
+  ${c[4].map((it, i) => `<rect x="${c[0]}" y="${78 + i * 58}" width="188" height="50" rx="7" class="${c[3]}" fill-opacity=".7"/>
+  <text x="${c[0] + 12}" y="${99 + i * 58}" class="t-sm b">${it[0]}</text><text x="${c[0] + 12}" y="${116 + i * 58}" class="t-xs t-muted">${it[1]}</text>`).join('')}`).join('')}
+</svg>`;
+
+DIAG.story = `<svg viewBox="0 0 640 236" role="img" aria-labelledby="st-t"><title id="st-t">A user story has three parts: who, what and why. The “so that” records the intent and matters most. Good stories pass INVEST: independent, negotiable, valuable, estimable, small, testable.</title>
+  <rect x="10" y="10" width="410" height="150" rx="10" class="d-surface"/>
+  <rect x="20" y="112" width="390" height="34" rx="6" class="d-gold"/>
+  <text x="32" y="50" class="t-md">As an advisor preparing for a client review,</text>
+  <text x="32" y="88" class="t-md">I want a one-page brief of what changed,</text>
+  <text x="32" y="134" class="t-md b">so that I can prepare in minutes.</text>
+  <path d="M422 46 H436 M422 84 H436 M422 129 H436" class="d-line"/>
+  <text x="444" y="44" class="t-mono t-acc">WHO</text><text x="444" y="60" class="t-xs t-muted">the user</text>
+  <text x="444" y="84" class="t-mono t-acc">WHAT</text><text x="444" y="100" class="t-xs t-muted">the capability</text>
+  <text x="444" y="124" class="t-mono t-gold">WHY · MOST IMPORTANT</text><text x="444" y="140" class="t-xs t-muted">records the intent, so engineers</text><text x="444" y="154" class="t-xs t-muted">can suggest a better solution</text>
+  ${[['I', 'Independent'], ['N', 'Negotiable'], ['V', 'Valuable'], ['E', 'Estimable'], ['S', 'Small'], ['T', 'Testable']].map((l, i) => `
+  <rect x="${10 + i * 104}" y="180" width="98" height="46" rx="7" class="d-soft" fill-opacity=".7"/>
+  <text x="${22 + i * 104}" y="210" class="t-lg t-acc">${l[0]}</text><text x="${40 + i * 104}" y="208" class="t-xs">${l[1]}</text>`).join('')}
 </svg>`;
 
 WIDGETS.rice = (() => {
@@ -663,9 +831,18 @@ ${table(['Role', 'Owns', 'Typical question', 'Not their call'], [
   <li><strong>Measuring</strong>: did the release move the metric we cared about?</li>
   <li><strong>Communicating</strong>: concise updates, early bad news, explicit trade-offs.</li>
 </ul>
+${cards([
+  ['Understand', 'Problems', 'partner calls, support tickets, usage data, sitting with ops'],
+  ['Shape', 'Work', 'problem statements, specs, stories with acceptance criteria'],
+  ['Order', 'The backlog', 'and keep the team clear on the current goal'],
+  ['Unblock', 'Get answers fast', 'from compliance, sales, ops and the CTO', 'gold'],
+  ['Measure', 'Outcomes', 'did the release move the metric we cared about?', 'good'],
+  ['Communicate', 'Updates', 'concise, bad news early, trade-offs explicit', 'guide']
+], 'A typical APM week: six kinds of work around one slice of the product.')}
 <p>You earn more scope by being right about problems and reliable on follow-through. A big title doesn’t do it.</p>
 ${tip('<p>In a CTO-led company you are often the person closest to customers. Your leverage is <strong>context</strong>. Bring evidence to every decision: call notes, usage data and compliance constraints. With evidence on the table, engineers and the CTO can make better calls, and they will start to seek you out.</p>')}
-<p>Many companies describe the core working group as the <strong>product trio</strong>: a PM, a design lead and a tech lead doing discovery together, so that value, usability and feasibility are considered at the same time instead of handed over in sequence.</p>`,
+<p>Many companies describe the core working group as the <strong>product trio</strong>: a PM, a design lead and a tech lead doing discovery together, so that value, usability and feasibility are considered at the same time instead of handed over in sequence.</p>
+${fig(DIAG.trio, 'Handover in sequence versus the product trio. The trio weighs all three risks together, before anything is built.')}`,
   example: {
     title: 'The AI portfolio summary slipped two weeks. Who owns what?',
     html: `
@@ -676,7 +853,11 @@ ${table(['Who', 'What they own in this situation'], [
   ['<strong>Designer</strong>', 'Design the review-and-edit flow and how “AI-generated, verify before use” is shown.'],
   ['<strong>CTO</strong>', 'Approve the trade-off if it changes what was committed this quarter.']
 ])}
-<p><strong>What you don’t do:</strong> debug the prompt yourself, assign tickets to engineers, or quietly push the date and hope nobody asks. <strong>What you do:</strong> make sure everyone knows the problem, the quality bar and the trade-off, and get decisions made fast.</p>`
+<p><strong>What you don’t do:</strong> debug the prompt yourself, assign tickets to engineers, or quietly push the date and hope nobody asks. <strong>What you do:</strong> make sure everyone knows the problem, the quality bar and the trade-off, and get decisions made fast.</p>
+${contrast(
+  ['What you don’t do', ['Debug the prompt yourself', 'Assign tickets to engineers', 'Quietly push the date and hope nobody asks']],
+  ['What you do', ['Re-scope: view-only pilot first, client sending in v1.1', 'Set the quality bar: zero numeric errors in 50 summaries', 'Make the trade-off visible and get it decided fast']]
+)}`
   },
   mistakes: [
     'Acting as a “backlog secretary” who writes a ticket for every stakeholder request without asking which problem it solves.',
@@ -750,6 +931,11 @@ ${fig(DIAG.ladder, 'Laddering from a request to the job. The job opens up better
   <li><strong>Emotional</strong>: “feel confident I won’t be caught off guard by a question about an underperforming fund”.</li>
   <li><strong>Social</strong>: “look prepared and expert in front of a high-net-worth client”.</li>
 </ul>
+${cards([
+  ['Functional', 'Get the task done', '“prepare a client review in under 15 minutes”'],
+  ['Emotional', 'How they want to feel', '“confident I won’t be caught off guard”', 'gold'],
+  ['Social', 'How they want to be seen', '“prepared and expert in front of a high-net-worth client”', 'guide']
+], 'Three layers of one job. B2B PMs often stop at the first.')}
 <h3>In B2B, the user isn’t the buyer</h3>
 ${table(['Person', 'Their job', 'What they care about'], [
   ['Advisor / relationship manager (user)', 'Serve clients well and grow their book', 'Speed, fewer embarrassing moments, client trust'],
@@ -758,6 +944,7 @@ ${table(['Person', 'Their job', 'What they care about'], [
   ['Operations (admin)', 'Onboard clients and keep data clean', 'Bulk actions, fewer manual errors']
 ])}
 <p>A feature that delights advisors but fails compliance review won’t ship. A feature the COO loves but advisors ignore won’t renew. You need all four perspectives.</p>
+${fig(DIAG.buyers, 'One feature, four people who decide its fate. Design for the user, and sell to the buyer and the approver too.')}
 <h3>User interviews that tell the truth</h3>
 <ul>
   <li><strong>Ask about past behavior, not future intentions.</strong> “Tell me about the last time you prepared for a quarterly review” beats “Would you use an AI brief?”</li>
@@ -766,6 +953,11 @@ ${table(['Person', 'Their job', 'What they care about'], [
   <li><strong>Listen for workarounds</strong>: spreadsheets, WhatsApp groups, sticky notes. A workaround proves the pain is real.</li>
   <li><strong>Five to eight interviews per segment</strong> usually reveal the main patterns. Record verbatim quotes, and invite your designer and an engineer.</li>
 </ul>
+${contrast(
+  ['Instead of', ['“Would you use an AI brief?”', 'Describing your idea and watching people nod', 'Asking what they might do someday']],
+  ['Ask', ['“Tell me about the last time you prepared for a quarterly review.”', '“Can you show me?” · “What happened next?”', 'What workaround do you use today?']],
+  'Past behavior is evidence. Opinions about the future are guesses.'
+)}
 <h3>A problem statement template</h3>
 <p class="formula">[Segment] needs a way to [job] because [insight]. Today they [workaround], which costs [impact]. We’ll know it’s solved when [measurable outcome].</p>`,
   example: {
@@ -775,7 +967,14 @@ ${table(['Person', 'Their job', 'What they care about'], [
 <p>The pattern: before each quarterly review, advisors export holdings to Excel, calculate performance since the last meeting by hand, flag underperforming funds, and paste it all into a slide. That takes <strong>45–60 minutes per client</strong>, and an advisor with 120 client families does about 40 reviews a quarter.</p>
 <p><strong>Job statement:</strong> “When I’m preparing for a client review, I want a one-page view of what changed and what to discuss, so I can walk in confident and spend the meeting on advice instead of data.”</p>
 <p><strong>Problem statement:</strong> “Advisors at our partner firms (MFDs and RIAs managing ₹50–500 Cr AUM) spend 45–60 minutes preparing each quarterly client review because the platform shows holdings but not <em>what changed since we last met</em>. Today they rebuild it in Excel, which costs 30+ hours per advisor per quarter. We’ll know it’s solved when median prep time for pilot advisors falls below 15 minutes.”</p>
-<p><strong>Result:</strong> the export would help a little and is cheap, so it ships as a stopgap. The real opportunity is an <strong>AI meeting-prep brief</strong>, which you’ll keep working on through the rest of this course.</p>`
+<p><strong>Result:</strong> the export would help a little and is cheap, so it ships as a stopgap. The real opportunity is an <strong>AI meeting-prep brief</strong>, which you’ll keep working on through the rest of this course.</p>
+${flow([
+  ['Request', '“Can we get an Excel export?” from three firms', 'muted'],
+  ['Pattern', 'Export, calculate by hand, paste into a slide: 45–60 min per client', 'gold'],
+  ['Job', 'Walk in confident and spend the meeting on advice'],
+  ['Problem statement', 'Solved when pilot median prep time is below 15 minutes'],
+  ['Decision', 'Export ships as a stopgap. The AI brief is the real bet.', 'good']
+], 'From a feature request to a problem worth solving.')}`
   },
   mistakes: [
     'Taking feature requests literally and dropping them into the backlog as-is.',
@@ -839,6 +1038,7 @@ ${table(['Risk', 'Question', 'Wealth-tech / AI flavor'], [
 ])}
 <h3>Test assumptions, not ideas</h3>
 <p>Every idea rests on assumptions. List them, then rank each one by <strong>how important it is</strong> and <strong>how little evidence you have</strong>. Test the important, low-evidence ones first.</p>
+${fig(DIAG.assumptions, 'The three assumptions from the worked example below, mapped. Start top right.')}
 ${table(['Test', 'Best for', 'Typical cost', 'Example'], [
   ['Problem interviews', 'Value of solving the problem', 'Days', 'Talk to 6 advisors about review prep'],
   ['Clickable prototype', 'Usability, desirability', '~1 week', 'A Figma brief shown to 5 advisors'],
@@ -863,7 +1063,15 @@ ${tip('<p>In B2B, keep fake doors honest and limited. A partner who clicks a fak
 </ol>
 <p><strong>Test:</strong> a two-week Wizard of Oz with 5 partner advisors. An analyst writes three suggestions per advisor each morning from platform data and delivers them through the existing notification panel. In parallel, compliance reviews 20 sample suggestions and sets guardrails, such as no scheme-specific recommendations unless the firm is a registered investment adviser.</p>
 <p><strong>Success criteria, set in advance:</strong> at least 40% of suggestions acted on within 48 hours, and at least 4 of 5 advisors ask to keep receiving them.</p>
-<p><strong>Illustrative result:</strong> 52% were acted on, but the “idle cash” suggestions were ignored because advisors already knew. Failed-SIP and maturity alerts drove most of the action. <strong>Decision:</strong> build rule-based alerts for those two types first, and use the LLM only to explain each alert in plain language. That saved roughly a quarter of machine-learning work on the parts nobody used.</p>`
+<p><strong>Illustrative result:</strong> 52% were acted on, but the “idle cash” suggestions were ignored because advisors already knew. Failed-SIP and maturity alerts drove most of the action. <strong>Decision:</strong> build rule-based alerts for those two types first, and use the LLM only to explain each alert in plain language. That saved roughly a quarter of machine-learning work on the parts nobody used.</p>
+${fig(DIAG.wozResult, 'The result cleared the bar that was set in advance, so the test counts as evidence, not as a story told afterwards.')}
+${flow([
+  ['Riskiest assumption', 'Advisors will act on suggestions', 'gold'],
+  ['Cheapest test', 'Two-week Wizard of Oz with 5 advisors'],
+  ['Bar set in advance', '≥40% acted on in 48 h, and 4 of 5 advisors want more'],
+  ['Result', '52% acted on. Failed SIPs and maturities drove it.', 'good'],
+  ['Decision', 'Rule-based alerts first; the LLM only explains them', 'good']
+], 'Discovery in five steps: evidence and a decision, before any production AI.')}`
   },
   mistakes: [
     'Treating discovery as a phase that’s “done” before building starts.',
@@ -931,9 +1139,16 @@ LESSONS.push({
   <li><strong>Confidence</strong>: 100% (strong data), 80% (some data), 50% (gut feel).</li>
   <li><strong>Effort</strong>: person-weeks or person-months, estimated by the team.</li>
 </ul>
+${cards([
+  ['R · Reach', 'How many', 'users or accounts per period'],
+  ['I · Impact', 'How much each', '3 · 2 · 1 · 0.5 · 0.25'],
+  ['C · Confidence', 'How sure', '100% · 80% · 50%'],
+  ['E · Effort', 'How costly', 'person-weeks, estimated by the team', 'gold']
+], 'Reach, impact and confidence multiply the value. Effort divides it.', 4)}
 <p><strong>Good for</strong> comparing many similar-sized items when you have some data. <strong>Misleads</strong> when value is concentrated, as it often is in B2B: a deal-blocker for one ₹1 Cr account, a regulatory deadline, or a dependency that unlocks three other items. It also invites fake precision, because 37.5 vs 40 means nothing.</p>
 <h3>MoSCoW</h3>
 <p><strong>Must</strong> have, <strong>Should</strong> have, <strong>Could</strong> have, <strong>Won’t</strong> have (this time). It’s best for <strong>scoping a fixed-date release</strong>, such as what must be in the build for a regulatory reporting change. It misleads when everything becomes a Must, and it doesn’t order items within a bucket.</p>
+${fig(DIAG.moscow, 'MoSCoW against a fixed date. When every item is a Must, nothing tells you what to drop.')}
 <h3>Kano</h3>
 ${fig(DIAG.kano, 'Kano: some features only prevent unhappiness, some scale with quality, and some surprise people.')}
 <ul>
@@ -964,6 +1179,7 @@ ${table(['Item', 'Reach', 'Impact', 'Conf.', 'Effort', 'RICE'], [
 <p><strong>RICE says:</strong> Bulk KYC, then dark mode, then tone control, then SSO.</p>
 <p><strong>Then context arrives.</strong> Two enterprise prospects worth ₹1.2 Cr ARR combined won’t go live without SSO, because their infosec review requires it. In <strong>MoSCoW</strong> terms for the Q3 enterprise release, SSO is a Must. In <strong>Kano</strong> terms it’s a basic feature for enterprise buyers: nobody cheers for it, but without it you lose the deal. Hindi tone control may be a delighter for advisors serving Tier-2 and Tier-3 cities, but confidence is only 50%.</p>
 <p><strong>Decision:</strong> Bulk KYC and SSO this quarter. Dark mode as a fill-in if there’s capacity. Tone control goes back to discovery: a one-week test of Hindi summaries with 5 advisors will raise confidence far more cheaply than arguing about it.</p>
+${fig(DIAG.riceDecision, 'RICE gave the first cut. B2B context moved SSO from last place into this quarter.')}
 <p>RICE ranked dark mode second. That doesn’t make RICE wrong. It showed you where your data is thin and where B2B value hides.</p>`
   },
   mistakes: [
@@ -1029,9 +1245,11 @@ LESSONS.push({
   <li><strong>Open questions</strong>, each with an owner.</li>
   <li><strong>Rollout and measurement plan.</strong></li>
 </ol>
+${fig(DIAG.prd, 'Nine sections in three groups: why we’re doing it, what “done” looks like, and the guardrails and plan.')}
 <h3>User stories</h3>
 <p class="formula">As a [user], I want [capability], so that [benefit].</p>
 <p>A story is a <strong>placeholder for a conversation</strong>, not a contract. The “so that” is the most important part: it records the intent, so engineers can suggest a better solution. Check stories against <strong>INVEST</strong>: Independent, Negotiable, Valuable, Estimable, Small, Testable.</p>
+${fig(DIAG.story, 'The story from the worked example, taken apart. The “so that” is what lets engineers propose a better way.')}
 <h3>Acceptance criteria</h3>
 <p>These are pass/fail conditions that say a story is complete. The Given/When/Then format keeps them testable:</p>
 <p class="formula">Given [context], when [action], then [observable result].</p>
@@ -1048,6 +1266,13 @@ ${table(['Weak', 'Strong'], [
   <li><strong>Permissions</strong>: an advisor must never see another advisor’s clients.</li>
   <li><strong>AI-specific</strong>: hallucination, low confidence, refusals, latency, cost spikes, PII in prompts, and instructions hidden inside uploaded documents.</li>
 </ul>
+${cards([
+  ['Empty', 'Nothing there yet', 'a new client, or an advisor with no clients', 'muted'],
+  ['Stale', 'Late data', 'NAV feed delayed, RTA file late', 'gold'],
+  ['Scale', 'Huge portfolios', '300 holdings across 12 accounts'],
+  ['Permissions', 'Wrong eyes', 'never another advisor’s clients', 'bad'],
+  ['AI-specific', 'Model failures', 'hallucination, refusals, latency, cost, PII, hidden instructions', 'bad']
+], 'Five edge cases to specify for every B2B feature.', 5)}
 <h3>Non-goals</h3>
 <p>Writing down what you are <em>not</em> doing prevents scope creep and wrong assumptions. For example: “No investment recommendations in v1”, or “No client-facing sending in v1”.</p>
 ${tip('<p>For AI features, add a <strong>golden set</strong>: 30–50 real (masked) example inputs with what good output looks like. It becomes your acceptance test for prompts and models, and it ends the endless “is this good enough?” debates.</p>')}`,
@@ -1066,6 +1291,11 @@ ${tip('<p>For AI features, add a <strong>golden set</strong>: 30–50 real (mask
   <li><em>Given</em> no previous meeting is logged, <em>then</em> the brief compares the last 90 days and says so.</li>
   <li>The brief generates in ≤10 s at p95. Every brief is labeled “AI-generated draft. Verify before use” and logged with the prompt version and inputs for audit.</li>
 </ul>
+${flow([
+  ['Given', 'a client with holdings and a logged previous meeting', 'muted'],
+  ['When', 'the advisor opens “Prepare review”'],
+  ['Then', 'value change, XIRR, top 3 gainers and losers, failed SIPs, maturities in 90 days', 'good']
+], 'The first acceptance criterion, read as a test anyone can run.')}
 <p><strong>Edge cases:</strong> zero holdings (show the onboarding checklist instead); joint and family accounts; 300+ holdings (summarize the top 20 and group the rest); LLM timeout (data-only brief); no permission for that client (403, with no data leaked into logs).</p>
 <p><strong>Open questions:</strong> Should insurance policies be included, given they come from a different data source? (Owner: you, by Friday.) Is PDF export needed in v1? (Owner: design, after the pilot.)</p>`
   },
@@ -1184,6 +1414,159 @@ DIAG.rollout = `<svg viewBox="0 0 640 285" role="img" aria-labelledby="ro-t"><ti
   <circle cx="380" cy="276" r="4" class="d-fill-gold"/><text x="390" y="280" class="t-xs t-muted">gate: exit criteria checked before widening</text>
 </svg>`;
 
+DIAG.leadLag = `<svg viewBox="0 0 640 200" role="img" aria-labelledby="ll-t"><title id="ll-t">Leading indicators such as 14-day activation, weekly active advisors and time-to-first-value predict lagging outcomes such as renewals, logo churn and NRR, which arrive quarters later.</title>
+  <defs><marker id="ah-ll" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <text x="20" y="24" class="t-mono t-good">LEADING · PREDICT</text><text x="360" y="24" class="t-mono t-muted">LAGGING · CONFIRM</text>
+  ${['14-day activation rate', 'Weekly active advisors', 'Time-to-first-value'].map((t, i) => `<rect x="20" y="${36 + i * 42}" width="250" height="32" rx="6" class="d-good" fill-opacity=".8"/><text x="34" y="${57 + i * 42}" class="t-sm b">${t}</text>`).join('')}
+  ${['Renewals', 'Logo churn', 'Net revenue retention'].map((t, i) => `<rect x="360" y="${36 + i * 42}" width="260" height="32" rx="6" class="d-surface"/><text x="374" y="${57 + i * 42}" class="t-sm b">${t}</text>`).join('')}
+  <path d="M282 94 H348" class="d-line" marker-end="url(#ah-ll)"/><text x="315" y="86" text-anchor="middle" class="t-xs t-muted">predicts</text>
+  <path d="M20 172 H612" class="d-line" marker-end="url(#ah-ll)"/>
+  <text x="20" y="192" class="t-xs t-muted">this month: you can still act</text><text x="620" y="192" text-anchor="end" class="t-xs t-muted">quarters later: already happened</text>
+</svg>`;
+
+DIAG.retention = `<svg viewBox="0 0 560 240" role="img" aria-labelledby="ret-t"><title id="ret-t">Two illustrative retention curves for a cohort. A healthy curve drops and then flattens. An unhealthy curve keeps falling, which means people try the product and leave.</title>
+  <path d="M60 200 H540 M60 200 V20" class="d-line"/>
+  <text x="52" y="28" text-anchor="end" class="t-xs t-muted">100%</text><text x="52" y="204" text-anchor="end" class="t-xs t-muted">0%</text>
+  ${[0, 2, 4, 6, 8].map(w => `<text x="${60 + w * 58}" y="218" text-anchor="middle" class="t-xs t-muted">wk ${w}</text>`).join('')}
+  <path d="M60 24 C 120 90, 170 112, 240 118 S 420 124, 524 125" class="d-acc"/>
+  <path d="M60 24 C 140 90, 230 130, 330 160 S 470 192, 524 197" class="d-badline"/>
+  <text x="530" y="118" text-anchor="end" class="t-sm b t-acc">flattens · healthy</text>
+  <text x="530" y="152" text-anchor="end" class="t-sm b t-bad">keeps falling · people leave</text>
+  <text x="300" y="236" text-anchor="middle" class="t-xs t-muted">weeks since the cohort activated (illustrative)</text>
+</svg>`;
+
+DIAG.nrr = `<svg viewBox="0 0 560 262" role="img" aria-labelledby="nrr-t"><title id="nrr-t">NRR waterfall: start at 10 crore rupees, add 1.5 crore expansion, lose 0.4 crore to contraction and 0.8 crore to churn, ending at 10.3 crore, an NRR of 103 percent.</title>
+  <text x="50" y="16" class="t-xs t-muted">₹ Cr · axis starts at ₹8 Cr</text>
+  <path d="M50 230 H540" class="d-line"/>
+  <path d="M130 130 H160 M230 55 H260 M330 75 H360 M430 115 H460" class="d-line" stroke-dasharray="3 3"/>
+  <rect x="60" y="130" width="70" height="100" rx="3" class="d-soft"/><text x="95" y="122" text-anchor="middle" class="t-sm b">₹10 Cr</text>
+  <rect x="160" y="55" width="70" height="75" rx="3" class="d-good"/><text x="195" y="47" text-anchor="middle" class="t-sm b t-good">+₹1.5 Cr</text>
+  <rect x="260" y="55" width="70" height="20" rx="3" class="d-bad"/><text x="295" y="47" text-anchor="middle" class="t-sm b t-bad">−₹0.4 Cr</text>
+  <rect x="360" y="75" width="70" height="40" rx="3" class="d-bad"/><text x="395" y="67" text-anchor="middle" class="t-sm b t-bad">−₹0.8 Cr</text>
+  <rect x="460" y="115" width="70" height="115" rx="3" class="d-fill-acc" fill-opacity=".85"/><text x="495" y="107" text-anchor="middle" class="t-sm b">₹10.3 Cr</text>
+  <text x="495" y="86" text-anchor="middle" class="t-md b t-acc">NRR 103%</text>
+  ${['Start', 'Expansion', 'Contraction', 'Churn', 'End'].map((t, i) => `<text x="${95 + i * 100}" y="250" text-anchor="middle" class="t-xs t-muted">${t}</text>`).join('')}
+</svg>`;
+
+DIAG.triangle = `<svg viewBox="0 0 560 282" role="img" aria-labelledby="tri-t"><title id="tri-t">The trade-off triangle of scope, time and people. When the date and the team are fixed, scope flexes. Quality sits in the middle and does not flex.</title>
+  <path d="M260 64 L100 216 M300 64 L460 216 M160 240 H400" class="d-acc"/>
+  <rect x="200" y="16" width="160" height="48" rx="8" class="d-gold"/><text x="280" y="37" text-anchor="middle" class="t-sm b">Scope</text><text x="280" y="54" text-anchor="middle" class="t-mono t-gold">FLEXES</text>
+  <rect x="20" y="216" width="140" height="48" rx="8" class="d-surface"/><text x="90" y="237" text-anchor="middle" class="t-sm b">Time</text><text x="90" y="254" text-anchor="middle" class="t-mono t-muted">FIXED · THE DATE</text>
+  <rect x="400" y="216" width="140" height="48" rx="8" class="d-surface"/><text x="470" y="237" text-anchor="middle" class="t-sm b">People</text><text x="470" y="254" text-anchor="middle" class="t-mono t-muted">FIXED · THE TEAM</text>
+  <circle cx="280" cy="160" r="48" class="d-good"/><text x="280" y="157" text-anchor="middle" class="t-sm b">Quality</text><text x="280" y="174" text-anchor="middle" class="t-xs t-good">doesn’t flex</text>
+</svg>`;
+
+DIAG.debtSlice = `<svg viewBox="0 0 560 104" role="img" aria-labelledby="ds-t"><title id="ds-t">Many teams reserve 15 to 25 percent of capacity for tech debt. It is a team practice, not a rule.</title>
+  <text x="10" y="18" class="t-mono t-muted">TEAM CAPACITY</text><text x="550" y="18" text-anchor="end" class="t-mono t-gold">TECH DEBT 15–25%</text>
+  <rect x="10" y="28" width="540" height="40" rx="6" class="d-surface"/>
+  <rect x="10" y="28" width="405" height="40" rx="6" class="d-soft"/>
+  <rect x="415" y="28" width="54" height="40" class="d-gold" fill-opacity=".35" stroke-dasharray="4 3"/>
+  <rect x="469" y="28" width="81" height="40" rx="6" class="d-gold"/>
+  <text x="24" y="53" class="t-sm b">Features and discovery work</text>
+  <text x="509" y="53" text-anchor="middle" class="t-sm b">Debt</text>
+  <text x="442" y="53" text-anchor="middle" class="t-xs t-gold">flex</text>
+  <text x="10" y="92" class="t-xs t-muted">A steady slice, tied to outcomes such as “report failures from 3% to under 0.5%”. A team practice, not a rule.</text>
+</svg>`;
+
+DIAG.syncOptions = `<svg viewBox="0 0 640 232" role="img" aria-labelledby="so-t"><title id="so-t">Three options for real-time sync. A, full real-time, takes 8 to 10 weeks plus licence cost. B, end-of-day sync with on-demand refresh, takes 2 to 3 weeks. C, a timestamp only, takes 2 days. Decision: C this Sprint, B next, revisit A later.</title>
+  <text x="170" y="18" class="t-mono t-muted">EFFORT · WORKING DAYS</text>
+  ${[['A · Full real-time', 240, 300, '8–10 wks + licence', 'High value, but only for equity-heavy HNI books', 'revisit later', 'd-surface'],
+     ['B · End-of-day + refresh', 60, 90, '2–3 weeks', 'Solves trust for most advisors', 'next Sprint', 'd-gold'],
+     ['C · Timestamp only', 12, 12, '2 days', 'A quick trust win and a test of the hypothesis', 'this Sprint', 'd-good']].map((r, i) => {
+    const y = 30 + i * 66;
+    return `<text x="10" y="${y + 16}" class="t-sm b">${r[0]}</text>
+  <rect x="10" y="${y + 26}" width="92" height="22" rx="11" class="${r[6]}"/><text x="56" y="${y + 41}" text-anchor="middle" class="t-xs b">${r[5]}</text>
+  <rect x="170" y="${y + 4}" width="${r[1]}" height="16" rx="3" class="d-fill-acc" fill-opacity=".85"/>
+  ${r[2] > r[1] ? `<rect x="${170 + r[1]}" y="${y + 4}" width="${r[2] - r[1]}" height="16" rx="3" class="d-fill-acc" fill-opacity=".35"/>` : ''}
+  <text x="${178 + r[2]}" y="${y + 17}" class="t-mono">${r[3]}</text>
+  <text x="170" y="${y + 40}" class="t-xs t-muted">${r[4]}</text>`;
+  }).join('')}
+</svg>`;
+
+DIAG.powerInterest = `<svg viewBox="0 0 560 360" role="img" aria-labelledby="pi-t"><title id="pi-t">Power and interest grid. Manage closely: your CTO and a key partner. Keep satisfied with brief summaries: the CEO and CFO. Keep informed: the customer success team.</title>
+  <rect x="70" y="20" width="230" height="150" class="d-gold" fill-opacity=".45"/>
+  <rect x="300" y="20" width="230" height="150" class="d-soft" fill-opacity=".8"/>
+  <rect x="70" y="170" width="230" height="150" class="d-surface"/>
+  <rect x="300" y="170" width="230" height="150" class="d-guide" fill-opacity=".6"/>
+  <text x="82" y="40" class="t-mono t-gold">KEEP SATISFIED</text><text x="518" y="40" text-anchor="end" class="t-mono t-acc">MANAGE CLOSELY</text>
+  <text x="82" y="310" class="t-mono t-muted">MONITOR</text><text x="518" y="310" text-anchor="end" class="t-mono t-guide">KEEP INFORMED</text>
+  ${[[350, 82, 'Your CTO'], [400, 122, 'Key partner'], [110, 82, 'CEO'], [170, 112, 'CFO'], [360, 240, 'CS team']].map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="7" class="d-fill-acc"/><text x="${p[0] + 12}" y="${p[1] + 4}" class="t-sm b">${p[2]}</text>`).join('')}
+  <text x="82" y="152" class="t-xs t-muted">brief summaries</text><text x="312" y="152" class="t-xs t-muted">close, frequent contact</text><text x="312" y="290" class="t-xs t-muted">regular updates</text>
+  <text x="300" y="346" text-anchor="middle" class="t-sm t-muted">Interest →</text>
+  <text x="34" y="170" text-anchor="middle" transform="rotate(-90 34 170)" class="t-sm t-muted">Power →</text>
+</svg>`;
+
+DIAG.update = `<svg viewBox="0 0 560 252" role="img" aria-labelledby="up-t"><title id="up-t">Shape of a weekly update: a one-sentence headline with on track, at risk or off track; progress against the goal metric; done and next; and risks and asks with who must decide. Under about 150 words.</title>
+  <rect x="10" y="10" width="540" height="232" rx="10" class="d-surface"/>
+  <text x="28" y="36" class="t-mono t-muted">WEEKLY UPDATE</text><text x="532" y="36" text-anchor="end" class="t-mono t-acc">UNDER ~150 WORDS</text>
+  <path d="M10 48 H550" class="d-grid"/>
+  <text x="28" y="76" class="t-sm b">1 · Headline</text>
+  <rect x="170" y="62" width="80" height="20" rx="10" class="d-good"/><text x="210" y="76" text-anchor="middle" class="t-xs b">on track</text>
+  <rect x="258" y="62" width="80" height="20" rx="10" class="d-gold"/><text x="298" y="76" text-anchor="middle" class="t-xs b">at risk</text>
+  <rect x="346" y="62" width="80" height="20" rx="10" class="d-bad"/><text x="386" y="76" text-anchor="middle" class="t-xs b">off track</text>
+  <text x="436" y="76" class="t-xs t-muted">one sentence</text>
+  <text x="28" y="124" class="t-sm b">2 · Progress vs goal</text>
+  <rect x="170" y="112" width="250" height="12" rx="6" class="d-fill-line"/><rect x="170" y="112" width="160" height="12" rx="6" class="d-fill-acc"/><text x="430" y="122" class="t-xs t-muted">the metric, not activity</text>
+  <text x="28" y="172" class="t-sm b">3 · Done and next</text>
+  <rect x="170" y="162" width="150" height="6" rx="3" class="d-fill-line"/><rect x="170" y="174" width="120" height="6" rx="3" class="d-fill-line"/>
+  <rect x="340" y="162" width="150" height="6" rx="3" class="d-fill-line"/><rect x="340" y="174" width="110" height="6" rx="3" class="d-fill-line"/>
+  <text x="28" y="220" class="t-sm b">4 · Risks and asks</text>
+  <text x="170" y="220" class="t-xs t-gold">decision needed · from whom · by when</text>
+</svg>`;
+
+DIAG.raci = `<svg viewBox="0 0 600 292" role="img" aria-labelledby="raci-t"><title id="raci-t">RACI for the rebalancing scope decision. Responsible: you, the APM. Accountable: the CTO, exactly one person. Consulted: compliance, the sales lead and the tech lead. Informed: customer success and the leadership team.</title>
+  ${[['R', 'does the work', 'd-soft', 't-acc'], ['A', 'makes the call', 'd-gold', 't-gold'], ['C', 'input before', 'd-guide', 't-guide'], ['I', 'told after', 'd-surface', 't-muted']].map((c, i) => `
+  <text x="${240 + i * 100}" y="32" text-anchor="middle" class="t-lg ${c[3]}">${c[0]}</text><text x="${240 + i * 100}" y="50" text-anchor="middle" class="t-xs t-muted">${c[1]}</text>`).join('')}
+  <path d="M10 60 H590" class="d-line"/>
+  ${[['You (APM)', 0], ['CTO', 1], ['Compliance', 2], ['Sales lead', 2], ['Tech lead', 2], ['Customer success', 3], ['Leadership team', 3]].map((r, i) => {
+    const y = 66 + i * 31, cls = ['d-soft', 'd-gold', 'd-guide', 'd-surface'][r[1]];
+    return `<text x="14" y="${y + 20}" class="t-sm${r[1] === 1 ? ' b' : ''}">${r[0]}</text>
+  <rect x="${208 + r[1] * 100}" y="${y + 3}" width="64" height="24" rx="6" class="${cls}"/><text x="${240 + r[1] * 100}" y="${y + 20}" text-anchor="middle" class="t-sm b">${'RACI'[r[1]]}</text>
+  <path d="M10 ${y + 30} H590" class="d-grid"/>`;
+  }).join('')}
+</svg>`;
+
+DIAG.horizons = `<svg viewBox="0 0 640 262" role="img" aria-labelledby="hz-t"><title id="hz-t">Nested planning horizons: the roadmap over quarters contains the Product Goal over months, which contains the Product Backlog over weeks to months, which contains the Sprint or release plan over days to weeks.</title>
+  ${[[10, 10, 620, 242, 'd-surface', 't-muted', 'ROADMAP · QUARTERS', 'Which problems, in what order, and why?'],
+     [30, 60, 580, 182, 'd-guide', 't-guide', 'PRODUCT GOAL · MONTHS', 'What is the next objective the Scrum Team is working towards?'],
+     [50, 110, 540, 122, 'd-gold', 't-gold', 'PRODUCT BACKLOG · WEEKS TO MONTHS', 'What work, in what order?'],
+     [70, 160, 500, 62, 'd-soft', 't-acc', 'SPRINT / RELEASE PLAN · DAYS TO WEEKS', 'What ships when?']].map(b => `
+  <rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}" rx="10" class="${b[4]}"/>
+  <text x="${b[0] + 14}" y="${b[1] + 22}" class="t-mono ${b[5]}">${b[6]}</text><text x="${b[0] + 14}" y="${b[1] + 39}" class="t-xs">${b[7]}</text>`).join('')}
+</svg>`;
+
+DIAG.flags = `<svg viewBox="0 0 640 206" role="img" aria-labelledby="fg-t"><title id="fg-t">Deploy is not release. Code is deployed to production first, and a feature flag then decides who sees it: on for the internal team and Firm X, off for everyone else. A kill switch turns it off instantly.</title>
+  <defs><marker id="ah-fg" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <rect x="10" y="58" width="180" height="84" rx="10" class="d-surface"/>
+  <text x="26" y="82" class="t-mono t-acc">DEPLOY</text><text x="26" y="104" class="t-sm b">Code is in production</text><text x="26" y="122" class="t-xs t-muted">users see nothing yet</text>
+  <path d="M194 100 H236" class="d-line" marker-end="url(#ah-fg)"/>
+  <text x="280" y="70" text-anchor="middle" class="t-mono t-muted">FEATURE FLAG</text>
+  <rect x="248" y="85" width="64" height="30" rx="15" class="d-soft"/><circle cx="296" cy="100" r="11" class="d-fill-acc"/>
+  <text x="280" y="138" text-anchor="middle" class="t-xs t-muted">you choose who</text><text x="280" y="152" text-anchor="middle" class="t-xs t-muted">sees it, and when</text>
+  <path d="M324 100 H368" class="d-line" marker-end="url(#ah-fg)"/>
+  <text x="380" y="26" class="t-mono t-acc">RELEASE</text>
+  ${[['Internal team', 'ON', 'd-good', 't-good'], ['Firm X (entitlement)', 'ON', 'd-good', 't-good'], ['All other firms', 'OFF', 'd-surface', 't-muted']].map((r, i) => `
+  <rect x="380" y="${40 + i * 44}" width="250" height="34" rx="8" class="${r[2]}"/><text x="394" y="${62 + i * 44}" class="t-sm b">${r[0]}</text><text x="616" y="${62 + i * 44}" text-anchor="end" class="t-mono ${r[3]}">${r[1]}</text>`).join('')}
+  <text x="10" y="194" class="t-xs t-bad">Kill switch: one flag turns it off for everyone, instantly.</text>
+</svg>`;
+
+DIAG.did = `<svg viewBox="0 0 680 236" role="img" aria-labelledby="did-t"><title id="did-t">Prep time fell from 50 to 19 minutes at enabled firms and from 50 to 46 minutes at not-yet-enabled firms. About 4 minutes is seasonal, so about 27 minutes is the feature’s effect, not the naive 31.</title>
+  <text x="20" y="18" class="t-mono t-muted">PREP TIME (MIN)</text>
+  <path d="M60 200 H520" class="d-line"/>
+  <path d="M100 50 H500 M330 66 H500" class="d-grid" stroke-dasharray="3 4"/>
+  <path d="M100 50 L330 66" class="d-goldline" stroke-dasharray="6 4"/>
+  <path d="M100 50 L330 174" class="d-acc"/>
+  <circle cx="100" cy="50" r="5" class="d-fill-muted"/><circle cx="330" cy="66" r="5" class="d-fill-gold"/><circle cx="330" cy="174" r="5" class="d-fill-acc"/>
+  <text x="88" y="46" text-anchor="end" class="t-sm b">50</text>
+  <text x="342" y="84" class="t-sm b t-gold">46 · not yet enabled</text>
+  <text x="342" y="178" class="t-sm b t-acc">19 · enabled firms</text>
+  <path d="M500 50 H508 V66 H500" class="d-line"/><text x="516" y="62" class="t-xs t-muted">≈4 min seasonal</text>
+  <path d="M500 68 H508 V174 H500" class="d-acc" stroke-width="1.6"/>
+  <text x="516" y="118" class="t-sm b t-acc">≈27 min from</text><text x="516" y="134" class="t-sm b t-acc">the feature</text>
+  <text x="516" y="152" class="t-xs t-muted">(naive before/after: 31)</text>
+  <text x="100" y="220" text-anchor="middle" class="t-xs t-muted">before</text><text x="330" y="220" text-anchor="middle" class="t-xs t-muted">after Stage 2</text>
+</svg>`;
+
 LESSONS.push({
   id: 'pm-6', track: 'pm', n: 6, minutes: 14,
   title: 'Metrics that matter', short: 'Metrics',
@@ -1197,8 +1580,10 @@ LESSONS.push({
 ${fig(DIAG.metricTree, 'A metric tree: the North Star breaks into inputs the team can move, with guardrails underneath.')}
 <h3>Leading vs lagging</h3>
 <p><strong>Leading</strong> indicators predict the future: 14-day activation rate, weekly active advisors, time-to-first-value. <strong>Lagging</strong> indicators confirm what already happened: renewals, logo churn, NRR. If your only goals are lagging, you find out a strategy failed two quarters too late.</p>
+${fig(DIAG.leadLag, 'Set goals on the left side: those numbers still give you time to act.')}
 <h3>Funnels, activation and retention</h3>
 <p>A funnel is a sequence of steps with a conversion rate at each one. <strong>Activation</strong> is the moment a user first gets real value, defined as a behavior. For example: “generated and opened at least 3 briefs within 14 days”. <strong>Retention</strong> is measured by cohort: of the advisors who activated in March, what percentage are still active in week 8? A healthy retention curve flattens. One that keeps falling means people try the product and leave.</p>
+${fig(DIAG.retention, 'Read the shape, not one number. The question is whether the curve finds a floor.')}
 ${fig(DIAG.funnel, 'Illustrative advisor funnel. The biggest absolute leak is at login, but the worst conversion (58%) is from first brief to activation, which is closest to the value and squarely in the product team’s control.')}
 <h3>B2B metrics you’ll hear every week</h3>
 ${table(['Metric', 'What it tells you'], [
@@ -1211,6 +1596,7 @@ ${table(['Metric', 'What it tells you'], [
 ])}
 <p class="formula">NRR = (Starting ARR + Expansion − Contraction − Churned ARR) ÷ Starting ARR</p>
 <p>Example: start at ₹10 Cr, add ₹1.5 Cr expansion, lose ₹0.4 Cr to contraction and ₹0.8 Cr to churn. NRR = 10.3 ÷ 10 = <strong>103%</strong>.</p>
+${fig(DIAG.nrr, 'The same NRR example as a waterfall. Above 100% means existing customers grew even after churn.')}
 ${tip('<p>Choose the metric’s time window to match the product’s natural cadence. Advisors prepare reviews weekly or around meetings, not daily, so a daily-active metric would label healthy weekly use as failure.</p>')}`,
   example: {
     title: 'Metrics for the AI meeting-prep brief',
@@ -1220,6 +1606,12 @@ ${tip('<p>Choose the metric’s time window to match the product’s natural cad
 <ul><li>Advisors activated (3+ briefs in their first 14 days)</li><li>Briefs per active advisor per week</li><li>Share of briefs used with light edits (a quality signal)</li><li>Days from contract signature to a firm’s first brief</li></ul>
 <p><strong>Guardrails:</strong> numeric error reports (target: zero), compliance flags, p95 latency ≤ 10 s, LLM cost ≤ ₹4 per brief.</p>
 <p><strong>Lagging business outcomes:</strong> renewal rate and seat expansion at pilot firms over the following two quarters.</p>
+${cards([
+  ['North Star', 'Reviews prepared with the brief / week', 'breadth × depth: value delivered, not clicks'],
+  ['Inputs', 'What the team moves', 'activation · briefs per advisor · light edits · days to first brief', 'good'],
+  ['Guardrails', 'Must not get worse', 'zero numeric errors · compliance flags · p95 ≤ 10 s · ≤ ₹4 per brief', 'bad'],
+  ['Lagging', 'Confirms it worked', 'renewals and seat expansion at pilot firms', 'guide']
+], 'The brief’s full metric set on one screen.', 4)}
 <p><strong>Reading the funnel above:</strong> 260 advisors generated a first brief, but only 150 (58%) went on to use it regularly. Watching recordings and asking a few of them reveals the first brief often loaded slowly for large books, and missed SIP data advisors expected. Fixing the first-run experience is likely to move the North Star faster than another invite email campaign.</p>`
   },
   mistakes: [
@@ -1295,7 +1687,14 @@ LESSONS.push({
   <li>“What would we need to learn to be more confident, and could a short spike tell us?”</li>
   <li>“If the date is fixed, what would you cut first?”</li>
 </ul>
+${cards([
+  ['Size', 'Find the big part', '“What makes this big? Which part is the riskiest?”'],
+  ['Slice', 'Find a smaller version', '“Is there a smaller version that delivers most of the value?”'],
+  ['Learn', 'Buy confidence cheaply', '“Could a short spike tell us?”', 'guide'],
+  ['Cut', 'Protect the date', '“If the date is fixed, what would you cut first?”', 'gold']
+], 'Four questions that shrink uncertainty or scope, instead of haggling over the number.', 4)}
 <p>The classic trade-off triangle is scope, time and people. When the date and the team are fixed, <strong>scope flexes</strong>. Quality doesn’t. In regulated finance, cutting testing or the audit log to hit a date is the most expensive shortcut there is.</p>
+${fig(DIAG.triangle, 'With the date and the team fixed, scope is the only honest lever. Quality stays in the middle.')}
 <h3>Making trade-offs explicit</h3>
 <p>Give decision-makers options instead of a single plan. Show the value, cost and risk of each one, and make a recommendation. A good decision depends on seeing those side by side.</p>
 <h3>Tech debt</h3>
@@ -1305,10 +1704,25 @@ LESSONS.push({
   <li>Many teams reserve a steady slice of capacity for it, often 15–25%. That’s a team practice, not a rule.</li>
   <li>Tie paydown to outcomes: “cuts report-generation failures from 3% to under 0.5%”.</li>
 </ul>
+${cards([
+  ['Deliberate', 'Shipped fast on purpose', 'a known shortcut to hit a goal', 'gold'],
+  ['Accidental', 'Found a better design later', 'you learned something after building'],
+  ['Bit rot', 'Things aged', 'dependencies and infrastructure got old', 'bad']
+], 'Three kinds of tech debt. All of them slow every future feature.')}
+${fig(DIAG.debtSlice, '')}
 <h3>Working with design</h3>
 <p>Share the problem and the constraints before any screens exist. Give feedback anchored in <strong>user goals</strong>, not taste. “Can an advisor spot a failed SIP within 5 seconds on this screen?” is useful. “Make it pop” isn’t.</p>
+${contrast(
+  ['Taste feedback', ['“Make it pop.”', 'Screens reviewed before the problem was shared']],
+  ['Goal feedback', ['“Can an advisor spot a failed SIP within 5 seconds?”', 'Problem and constraints shared before any screens exist']]
+)}
 <h3>Saying no</h3>
-<p>Every yes is a no to something else. A good no: <strong>acknowledge</strong> the need, <strong>explain</strong> the trade-off against current priorities, and <strong>offer</strong> an alternative (“no, but…” or “yes, if…”) or a clear condition for revisiting it.</p>`,
+<p>Every yes is a no to something else. A good no: <strong>acknowledge</strong> the need, <strong>explain</strong> the trade-off against current priorities, and <strong>offer</strong> an alternative (“no, but…” or “yes, if…”) or a clear condition for revisiting it.</p>
+${flow([
+  ['Acknowledge', 'the need is real, and you heard it'],
+  ['Explain', 'the trade-off against current priorities', 'gold'],
+  ['Offer', '“no, but…”, “yes, if…”, or when you’ll revisit it', 'good']
+], 'A good no in three moves.')}`,
   example: {
     title: '“Real-time portfolio sync” came back as an XL estimate',
     html: `
@@ -1320,7 +1734,8 @@ ${table(['Option', 'Effort', 'Value'], [
   ['B. End-of-day sync with an “as of” timestamp, plus on-demand refresh of equity holdings using delayed prices', '2–3 weeks', 'Solves trust for most advisors'],
   ['C. “Data as of [time]” timestamp only', '2 days', 'A quick trust win and a test of the hypothesis']
 ])}
-<p><strong>Decision:</strong> C this Sprint, B next. Revisit A after measuring how many advisors manage equity-heavy books. You didn’t argue about whether it’s “really” 8 weeks. You changed the scope to fit the actual problem.</p>`
+<p><strong>Decision:</strong> C this Sprint, B next. Revisit A after measuring how many advisors manage equity-heavy books. You didn’t argue about whether it’s “really” 8 weeks. You changed the scope to fit the actual problem.</p>
+${fig(DIAG.syncOptions, 'Same problem, three scopes. The two-day option tests whether trust was the real need.')}`
   },
   mistakes: [
     'Negotiating the estimate (“can’t you do it in a week?”) instead of the scope.',
@@ -1375,6 +1790,7 @@ LESSONS.push({
   body: `
 <h3>Map your stakeholders</h3>
 <p>Internal: your CTO, sales, customer success, operations, compliance, finance and leadership. External: partner firms and their own compliance teams. A simple way to sort them is by <strong>power and interest</strong>. Manage the high-power, high-interest people closely (your CTO, a key partner). Keep high-power, lower-interest people satisfied with brief summaries (the CEO, the CFO). Keep high-interest people informed (the CS team).</p>
+${fig(DIAG.powerInterest, 'Where each stakeholder sits decides how often, and how deeply, you talk to them.')}
 <h3>Managing up</h3>
 <ul>
   <li>Know your CTO’s goals and worries this quarter. Frame your updates in those terms.</li>
@@ -1390,6 +1806,7 @@ LESSONS.push({
   <li><strong>Risks and asks</strong>: decisions you need, and from whom.</li>
 </ol>
 <p>Keep exec updates under about 150 words, with links for anyone who wants more detail.</p>
+${fig(DIAG.update, 'The shape of an update that gets read. Status first, then the metric, then what you need.')}
 <h3>Aligning sales, ops and compliance</h3>
 ${table(['Group', 'What they need from you', 'What to avoid'], [
   ['<strong>Sales</strong>', 'A clear roadmap story with confidence levels, one intake channel for requests, and early access to pilots', 'Letting them commit dates or features you haven’t agreed'],
@@ -1398,8 +1815,15 @@ ${table(['Group', 'What they need from you', 'What to avoid'], [
 ])}
 <h3>RACI</h3>
 <p><strong>R</strong>esponsible (does the work), <strong>A</strong>ccountable (makes the final call, exactly one person), <strong>C</strong>onsulted (gives input before the decision), <strong>I</strong>nformed (told afterwards). Most stakeholder pain comes from people who think they’re A when they’re C.</p>
+${fig(DIAG.raci, 'The rebalancing decision from the worked example below, as a RACI grid. Many people are consulted, but there is exactly one A.')}
 <h3>Delivering bad news</h3>
-<p>Do it early, privately first, and in this order: <strong>what happened, the impact, what we’re doing about it, and what we need</strong>. Don’t sugar-coat it, and don’t wait until you’ve fixed it.</p>`,
+<p>Do it early, privately first, and in this order: <strong>what happened, the impact, what we’re doing about it, and what we need</strong>. Don’t sugar-coat it, and don’t wait until you’ve fixed it.</p>
+${flow([
+  ['What happened', 'plain facts, no sugar-coating', 'bad'],
+  ['The impact', 'who is affected, and how much', 'gold'],
+  ['What we’re doing', 'the plan, already moving'],
+  ['What we need', 'a decision, help, or patience', 'good']
+], 'Bad news in this order: early, and privately first.')}`,
   example: {
     title: 'Sales promised “AI auto-rebalancing”, and compliance objects',
     html: `
@@ -1410,6 +1834,16 @@ ${table(['Group', 'What they need from you', 'What to avoid'], [
   <li><strong>Run one decision meeting.</strong> Reframe the promise as “AI rebalancing proposals: drift detection and suggested trades, advisor approval, client consent”. Sales gets a story it can tell compliantly, with honest timing (a Q4 pilot).</li>
   <li><strong>Fix the process.</strong> A one-page sales roadmap labeled “committed / exploring / not planned”, and a rule that customer-facing dates need PM sign-off.</li>
 </ol>
+${flow([
+  ['Facts in 24 h', 'what was promised, and the real need: 3,000 drifting portfolios', 'gold'],
+  ['Pre-wire', 'compliance, the sales lead and the CTO, one-on-one'],
+  ['One decision meeting', 'reframe the promise; honest Q4 pilot'],
+  ['Fix the process', 'a sales roadmap; PM signs off customer-facing dates', 'good']
+], 'Four steps from a broken promise to a compliant plan.')}
+${contrast(
+  ['What sales promised', ['“AI auto-rebalancing” in Q3', 'Changes client portfolios without consent each time', 'Needs licences most partners don’t have']],
+  ['What you can ship', ['“AI rebalancing proposals”, with a Q4 pilot', 'Drift detection and suggested trades', 'Advisor approves; client consents by OTP']]
+)}
 ${table(['Decision: rebalancing scope', 'Who'], [['Responsible', 'You (APM)'], ['Accountable', 'CTO'], ['Consulted', 'Compliance, sales lead, tech lead'], ['Informed', 'Customer success, leadership team']])}`
   },
   mistakes: [
@@ -1473,6 +1907,10 @@ LESSONS.push({
 <p>A roadmap aligns people on <strong>direction and priorities</strong> and explains the trade-offs behind them. It is not a promise of dates. When it turns into one, every change becomes a broken commitment.</p>
 <h3>Feature-based vs outcome-based</h3>
 <p>A <strong>feature roadmap</strong> lists features with dates: “Chatbot, Q2. PDF reports, Q3.” It’s easy to read, but it commits to solutions before you’ve learned anything. An <strong>outcome roadmap</strong> lists problems to solve, each with a metric: “Cut review-prep time by 50%”. Features appear underneath as <em>bets</em>. The team is free to find the best solution, and the roadmap survives learning.</p>
+${contrast(
+  ['Feature roadmap', ['“Chatbot, Q2. PDF reports, Q3.”', 'Commits to solutions before learning', 'Every change becomes a broken commitment']],
+  ['Outcome roadmap', ['“Cut review-prep time by 50%”', 'Features sit underneath as bets', 'Survives learning']]
+)}
 <h3>Now / Next / Later</h3>
 ${fig(DIAG.nnl, 'Columns, not dates. Detail and confidence fall from left to right.')}
 <ul>
@@ -1487,6 +1925,7 @@ ${table(['Artifact', 'Horizon', 'Answers'], [
   ['Product Backlog', 'Weeks to months', 'What work, in what order?'],
   ['Sprint / release plan', 'Days to weeks', 'What ships when?']
 ])}
+${fig(DIAG.horizons, 'Each layer zooms in. The outer layers answer “why”; the inner ones answer “what ships when”.')}
 <p>Real dates do exist. Regulatory deadlines and contractual commitments should appear as <strong>explicit fixed-date items</strong>, scoped with MoSCoW so everyone knows what is negotiable.</p>
 ${tip('<p>Keep one roadmap with different views. Engineers need detail, executives need outcomes and metrics, and partners or sales need themes, with no dates beyond “Now”.</p>')}`,
   example: {
@@ -1501,7 +1940,11 @@ ${table(['Column', 'Outcome (metric)', 'Current bets'], [
   ['<strong>Later</strong>', 'Clients see progress towards their goals', 'Goal planning (needs discovery)'],
   ['<em>Removed</em>', 'Generic chatbot', 'No validated problem. Folded into meeting-prep discovery']
 ])}
-<p>“WhatsApp alerts” became “act on failed SIPs within 48 hours”. WhatsApp might still be the answer, but now it has to compete with simpler options.</p>`
+<p>“WhatsApp alerts” became “act on failed SIPs within 48 hours”. WhatsApp might still be the answer, but now it has to compete with simpler options.</p>
+${contrast(
+  ['Before · features with dates', ['Q1 chatbot', 'Q2 PDF reports · Q2 SSO', 'Q3 WhatsApp alerts · Q3 Hindi UI', 'Q4 goal-planning module'], 'muted'],
+  ['After · outcomes with bets', ['Now: review prep under 15 min; enterprise firms pass infosec', 'Next: failed SIPs actioned within 48 hours', 'Later: clients served in their own language; goal progress', 'Removed: the generic chatbot']]
+)}`
   },
   mistakes: [
     'Putting precise dates on “Later” items, which sales then repeats to customers as promises.',
@@ -1565,15 +2008,30 @@ LESSONS.push({
   body: `
 <h3>Deploy ≠ release</h3>
 <p><strong>Deploying</strong> puts code into production. <strong>Releasing</strong> makes it available to users. <strong>Feature flags</strong> separate the two, so you can ship code safely and choose who sees it, when.</p>
+${fig(DIAG.flags, 'Deploying and releasing are separate moves. The flag sits between them.')}
 <ul>
   <li><strong>Release flags</strong>: hide unfinished work and roll it out gradually.</li>
   <li><strong>Kill switches</strong>: turn a feature off instantly if it misbehaves.</li>
   <li><strong>Entitlement flags</strong>: per firm or per plan, such as “AI brief enabled for Firm X”.</li>
   <li><strong>Experiment flags</strong>: split traffic for a test.</li>
 </ul>
+${cards([
+  ['Release', 'Roll out gradually', 'hide unfinished work'],
+  ['Kill switch', 'Turn it off now', 'if the feature misbehaves', 'bad'],
+  ['Entitlement', 'Per firm or plan', '“AI brief enabled for Firm X”', 'guide'],
+  ['Experiment', 'Split traffic', 'for a test', 'gold']
+], 'Four jobs a flag can do. Remove release flags once the rollout is finished.', 4)}
 <p>Remove flags once a rollout finishes. Stale flags are tech debt.</p>
 <h3>Release planning and readiness</h3>
 <p>Before you widen access, check: engineering is done (including monitoring and a rollback plan), compliance has signed off, CS is trained and has FAQs and support macros, help docs are ready, partner admins have been told, and dashboards exist for the metrics you’ll judge it by.</p>
+${cards([
+  ['Engineering', 'Done, really', 'including monitoring and a rollback plan'],
+  ['Compliance', 'Signed off', 'before anyone outside sees it', 'guide'],
+  ['Customer success', 'Trained', 'with FAQs and support macros'],
+  ['Docs', 'Help docs ready', 'before access widens'],
+  ['Partner admins', 'Told in advance', 'no surprises for the firm', 'gold'],
+  ['Data', 'Dashboards exist', 'for the metrics you’ll judge it by', 'good']
+], 'Launch readiness: six checks before you widen access.')}
 <h3>Staged rollouts, B2B-style</h3>
 ${fig(DIAG.rollout, 'Widen access step by step. Each step has exit criteria you agreed before launch.')}
 <p>In B2B, roll out <strong>by firm</strong>, not to a random 10% of users. Firms train their advisors together and admins need control, and having half a firm on the new flow creates confusion and support tickets.</p>
@@ -1584,7 +2042,13 @@ ${fig(DIAG.rollout, 'Widen access step by step. Each step has exit criteria you 
   <li>Use a <strong>comparison group</strong>: firms not enabled yet in a staggered rollout, a holdout, or an A/B test if volume allows. B2B volumes are often small, so combine numbers with interviews.</li>
 </ul>
 <h3>After launch</h3>
-<p>Watch closely for the first 48 hours. Triage feedback and bugs. Review at 30, 60 and 90 days and decide to <strong>iterate, scale or stop</strong>. For AI features, also sample outputs for human review, track drift, cost and latency, and version prompts and models so you can roll back.</p>`,
+<p>Watch closely for the first 48 hours. Triage feedback and bugs. Review at 30, 60 and 90 days and decide to <strong>iterate, scale or stop</strong>. For AI features, also sample outputs for human review, track drift, cost and latency, and version prompts and models so you can roll back.</p>
+${flow([
+  ['First 48 hours', 'watch closely; triage feedback and bugs', 'gold'],
+  ['Day 30', 'review against the metrics'],
+  ['Day 60', 'review again'],
+  ['Day 90', 'decide: iterate, scale or stop', 'good']
+], 'After launch. For AI features, keep sampling outputs and tracking drift, cost and latency throughout.')}`,
   example: {
     title: 'Rolling out the AI portfolio summary',
     html: `
@@ -1595,7 +2059,8 @@ ${table(['Stage', 'Who', 'Exit criteria to widen'], [
   ['3 · GA', 'All firms, with a firm-level admin toggle', 'Ongoing monitoring']
 ])}
 <p><strong>Kill switch:</strong> one flag turns off the AI narrative across the platform and falls back to the data-only summary.</p>
-<p><strong>Measuring impact:</strong> Stage 2 firms get the feature weeks before the rest, so you compare the two groups over the same weeks. Illustrative result: prep time fell <strong>50 → 19 min</strong> at enabled firms and <strong>50 → 46 min</strong> at not-yet-enabled firms, a seasonal effect of about 4 minutes. The effect you can attribute to the feature is about <strong>(50−19) − (50−46) = 27 minutes</strong>, not the 31 a naive before/after comparison would claim.</p>`
+<p><strong>Measuring impact:</strong> Stage 2 firms get the feature weeks before the rest, so you compare the two groups over the same weeks. Illustrative result: prep time fell <strong>50 → 19 min</strong> at enabled firms and <strong>50 → 46 min</strong> at not-yet-enabled firms, a seasonal effect of about 4 minutes. The effect you can attribute to the feature is about <strong>(50−19) − (50−46) = 27 minutes</strong>, not the 31 a naive before/after comparison would claim.</p>
+${fig(DIAG.did, 'The not-yet-enabled firms show what would have happened anyway. Only the gap between the two lines belongs to the feature.')}`
   },
   mistakes: [
     'Treating “deployed” as “done” and moving on without measuring anything.',
@@ -1716,6 +2181,139 @@ DIAG.kanban = `<svg viewBox="0 0 680 300" role="img" aria-labelledby="kb-t"><tit
   <rect x="154" y="250" width="104" height="30" rx="5" class="d-surface"/><text x="166" y="270" class="t-mono">SUP-112</text>
 </svg>`;
 
+DIAG.pillars = `<svg viewBox="0 0 640 236" role="img" aria-labelledby="pil-t"><title id="pil-t">The three pillars of empiricism form a loop: transparency, inspection, adaptation, repeated every Sprint. Inspection without transparency misleads; inspection without adaptation is pointless.</title>
+  <defs><marker id="ah-pil" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  ${[[20, 'TRANSPARENCY', 'Make the work visible', 'to doers and receivers', 'd-guide', 't-guide'], [230, 'INSPECTION', 'Check progress often', 'against agreed goals', 'd-soft', 't-acc'], [440, 'ADAPTATION', 'Adjust as soon as', 'possible when off-track', 'd-gold', 't-gold']].map(b => `
+  <rect x="${b[0]}" y="40" width="180" height="80" rx="10" class="${b[4]}"/>
+  <text x="${b[0] + 90}" y="64" text-anchor="middle" class="t-mono ${b[5]}">${b[1]}</text>
+  <text x="${b[0] + 90}" y="86" text-anchor="middle" class="t-sm b">${b[2]}</text><text x="${b[0] + 90}" y="104" text-anchor="middle" class="t-xs t-muted">${b[3]}</text>`).join('')}
+  <path d="M202 80 H226" class="d-line" marker-end="url(#ah-pil)"/><path d="M412 80 H436" class="d-line" marker-end="url(#ah-pil)"/>
+  <path d="M530 122 C 530 232, 110 232, 110 126" class="d-line" marker-end="url(#ah-pil)"/>
+  <text x="215" y="150" text-anchor="middle" class="t-xs t-bad">no transparency → misleading</text>
+  <text x="425" y="150" text-anchor="middle" class="t-xs t-bad">no adaptation → pointless</text>
+  <text x="320" y="228" text-anchor="middle" class="t-xs t-muted">every Sprint</text>
+  <text x="320" y="24" text-anchor="middle" class="t-mono t-muted">EMPIRICISM · DECIDE BASED ON WHAT YOU OBSERVE</text>
+</svg>`;
+
+DIAG.scrumTeam = `<svg viewBox="0 0 640 250" role="img" aria-labelledby="stm-t"><title id="stm-t">A Scrum Team: one Product Owner, one Scrum Master and the Developers, typically 10 or fewer people, with no sub-teams or hierarchies, focused on one Product Goal.</title>
+  <text x="320" y="16" text-anchor="middle" class="t-xs t-muted">one objective at a time: the Product Goal</text>
+  <rect x="10" y="28" width="620" height="212" rx="16" class="d-surface"/>
+  <text x="26" y="52" class="t-mono t-acc">SCRUM TEAM</text><text x="614" y="52" text-anchor="end" class="t-mono t-muted">TYPICALLY ≤ 10 · NO SUB-TEAMS OR HIERARCHY</text>
+  <rect x="26" y="66" width="168" height="74" rx="10" class="d-gold"/><text x="42" y="94" class="t-sm b">Product Owner</text><text x="42" y="112" class="t-xs t-muted">one person, not a committee</text><text x="42" y="128" class="t-xs t-muted">maximizes value</text>
+  <rect x="26" y="152" width="168" height="74" rx="10" class="d-guide"/><text x="42" y="180" class="t-sm b">Scrum Master</text><text x="42" y="198" class="t-xs t-muted">one person</text><text x="42" y="214" class="t-xs t-muted">team effectiveness</text>
+  <rect x="210" y="66" width="404" height="160" rx="12" class="d-soft" fill-opacity=".7"/>
+  <text x="228" y="92" class="t-sm b">Developers</text><text x="228" y="110" class="t-xs t-muted">everyone who creates any part of the usable Increment</text>
+  ${Array.from({ length: 8 }, (_, i) => `<circle cx="${252 + i * 46}" cy="152" r="15" class="d-fill-acc" fill-opacity=".75"/>`).join('')}
+  <text x="228" y="204" class="t-xs t-muted">engineers · designers · QA · data scientists, all self-managing</text>
+</svg>`;
+
+DIAG.pmPo = `<svg viewBox="0 0 600 210" role="img" aria-labelledby="pmpo-t"><title id="pmpo-t">The PM job is broader than the Product Owner accountability. The PO part is the Product Goal and ordering the Product Backlog; the rest of the PM job includes discovery, pricing input and go-to-market.</title>
+  <rect x="10" y="10" width="580" height="190" rx="14" class="d-surface"/>
+  <text x="28" y="36" class="t-mono t-acc">THE PM JOB</text>
+  <rect x="28" y="52" width="300" height="132" rx="10" class="d-gold"/>
+  <text x="44" y="76" class="t-mono t-gold">PO ACCOUNTABILITY (SCRUM)</text>
+  <text x="44" y="100" class="t-sm b">Develop the Product Goal</text>
+  <text x="44" y="120" class="t-sm b">Order the Product Backlog</text>
+  <text x="44" y="140" class="t-sm b">Keep it transparent</text>
+  <text x="44" y="166" class="t-xs t-muted">can delegate the work, stays accountable</text>
+  ${['Discovery', 'Pricing input', 'Go-to-market'].map((t, i) => `<rect x="350" y="${56 + i * 44}" width="220" height="34" rx="17" class="d-soft"/><text x="460" y="${78 + i * 44}" text-anchor="middle" class="t-sm b">${t}</text>`).join('')}
+</svg>`;
+
+DIAG.teamMap = `<svg viewBox="0 0 640 300" role="img" aria-labelledby="tmap-t"><title id="tmap-t">Mapping your real team onto Scrum. The CTO or you is the Product Owner, decided explicitly. The engineering lead or a senior engineer is a part-time Scrum Master. Eight people are Developers. Sales, compliance, ops and partners are stakeholders who work through the PO.</title>
+  ${['CTO', 'You (APM)', 'Engineering lead', '4 backend / ML engineers', 'Frontend engineer', 'Designer', 'QA engineer', 'Sales, compliance, ops, partners'].map((t, i) => `<rect x="10" y="${12 + i * 35}" width="200" height="28" rx="6" class="d-surface"/><text x="22" y="${31 + i * 35}" class="${i === 7 ? 't-xs' : 't-sm'}">${t}</text>`).join('')}
+  <path d="M210 26 C 300 26, 310 46, 400 46 M210 61 C 300 61, 310 50, 400 50" class="d-goldline" stroke-dasharray="5 4"/>
+  <path d="M210 96 C 300 96, 310 116, 400 116" class="d-guideline" stroke-dasharray="5 4"/>
+  <path d="M210 96 C 300 96, 310 190, 400 190 M210 131 C 300 131, 310 192, 400 192 M210 166 C 300 166, 310 194, 400 194 M210 201 C 300 201, 310 196, 400 196 M210 236 C 300 236, 310 198, 400 198" class="d-acc" stroke-width="1.5"/>
+  <path d="M210 271 C 300 271, 310 272, 400 272" class="d-line"/>
+  <rect x="400" y="18" width="230" height="58" rx="8" class="d-gold"/><text x="414" y="40" class="t-sm b">Product Owner</text><text x="414" y="58" class="t-xs t-muted">CTO or you: decide explicitly</text>
+  <rect x="400" y="88" width="230" height="58" rx="8" class="d-guide"/><text x="414" y="110" class="t-sm b">Scrum Master</text><text x="414" y="128" class="t-xs t-muted">part-time; not the de facto PO</text>
+  <rect x="400" y="158" width="230" height="78" rx="8" class="d-soft"/><text x="414" y="182" class="t-sm b">Developers · 8 people</text><text x="414" y="200" class="t-xs t-muted">own the Sprint plan; designer</text><text x="414" y="214" class="t-xs t-muted">and QA count as Developers</text>
+  <rect x="400" y="250" width="230" height="44" rx="8" class="d-surface"/><text x="414" y="270" class="t-sm b">Stakeholders</text><text x="414" y="286" class="t-xs t-muted">influence the backlog through the PO</text>
+</svg>`;
+
+DIAG.doneGate = `<svg viewBox="0 0 640 210" role="img" aria-labelledby="dg-t"><title id="dg-t">The Definition of Done is a gate. An item that meets it becomes part of a usable Increment, which may be released before the Sprint ends. An item that doesn’t goes back to the Product Backlog and isn’t shown at the Sprint Review.</title>
+  <defs><marker id="ah-dg" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <rect x="10" y="80" width="150" height="54" rx="8" class="d-surface"/><text x="85" y="104" text-anchor="middle" class="t-sm b">Backlog item</text><text x="85" y="121" text-anchor="middle" class="t-xs t-muted">worked on this Sprint</text>
+  <path d="M162 107 H226" class="d-line" marker-end="url(#ah-dg)"/>
+  <rect x="232" y="20" width="56" height="174" rx="8" class="d-guide"/>
+  <text x="260" y="107" text-anchor="middle" transform="rotate(-90 260 107)" class="t-mono t-guide">DEFINITION OF DONE</text>
+  <path d="M290 70 C 330 70, 340 52, 376 52" class="d-goldline" marker-end="url(#ah-dg)"/>
+  <path d="M290 146 C 330 146, 340 162, 376 162" class="d-badline" marker-end="url(#ah-dg)"/>
+  <text x="300" y="44" class="t-xs t-good b">meets it</text><text x="300" y="186" class="t-xs t-bad b">doesn’t</text>
+  <rect x="384" y="20" width="246" height="68" rx="8" class="d-good"/><text x="398" y="42" class="t-sm b">Part of the Increment</text><text x="398" y="60" class="t-xs t-muted">usable, verified, additive</text><text x="398" y="76" class="t-xs t-muted">may ship before the Sprint ends</text>
+  <rect x="384" y="128" width="246" height="68" rx="8" class="d-bad"/><text x="398" y="150" class="t-sm b">Back to the Product Backlog</text><text x="398" y="168" class="t-xs t-muted">can’t be released, or even</text><text x="398" y="184" class="t-xs t-muted">presented at the Sprint Review</text>
+</svg>`;
+
+DIAG.sprintCal = `<svg viewBox="0 0 700 214" role="img" aria-labelledby="cal-t"><title id="cal-t">A two-week Sprint calendar starting on a Wednesday: Sprint Planning on day 1, a 15-minute Daily Scrum every working day, refinement on days 4 and 8, and the Sprint Review and Retrospective on day 10. The next Sprint starts the following Wednesday.</title>
+  ${['Wed', 'Thu', 'Fri', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Mon', 'Tue'].map((d, i) => {
+    const x = 20 + i * 64 + (i >= 3 ? 12 : 0) + (i >= 8 ? 12 : 0);
+    const ev = { 0: [['Planning', '10–13 h', 'd-gold', 56]], 3: [['Refine', '60 min', 'd-surface', 40]], 7: [['Refine', '60 min', 'd-surface', 40]], 9: [['Review', '14:00', 'd-guide', 40], ['Retro', '16:00', 'd-soft', 40]] }[i] || [];
+    let y = 74;
+    return `<text x="${x + 30}" y="18" text-anchor="middle" class="t-mono t-muted">D${i + 1}</text><text x="${x + 30}" y="34" text-anchor="middle" class="t-xs">${d}</text>
+  <rect x="${x}" y="44" width="60" height="22" rx="5" class="d-soft" fill-opacity=".5"/><text x="${x + 30}" y="59" text-anchor="middle" class="t-xs">Daily 15′</text>
+  ${ev.map(e => { const out = `<rect x="${x}" y="${y}" width="60" height="${e[3]}" rx="6" class="${e[2]}"/><text x="${x + 30}" y="${y + 17}" text-anchor="middle" class="t-xs b">${e[0]}</text><text x="${x + 30}" y="${y + 31}" text-anchor="middle" class="t-xs t-muted">${e[1]}</text>`; y += e[3] + 6; return out; }).join('')}`;
+  }).join('')}
+  <path d="M20 176 H680" class="d-acc"/>
+  <text x="20" y="196" class="t-xs t-muted">one Sprint · 10 working days · weekends shown as gaps</text>
+  <text x="680" y="196" text-anchor="end" class="t-xs t-acc b">next Sprint starts Wednesday →</text>
+</svg>`;
+
+DIAG.slicing = `<svg viewBox="0 0 640 230" role="img" aria-labelledby="sl-t"><title id="sl-t">Horizontal splits by layer deliver nothing usable until every layer lands. Vertical slices cut through every layer, so each slice works end to end.</title>
+  <text x="20" y="24" class="t-mono t-bad">HORIZONTAL · AVOID</text>
+  ${['UI', 'API', 'Data and model'].map((t, i) => `<rect x="20" y="${40 + i * 48}" width="270" height="40" rx="6" class="d-bad" fill-opacity=".7"/><text x="34" y="${65 + i * 48}" class="t-sm b">Item ${i + 1}: ${t}</text>`).join('')}
+  <text x="20" y="208" class="t-xs t-muted">nothing usable until every layer lands</text>
+  <text x="340" y="24" class="t-mono t-good">VERTICAL · PREFER</text>
+  ${['UI', 'API', 'Data and model'].map((t, i) => `<rect x="340" y="${40 + i * 48}" width="290" height="40" rx="6" class="d-surface"/><text x="616" y="${65 + i * 48}" text-anchor="end" class="t-xs t-muted">${t}</text>`).join('')}
+  ${[0, 1, 2, 3].map(i => `<rect x="${352 + i * 46}" y="40" width="36" height="136" rx="6" class="d-good" fill-opacity=".85"/><text x="${370 + i * 46}" y="113" text-anchor="middle" class="t-sm b">${i + 1}</text>`).join('')}
+  <text x="340" y="208" class="t-xs t-muted">each slice works end to end and is usable</text>
+</svg>`;
+
+DIAG.velocity = `<svg viewBox="0 0 560 226" role="img" aria-labelledby="vel-t"><title id="vel-t">Velocity over the last four Sprints was 27, 31, 29 and 33 points, so a forecast of about 30 for the next Sprint is reasonable. Use it to forecast, not as a target.</title>
+  <rect x="50" y="38.1" width="460" height="25.8" class="d-gold" fill-opacity=".35" style="stroke:none"/>
+  <text x="506" y="34" text-anchor="end" class="t-xs t-gold">usual range 27–33</text>
+  <path d="M50 180 H520" class="d-line"/>
+  ${[[27, '4 Sprints ago'], [31, '3 ago'], [29, '2 ago'], [33, 'last']].map((b, i) => {
+    const h = b[0] * 4.3, x = 70 + i * 90;
+    return `<rect x="${x}" y="${(180 - h).toFixed(1)}" width="56" height="${h.toFixed(1)}" rx="4" class="d-fill-acc" fill-opacity=".8"/><text x="${x + 28}" y="${(172 - h).toFixed(1)}" text-anchor="middle" class="t-sm b">${b[0]}</text><text x="${x + 28}" y="198" text-anchor="middle" class="t-xs t-muted">${b[1]}</text>`;
+  }).join('')}
+  <rect x="430" y="51" width="56" height="129" rx="4" class="d-soft" stroke-dasharray="5 4"/>
+  <text x="458" y="120" text-anchor="middle" class="t-sm b">≈30</text>
+  <text x="458" y="198" text-anchor="middle" class="t-xs t-acc b">forecast</text>
+  <text x="50" y="220" class="t-xs t-muted">story points completed per Sprint · a forecast, never a KPI</text>
+</svg>`;
+
+DIAG.sprintFit = `<svg viewBox="0 0 580 150" role="img" aria-labelledby="sf-t"><title id="sf-t">Sprint 15 at about 30 points: slice 1 (5 points), slice 2 (8) and slice 3 (3) make 16 points, plus a timeboxed spike, alongside other priorities. Slice 4 (8 points) comes next.</title>
+  <text x="20" y="18" class="t-mono t-muted">SPRINT 15 · VELOCITY ≈ 30 POINTS</text>
+  ${[[20, 90, '1 · PAN', '5 pts'], [110, 144, '2 · Address proof', '8 pts'], [254, 54, '3', '3 pts']].map(s => `<rect x="${s[0]}" y="28" width="${s[1]}" height="44" rx="5" class="d-soft"/><text x="${s[0] + 8}" y="47" class="t-xs b">${s[2]}</text><text x="${s[0] + 8}" y="63" class="t-mono t-acc">${s[3]}</text>`).join('')}
+  <rect x="308" y="28" width="252" height="44" rx="5" class="d-surface" stroke-dasharray="5 4"/><text x="320" y="47" class="t-xs b">Other priorities</text><text x="320" y="63" class="t-mono t-muted">≈14 pts</text>
+  <text x="20" y="90" class="t-xs t-gold">+ spike: extraction accuracy on 200 masked forms, timeboxed to 3 days</text>
+  <text x="20" y="114" class="t-mono t-muted">NEXT</text>
+  <rect x="20" y="120" width="144" height="26" rx="5" class="d-surface"/><text x="28" y="137" class="t-xs b">4 · Bulk upload · 8 pts</text>
+</svg>`;
+
+DIAG.sprint12 = `<svg viewBox="0 0 680 215" role="img" aria-labelledby="s12-t"><title id="s12-t">Sprint 12 timeline. Day 1: a ticket-list Sprint Goal. Every day: a 35-minute status standup. Day 6: a mid-Sprint scope bomb from sales, and BRF-24 slips. Day 10: a slide-deck review with no backlog change, and the retrospective cancelled.</title>
+  ${[[30, 40, 'Ticket-list goal', 'KYC-112, KYC-118, BRF-21…'], [272, 360, 'Scope bomb · day 6', 'sales asks an engineer directly'], [470, 616, 'Demo theater', 'slides; backlog unchanged']].map(b => `
+  <rect x="${b[0]}" y="22" width="${b[0] === 470 ? 170 : 180}" height="48" rx="8" class="d-bad"/><text x="${b[0] + 12}" y="42" class="t-sm b">${b[2]}</text><text x="${b[0] + 12}" y="59" class="t-xs t-muted">${b[3]}</text>
+  <path d="M${b[1]} 70 V120" class="d-line"/><circle cx="${b[1]}" cy="120" r="4" class="d-fill-gold"/>`).join('')}
+  <path d="M40 120 H630" class="d-line"/>
+  ${Array.from({ length: 10 }, (_, i) => `<text x="${44 + i * 64}" y="112" class="t-mono t-muted">D${i + 1}</text>`).join('')}
+  <rect x="40" y="130" width="590" height="20" rx="4" class="d-bad" fill-opacity=".45"/>
+  <text x="50" y="144" class="t-xs">Every day: a 35-minute Daily Scrum, each engineer reporting to the CTO</text>
+  <text x="360" y="170" text-anchor="middle" class="t-xs t-bad">BRF-24 slips</text>
+  <path d="M616 150 V160" class="d-line"/>
+  <rect x="470" y="160" width="170" height="40" rx="8" class="d-bad"/><text x="482" y="178" class="t-sm b">Retro cancelled</text><text x="482" y="193" class="t-xs t-muted">for a partner call</text>
+</svg>`;
+
+DIAG.littles = `<svg viewBox="0 0 640 196" role="img" aria-labelledby="lit-t"><title id="lit-t">Little’s Law: 10 items in progress with 5 finished per week means about 2 weeks per item, a whole Sprint. Halving WIP to 5 cuts cycle time to about 1 week with no extra effort.</title>
+  <text x="20" y="20" class="t-mono t-muted">AVERAGE CYCLE TIME = AVERAGE WIP ÷ AVERAGE THROUGHPUT</text>
+  ${[[56, 10, '≈ 2 weeks per item', 'a whole Sprint', 't-gold'], [136, 5, '≈ 1 week per item', 'with no extra effort', 't-good']].map(r => `
+  <text x="20" y="${r[0] + 4}" class="t-mono t-muted">WIP ${r[1]}</text>
+  ${Array.from({ length: r[1] }, (_, i) => `<rect x="${76 + i * 21}" y="${r[0] - 12}" width="16" height="24" rx="3" class="d-fill-acc" fill-opacity=".8"/>`).join('')}
+  <text x="300" y="${r[0] + 5}" class="t-sm">÷ 5 finished / week</text>
+  <text x="450" y="${r[0]}" class="t-sm b ${r[4]}">${r[2]}</text><text x="450" y="${r[0] + 16}" class="t-xs t-muted">${r[3]}</text>`).join('')}
+  <path d="M20 96 H620" class="d-grid"/>
+</svg>`;
+
 LESSONS.push({
   id: 'scrum-1', track: 'scrum', n: 1, minutes: 11,
   title: 'Agile vs Scrum vs Waterfall: empiricism and values', short: 'Agile, Scrum, Waterfall',
@@ -1730,6 +2328,11 @@ ${table(['Term', 'What it is', 'Good fit'], [
 ])}
 ${fig(DIAG.waterfall, 'Plan-driven work learns at the end. Empirical work learns every Sprint.')}
 <p>The Agile Manifesto values <strong>individuals and interactions</strong> over processes and tools, <strong>working software</strong> over comprehensive documentation, <strong>customer collaboration</strong> over contract negotiation, and <strong>responding to change</strong> over following a plan. It doesn’t say the items on the right are worthless, only that the items on the left are valued more.</p>
+${contrast(
+  ['Valued more', ['Individuals and interactions', 'Working software', 'Customer collaboration', 'Responding to change'], 'good'],
+  ['…over these, which still matter', ['Processes and tools', 'Comprehensive documentation', 'Contract negotiation', 'Following a plan'], 'muted'],
+  'The four value pairs of the Agile Manifesto. Read each row across: this, over that.'
+)}
 ${guide(`<ul>
   <li>Scrum is “a lightweight framework that helps people, teams and organizations generate value through adaptive solutions for complex problems.”</li>
   <li>The Guide is <strong>purposefully incomplete</strong>. It defines only the parts required to implement Scrum theory, and teams add their own practices on top.</li>
@@ -1741,8 +2344,16 @@ ${guide(`<ul>
   <li><strong>Inspection</strong>: the artifacts and progress towards agreed goals are inspected frequently and diligently, to detect problems.</li>
   <li><strong>Adaptation</strong>: if something deviates outside acceptable limits, adjust as soon as possible. Inspection without adaptation is pointless.</li>
 </ul>
+${fig(DIAG.pillars, 'The three pillars only work as a loop. Drop any one and the other two lose their point.')}
 <h3>The five Scrum Values</h3>
 <p><strong>Commitment, Focus, Openness, Respect, Courage.</strong> The team commits to its goals and to supporting each other. It focuses on the work of the Sprint. Team and stakeholders are open about the work and its challenges. Members respect each other as capable, independent people. And they have the courage to do the right thing and work on tough problems, for example telling a stakeholder that the AI brief isn’t ready for clients yet.</p>
+${cards([
+  ['Commitment', 'To goals and each other', 'the team backs its goals and its members', 'guide'],
+  ['Focus', 'On the Sprint’s work', 'one Sprint Goal at a time', 'guide'],
+  ['Openness', 'About work and problems', 'team and stakeholders alike', 'guide'],
+  ['Respect', 'Capable, independent people', 'how members see each other', 'guide'],
+  ['Courage', 'Do the right thing', '“The AI brief isn’t ready for clients yet.”', 'guide']
+], 'The five Scrum Values, as the Scrum Guide lists them.', 5)}
 ${practice('<p>When companies say “we do Agile”, they often mean “we run two-week Sprints in Jira”. Agile is a set of values, Scrum is one framework, and Jira is a tool. You can use all three and still not be empirical if nobody changes course based on what they learn.</p>', 'In practice')}`,
   example: {
     title: 'Two projects in the same company',
@@ -1753,7 +2364,12 @@ ${practice('<p>When companies say “we do Agile”, they often mean “we run t
   <li><strong>Transparency:</strong> the Sprint Backlog and the pilot usage dashboard are visible to everyone, CTO included. Known model errors are logged openly, not hidden.</li>
   <li><strong>Inspection:</strong> at each Sprint Review, two pilot advisors use the latest Increment live, and the team looks at usage data together.</li>
   <li><strong>Adaptation:</strong> nobody read the “client sentiment” section, so it was dropped. Advisors kept asking about SIP status, so a SIP section went to the top of the Product Backlog.</li>
-</ul>`
+</ul>
+${contrast(
+  ['Project A · regulator-specified report', ['Format published, deadline fixed', 'Few unknowns', 'A plan-driven approach works well'], 'muted'],
+  ['Project B · AI meeting-prep brief', ['Value to advisors unknown; model behavior uncertain', 'See: backlog and pilot dashboard open to all', 'Inspect: pilot advisors use each Increment live', 'Adapt: “client sentiment” dropped; SIP section moved up'], 'acc'],
+  'Same company, two kinds of work. Match the approach to the amount of uncertainty.'
+)}`
   },
   mistakes: [
     'Saying “we’re agile” because the team uses Jira and holds standups.',
@@ -1819,12 +2435,18 @@ ${guide(`<ul>
   <li>The team is small enough to stay nimble and large enough to complete significant work within a Sprint: <strong>typically 10 or fewer people</strong>. Larger groups should split into multiple Scrum Teams that share the same Product Goal, Product Backlog and Product Owner.</li>
   <li>The 2020 Guide uses the word <strong>accountabilities</strong>, not “roles”.</li>
 </ul>`)}
+${fig(DIAG.scrumTeam, 'One team, three accountabilities, no sub-teams. If it grows past about 10, split into several Scrum Teams sharing one Product Goal, Product Backlog and Product Owner.')}
 <h3>The three accountabilities</h3>
 ${table(['Accountability', 'Accountable for', 'Key phrases from the Guide'], [
   ['<strong>Developers</strong>', 'Creating the Sprint Backlog (the plan); instilling quality by adhering to the Definition of Done; adapting the plan each day towards the Sprint Goal; holding each other accountable as professionals', 'The people committed to creating <em>any aspect</em> of a usable Increment each Sprint. That includes designers, QA and data scientists, not only coders.'],
   ['<strong>Product Owner</strong>', 'Maximizing the value of the product. Effective Product Backlog management: developing and communicating the Product Goal; creating and communicating backlog items; ordering them; keeping the backlog transparent, visible and understood', 'One person, not a committee. They can delegate the work but remain accountable. Those who want to change the backlog do so by convincing the Product Owner.'],
   ['<strong>Scrum Master</strong>', 'Establishing Scrum as defined in the Guide, and the Scrum Team’s effectiveness. Coaching self-management; causing impediments to be removed; making sure events happen and are positive, productive and within their timebox; serving the PO and the organization', '“True leaders who serve the Scrum Team and the larger organization.”']
 ])}
+${cards([
+  ['Developers', 'Own the plan and the quality', 'create the Sprint Backlog · meet the Definition of Done · adapt daily toward the Sprint Goal'],
+  ['Product Owner', 'Owns the value', 'Product Goal · creates and orders backlog items · keeps the backlog transparent', 'gold'],
+  ['Scrum Master', 'Owns the team’s effectiveness', 'coaches self-management · gets impediments removed · keeps events useful and timeboxed', 'guide']
+], 'Three accountabilities, three different jobs: the plan, the value, and how well the team works.')}
 <p>For Product Owners to succeed, the Guide says, the entire organization must <strong>respect their decisions</strong>. If the CTO, the Head of Sales and the PM each re-order the backlog, nobody is really the Product Owner.</p>
 ${practice(`<ul>
   <li><strong>The PM is the PO.</strong> This is the most common setup. The PM job is broader than the PO accountability, covering discovery, pricing input and go-to-market.</li>
@@ -1832,7 +2454,8 @@ ${practice(`<ul>
   <li><strong>Engineering managers</strong> aren’t a Scrum accountability. Good EMs support Developers’ growth and engineering health without directing Sprint work.</li>
   <li><strong>The Scrum Master</strong> is often part-time, for example an EM or an experienced engineer. The Guide says a PO or SM who works on Sprint Backlog items participates as a Developer.</li>
   <li>The anti-pattern to avoid is the <strong>proxy PO</strong>: someone who carries the title but has no decision rights, so every decision gets escalated.</li>
-</ul>`)}`,
+</ul>`)}
+${fig(DIAG.pmPo, 'When the PM is the PO, the PO accountability is one part of a broader job.')}`,
   example: {
     title: 'Mapping your real team onto Scrum',
     html: `
@@ -1843,7 +2466,8 @@ ${table(['Person', 'Scrum accountability', 'Notes'], [
   ['Engineering lead or a senior engineer (part-time)', '<strong>Scrum Master</strong>', 'Coaches the team and removes impediments. Avoid making yourself both the de facto PO and the SM: it’s hard to coach a team out of an anti-pattern you are causing.'],
   ['Sales, compliance, ops, partner firms', 'Stakeholders', 'They influence the backlog through the Product Owner.']
 ])}
-<p>Team size: 8 Developers plus a PO and an SM is about 10, which is right at the guidance. If the team grows further, split it into two Scrum Teams sharing one Product Backlog and one PO, rather than growing a 14-person “team”.</p>`
+<p>Team size: 8 Developers plus a PO and an SM is about 10, which is right at the guidance. If the team grows further, split it into two Scrum Teams sharing one Product Backlog and one PO, rather than growing a 14-person “team”.</p>
+${fig(DIAG.teamMap, 'Your real team, mapped. Dashed lines are choices you must make explicit.')}`
   },
   mistakes: [
     'Treating the PO as a ticket-taker for stakeholders rather than the person who decides the order.',
@@ -1910,11 +2534,22 @@ ${fig(DIAG.artifacts, 'The 2020 Scrum Guide pairs every artifact with a commitme
 ${guide(`<p>Scrum’s artifacts represent work or value and are designed to maximize transparency. Each one contains a commitment that provides focus and something to measure progress against.</p>`)}
 <h3>Product Backlog → Product Goal</h3>
 <p>The Product Backlog is “an emergent, ordered list of what is needed to improve the product”, and the <strong>single source of work</strong> for the Scrum Team. The <strong>Product Goal</strong> describes a future state of the product that the team can plan against. It sits in the Product Backlog, and the rest of the backlog emerges to define what will fulfil it. It is the team’s long-term objective, and the team must <strong>fulfil or abandon one Product Goal before taking on the next</strong>.</p>
+${flow([
+  ['Product Goal 1', 'fulfilled or abandoned', 'muted'],
+  ['Product Goal 2', 'the one objective the team plans against now'],
+  ['Product Goal 3', 'only once Goal 2 is fulfilled or abandoned', 'muted']
+], 'One Product Goal at a time. The rest of the Product Backlog emerges to serve the current one.')}
 <h3>Sprint Backlog → Sprint Goal</h3>
 <p>The Sprint Backlog is made up of the <strong>Sprint Goal (why)</strong>, the <strong>Product Backlog items selected for the Sprint (what)</strong> and an <strong>actionable plan for delivering the Increment (how)</strong>. It is a plan by and for the Developers, updated throughout the Sprint. The <strong>Sprint Goal</strong> is the single objective for the Sprint. It is a commitment by the Developers, but it leaves flexibility in the exact work needed to reach it. If the work turns out differently than expected, the Developers negotiate scope with the Product Owner <strong>without affecting the Sprint Goal</strong>.</p>
+${cards([
+  ['Why', 'Sprint Goal', 'the single objective; a commitment that holds', 'gold'],
+  ['What', 'Selected items', 'can be renegotiated with the PO as you learn'],
+  ['How', 'The plan', 'by and for the Developers, updated all Sprint', 'guide']
+], 'Three parts of the Sprint Backlog. Scope can flex; the Sprint Goal stays.')}
 <h3>Increment → Definition of Done</h3>
 <p>An Increment is a concrete stepping stone towards the Product Goal. It is additive to all prior Increments, thoroughly verified, and <strong>usable</strong>. Several Increments can be created within one Sprint, and an Increment <strong>may be delivered to stakeholders before the Sprint ends</strong>: the Sprint Review is not a gate to releasing value.</p>
 <p>The <strong>Definition of Done</strong> is a formal description of the state of the Increment when it meets the quality measures required for the product. The moment an item meets it, an Increment is born. If an item <strong>doesn’t</strong> meet the Definition of Done, it can’t be released or even presented at the Sprint Review. It returns to the Product Backlog for future consideration. If the organization has a DoD standard, every Scrum Team follows it as a minimum.</p>
+${fig(DIAG.doneGate, 'The Definition of Done decides, item by item, what counts as part of the Increment.')}
 ${practice(`${table(['', 'Definition of Done', 'Acceptance criteria'], [
   ['In the Scrum Guide?', 'Yes, as the Increment’s commitment', 'No. A common complementary practice'],
   ['Applies to', 'Every item and every Increment', 'One specific backlog item'],
@@ -1936,7 +2571,17 @@ ${practice(`${table(['', 'Definition of Done', 'Acceptance criteria'], [
   <li>p95 latency measured and within budget; accessibility checks pass.</li>
   <li>Deployed to production behind a flag; help article updated.</li>
 </ul>
-<p>Because compliance and quality are in the DoD, “Done” is honest. There’s no hidden “hardening” work waiting before a pilot firm can use it.</p>`
+<p>Because compliance and quality are in the DoD, “Done” is honest. There’s no hidden “hardening” work waiting before a pilot firm can use it.</p>
+${cards([
+  ['Quality', 'Reviewed, tests pass', 'second Developer reviews; automated tests'],
+  ['Quality', 'Golden set holds', 'zero numeric mismatches on 50 portfolios'],
+  ['Privacy', 'PII masked', 'in logs and prompts; approved regions only', 'bad'],
+  ['Audit', 'Every AI output logged', 'prompt version, model version, inputs', 'guide'],
+  ['Compliance', 'Disclaimer shown', 'on any AI-generated text', 'guide'],
+  ['Performance', 'p95 and accessibility', 'latency within budget; a11y checks pass', 'gold'],
+  ['Release', 'Behind a flag', 'deployed; help article updated', 'gold'],
+  ['Result', '“Done” is honest', 'no hidden hardening work', 'good']
+], 'The team’s Definition of Done: seven checks every item passes, every time.', 4)}`
   },
   mistakes: [
     'Writing a Sprint Goal that is just a list of tickets, such as “finish BRF-101, 102 and 104”.',
@@ -2018,6 +2663,10 @@ ${table(['Event', 'Purpose', 'Max timebox (1-month Sprint)', 'Who', 'Output'], [
   <li>The Sprint Review is a <strong>working session</strong>, and the team should avoid limiting it to a presentation.</li>
   <li>The Retrospective <strong>concludes</strong> the Sprint.</li>
 </ul>
+${contrast(
+  ['Often assumed', ['The PO brings a finished Sprint Goal', 'The Daily Scrum is three fixed questions', 'The Sprint Review is a demo', 'The Sprint ends, then the retro happens']],
+  ['What the Guide says', ['The whole Scrum Team crafts it during Planning', 'Any structure that inspects progress toward the Sprint Goal', 'A working session with stakeholders', 'The Retrospective concludes the Sprint'], 'guide']
+)}
 ${practice(`<ul>
   <li><strong>Two-week Sprints</strong> are the most common choice in industry.</li>
   <li>Scaling the timeboxes roughly in proportion is a common rule of thumb. For a 2-week Sprint that means Planning ≤ 4 h, Review ≤ 2 h, Retro ≤ 1.5 h. This isn’t in the Guide.</li>
@@ -2034,7 +2683,8 @@ ${table(['When', 'Event', 'Notes for you as APM'], [
   ['Day 10 (Tue), 14:00–15:30', 'Sprint Review', 'Invite two pilot advisors, the CS lead, compliance and the CTO. Use the working Increment, look at usage data, and agree changes to the Product Backlog.'],
   ['Day 10 (Tue), 16:00–17:00', 'Sprint Retrospective', 'The Scrum Team only. Pick one or two improvements and put the top one in the next Sprint Backlog.']
 ])}
-<p>The next Sprint starts on Wednesday morning. A two-week Sprint keeps feedback from pilot advisors flowing every fortnight.</p>`
+<p>The next Sprint starts on Wednesday morning. A two-week Sprint keeps feedback from pilot advisors flowing every fortnight.</p>
+${fig(DIAG.sprintCal, 'The same two weeks on a calendar. Refinement is an activity, so it sits between the events.')}`
   },
   mistakes: [
     'Running the Daily Scrum as a status report to the PM or CTO.',
@@ -2119,8 +2769,10 @@ ${table(['Practice', 'In the Scrum Guide?', 'What it is', 'Watch out for'], [
 ])}
 <h3>Splitting stories well</h3>
 <p>Split <strong>vertically</strong>: each slice is thin but works end to end and delivers something usable. Don’t split <strong>horizontally</strong> by layer (“API”, then “UI”, then “testing”), because nothing is usable until every layer lands. Common split patterns: by workflow step, by data variation (mutual funds first, equities later), by business rule, happy path before edge cases, by user role, or a timeboxed <strong>spike</strong> when something is unknown. Check each slice against <strong>INVEST</strong>.</p>
+${fig(DIAG.slicing, 'Same layers, cut two ways. Only vertical slices give users something after the first one.')}
 <h3>Using points and velocity sensibly</h3>
-<p>If the team completed 27, 31, 29 and 33 points in its last four Sprints, a forecast of <strong>about 30</strong> for the next Sprint is reasonable. Use velocity for forecasting, not as a performance KPI. Teams asked to “increase velocity by 20%” will simply inflate their estimates.</p>`,
+<p>If the team completed 27, 31, 29 and 33 points in its last four Sprints, a forecast of <strong>about 30</strong> for the next Sprint is reasonable. Use velocity for forecasting, not as a performance KPI. Teams asked to “increase velocity by 20%” will simply inflate their estimates.</p>
+${fig(DIAG.velocity, 'Recent velocity gives a range, and the forecast sits inside it.')}`,
   example: {
     title: 'Splitting the epic “AI-assisted KYC onboarding”',
     html: `
@@ -2133,7 +2785,8 @@ ${table(['Slice', 'Size (points)'], [
   ['4. Bulk upload of up to 50 documents with a progress view', '8'],
   ['Spike: measure extraction accuracy on 200 masked scanned forms (timeboxed to 3 days)', 'timebox'],
 ], [1])}
-<p><strong>Forecast:</strong> the team’s recent velocity is about 30. The PO doesn’t spend the whole Sprint on one epic, so slices 1–3 plus the spike (16 points plus the timebox) are a sensible fit for Sprint 15, alongside other priorities. Slice 4 comes next. Each slice is usable and testable on its own, and slice 1 alone already saves ops time.</p>`
+<p><strong>Forecast:</strong> the team’s recent velocity is about 30. The PO doesn’t spend the whole Sprint on one epic, so slices 1–3 plus the spike (16 points plus the timebox) are a sensible fit for Sprint 15, alongside other priorities. Slice 4 comes next. Each slice is usable and testable on its own, and slice 1 alone already saves ops time.</p>
+${fig(DIAG.sprintFit, 'Slices 1–3 fit Sprint 15 with room for other priorities. Slice 4 waits for the next Sprint.')}`
   },
   mistakes: [
     'Treating story points as hours, or using them to compare engineers or teams.',
@@ -2212,6 +2865,16 @@ ${table(['Anti-pattern', 'Symptom', 'Why it hurts', 'Fix'], [
   ['<strong>Mid-Sprint scope bombs</strong>', 'Stakeholders message engineers directly with “quick” requests.', 'It endangers the Sprint Goal, bypasses the PO and hides the trade-off.', 'Route every request through the PO. Renegotiate scope without endangering the Sprint Goal.'],
   ['<strong>Velocity as a KPI</strong>', '“Increase velocity 20% this quarter.”', 'Point inflation and an end to honest forecasting.', 'Measure outcomes and flow instead: cycle time, and advisor results.']
 ])}
+${cards([
+  ['Status-meeting standup', 'Developers run it', 'and inspect the Sprint Goal, not report to the PM', 'bad'],
+  ['Ticket-list Sprint Goal', 'One real objective', 'then pick the items that serve it', 'bad'],
+  ['Skipped retros', 'Short, never skipped', 'top action goes into the next Sprint', 'bad'],
+  ['Order-taker PO', 'The PO owns the order', 'stakeholders influence through the PO', 'bad'],
+  ['Demo theater', 'A working session', 'real Increment, real stakeholders', 'bad'],
+  ['Hardening Sprints', 'Stronger Definition of Done', 'until “Done” means releasable', 'bad'],
+  ['Mid-Sprint scope bombs', 'One route: via the PO', 'renegotiate without endangering the goal', 'bad'],
+  ['Velocity as a KPI', 'Measure outcomes and flow', 'cycle time and advisor results', 'bad']
+], 'Each anti-pattern (red label) and its fix, at a glance.', 4)}
 ${guide('<p>The Guide’s own words are the best counter-arguments: the Daily Scrum is “for the Developers”; the Sprint Review “is a working session and the Scrum Team should avoid limiting it to a presentation”; during the Sprint “no changes are made that would endanger the Sprint Goal” and “quality does not decrease”; “for Product Owners to succeed, the entire organization must respect their decisions.”', 'The Scrum Guide on these')}`,
   example: {
     title: 'Diagnosing Sprint 12',
@@ -2225,7 +2888,13 @@ ${guide('<p>The Guide’s own words are the best counter-arguments: the Daily Sc
   <li>The retrospective was cancelled for a partner call.</li>
 </ul>
 <p><strong>Diagnosis:</strong> a status-meeting standup, a ticket-list goal, a mid-Sprint scope bomb, demo theater and a skipped retro. That’s five anti-patterns.</p>
-<p><strong>Where to start:</strong> fix the <strong>Sprint Goal</strong> and the <strong>intake route</strong> first. A real objective gives the Daily Scrum something to inspect and gives the PO a basis for saying “not this Sprint”. A single intake route through the PO stops the scope bombs. Then reinstate the retrospective, and use it to tackle the rest one at a time.</p>`
+${fig(DIAG.sprint12, 'Sprint 12 on a timeline: five anti-patterns, from day 1 to day 10.')}
+<p><strong>Where to start:</strong> fix the <strong>Sprint Goal</strong> and the <strong>intake route</strong> first. A real objective gives the Daily Scrum something to inspect and gives the PO a basis for saying “not this Sprint”. A single intake route through the PO stops the scope bombs. Then reinstate the retrospective, and use it to tackle the rest one at a time.</p>
+${flow([
+  ['Fix the Sprint Goal', 'one real objective gives the Daily Scrum something to inspect', 'gold'],
+  ['Fix the intake route', 'every request goes through the PO; scope bombs stop', 'gold'],
+  ['Reinstate the retro', 'and tackle the rest one at a time', 'good']
+], 'Where to start: two fixes that unlock the rest.')}`
   },
   mistakes: [
     'Running the Daily Scrum yourself because “someone has to”.',
@@ -2297,6 +2966,7 @@ ${table(['Metric', 'Meaning'], [
 ])}
 <p class="formula">Little’s Law: average Cycle Time = average WIP ÷ average Throughput</p>
 <p>If 10 feature items are in progress and the team finishes 5 a week, items take about 2 weeks on average, which is a whole Sprint. Halve the WIP to 5 and cycle time drops to about 1 week, with no extra effort.</p>
+${fig(DIAG.littles, 'Same team, same throughput. Less work in progress means each item finishes sooner.')}
 <h3>Kanban vs Scrum</h3>
 ${table(['', 'Scrum', 'Kanban'], [
   ['Cadence', 'Fixed-length Sprints of one month or less', 'Continuous flow. Cadences are optional.'],
@@ -2319,7 +2989,13 @@ ${practice(`<ul>
   <li><strong>Plan for reality:</strong> support has historically taken about 20% of capacity, so Sprint Planning forecasts feature work with the remaining 80%.</li>
   <li><strong>Inspect:</strong> the Daily Scrum looks at the oldest items first (Work Item Age). The Retrospective reviews whether the WIP limits are helping.</li>
 </ul>
-<p>Result: feature items stop sitting half-finished for a whole Sprint, and partners get a predictable response time.</p>`
+<p>Result: feature items stop sitting half-finished for a whole Sprint, and partners get a predictable response time.</p>
+${flow([
+  ['Visualize', 'Ready → Build (WIP 4) → Review (2) → Test (2) → Done'],
+  ['Support lane', 'WIP 1 · 85% of P2s in 3 days · rotating support Developer', 'gold'],
+  ['Plan for reality', 'support takes ~20%, so forecast features with 80%'],
+  ['Inspect', 'oldest items first; the retro checks the WIP limits', 'good']
+], 'Kanban practices inside Scrum: the events stay, the flow improves.')}`
   },
   mistakes: [
     'Thinking Kanban just means “a board with columns”, without WIP limits or explicit policies.',
@@ -2758,6 +3434,111 @@ DIAG.strategyStack = `<svg viewBox="0 0 640 290" role="img" aria-labelledby="ss-
   }).join('')}
 </svg>`;
 
+DIAG.grounding = `<svg viewBox="0 0 680 214" role="img" aria-labelledby="gr-t"><title id="gr-t">Grounding: facts come from your systems and are passed into the prompt as fields. The model writes only the words. A check compares the output with the inputs before an advisor reviews it.</title>
+  <defs><marker id="ah-gr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <text x="138" y="22" text-anchor="middle" class="t-mono t-guide">NUMBERS FROM SYSTEMS</text>
+  <path d="M10 30 H266" class="d-guideline" stroke-width="1.5"/>
+  <text x="342" y="22" text-anchor="middle" class="t-mono t-acc">WORDS FROM THE MODEL</text>
+  <path d="M282 30 H402" class="d-acc" stroke-width="1.5"/>
+  ${[[10, 'd-guide', 'Your systems', 'holdings, returns,', 'SIP status'], [146, 'd-surface', 'Prompt fields', 'every number', 'from the engine'], [282, 'd-soft', 'LLM', 'explains and', 'summarizes only'], [418, 'd-gold', 'Check', 'output numbers', 'match the inputs'], [554, 'd-good', 'Advisor', 'reviews before', 'any client sees it']].map((b, i) => `
+  <rect x="${b[0]}" y="44" width="120" height="84" rx="10" class="${b[1]}"/>
+  <text x="${b[0] + 60}" y="72" text-anchor="middle" class="t-sm b">${b[2]}</text>
+  <text x="${b[0] + 60}" y="94" text-anchor="middle" class="t-xs t-muted">${b[3]}</text><text x="${b[0] + 60}" y="109" text-anchor="middle" class="t-xs t-muted">${b[4]}</text>
+  ${i < 4 ? `<path d="M${b[0] + 121} 86 H${b[0] + 133}" class="d-line" marker-end="url(#ah-gr)"/>` : ''}`).join('')}
+  <path d="M478 130 V156" class="d-badline" marker-end="url(#ah-gr)"/>
+  <rect x="398" y="160" width="160" height="40" rx="8" class="d-bad"/>
+  <text x="478" y="178" text-anchor="middle" class="t-xs b">mismatch?</text><text x="478" y="192" text-anchor="middle" class="t-xs t-muted">caught before anyone sees it</text>
+</svg>`;
+
+DIAG.cqTriangle = `<svg viewBox="0 0 620 250" role="img" aria-labelledby="cq-t"><title id="cq-t">Cost, latency and quality trade off: bigger models are usually better but slower and pricier. Levers: a smaller model for simple steps, caching, generating in the background, and streaming text.</title>
+  <path d="M150 64 L70 186 M190 64 L270 186 M110 210 H230" class="d-acc"/>
+  <rect x="100" y="20" width="140" height="44" rx="8" class="d-good"/><text x="170" y="40" text-anchor="middle" class="t-sm b">Quality</text><text x="170" y="56" text-anchor="middle" class="t-xs t-muted">the quality bar</text>
+  <rect x="10" y="186" width="120" height="44" rx="8" class="d-gold"/><text x="70" y="206" text-anchor="middle" class="t-sm b">Cost</text><text x="70" y="222" text-anchor="middle" class="t-xs t-muted">per output</text>
+  <rect x="210" y="186" width="120" height="44" rx="8" class="d-guide"/><text x="270" y="206" text-anchor="middle" class="t-sm b">Latency</text><text x="270" y="222" text-anchor="middle" class="t-xs t-muted">p95 target</text>
+  <text x="170" y="128" text-anchor="middle" class="t-xs t-muted">bigger model:</text><text x="170" y="142" text-anchor="middle" class="t-xs t-muted">better, slower,</text><text x="170" y="156" text-anchor="middle" class="t-xs t-muted">pricier</text>
+  <text x="370" y="34" class="t-mono t-acc">LEVERS</text>
+  ${['Smaller model for simple steps', 'Cache repeated work', 'Generate before the page opens', 'Stream text so it feels fast'].map((t, i) => `<rect x="370" y="${46 + i * 44}" width="240" height="34" rx="8" class="d-surface"/><text x="384" y="${68 + i * 44}" class="t-sm">${t}</text>`).join('')}
+</svg>`;
+
+DIAG.scorecard = `<svg viewBox="0 0 600 236" role="img" aria-labelledby="sc4-t"><title id="sc4-t">Launch scorecard. Version 3 missed every pass bar; version 4 met all five: numeric accuracy, completeness, no advice language, clarity, and latency and cost.</title>
+  <text x="14" y="22" class="t-mono t-muted">CRITERION</text><text x="250" y="22" class="t-mono t-muted">PASS BAR</text><text x="410" y="22" text-anchor="middle" class="t-mono t-muted">V3</text><text x="530" y="22" text-anchor="middle" class="t-mono t-acc">V4</text>
+  <path d="M10 32 H590" class="d-line"/>
+  ${[['Numeric accuracy', '100%', '97.5%', '100%'], ['Completeness', '≥ 95%', '91%', '96%'], ['No advice language', '0 violations', '3', '0'], ['Clarity (1–5)', '≥ 4.0', '3.8', '4.2'], ['p95 latency · cost', '≤ 10 s · ≤ ₹4', '12 s · ₹9', '8 s · ₹3']].map((r, i) => {
+    const y = 40 + i * 38;
+    return `<text x="14" y="${y + 22}" class="t-sm b">${r[0]}</text><text x="250" y="${y + 22}" class="t-sm t-muted">${r[1]}</text>
+  <rect x="356" y="${y + 6}" width="108" height="24" rx="12" class="d-bad"/><text x="410" y="${y + 22}" text-anchor="middle" class="t-xs b">✕ ${r[2]}</text>
+  <rect x="476" y="${y + 6}" width="108" height="24" rx="12" class="d-good"/><text x="530" y="${y + 22}" text-anchor="middle" class="t-xs b">✓ ${r[3]}</text>
+  <path d="M10 ${y + 36} H590" class="d-grid"/>`;
+  }).join('')}
+</svg>`;
+
+DIAG.abSplit = `<svg viewBox="0 0 640 210" role="img" aria-labelledby="ab-t"><title id="ab-t">An A/B test: write the hypothesis and minimum detectable effect first, randomly split users into control and variant, change one thing, then compare one primary metric chosen in advance while watching guardrails.</title>
+  <defs><marker id="ah-ab" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <rect x="10" y="70" width="130" height="70" rx="10" class="d-surface"/><text x="75" y="98" text-anchor="middle" class="t-sm b">Users</text><text x="75" y="116" text-anchor="middle" class="t-xs t-muted">split at random</text>
+  <path d="M142 96 C 180 96, 180 52, 214 52" class="d-line" marker-end="url(#ah-ab)"/><path d="M142 114 C 180 114, 180 158, 214 158" class="d-line" marker-end="url(#ah-ab)"/>
+  <rect x="220" y="24" width="170" height="56" rx="10" class="d-surface"/><text x="236" y="46" class="t-sm b">A · control</text><text x="236" y="64" class="t-xs t-muted">today’s experience</text>
+  <rect x="220" y="130" width="170" height="56" rx="10" class="d-soft"/><text x="236" y="152" class="t-sm b">B · variant</text><text x="236" y="170" class="t-xs t-muted">exactly one change</text>
+  <path d="M392 52 C 430 52, 430 96, 456 96" class="d-line" marker-end="url(#ah-ab)"/><path d="M392 158 C 430 158, 430 114, 456 114" class="d-line" marker-end="url(#ah-ab)"/>
+  <rect x="462" y="58" width="168" height="94" rx="10" class="d-gold"/>
+  <text x="476" y="82" class="t-sm b">Compare</text><text x="476" y="100" class="t-xs">one primary metric,</text><text x="476" y="114" class="t-xs">chosen in advance</text><text x="476" y="136" class="t-xs t-bad">+ watch guardrails</text>
+  <text x="10" y="200" class="t-xs t-muted">Before you start: hypothesis · minimum detectable effect · sample size · run for whole weeks</text>
+</svg>`;
+
+DIAG.sampleSize = (() => {
+  const X = d => 70 + (d - 4) * 30, Y = n => 190 - (Math.log10(n) - 2) * 108, N = d => 16 * 0.36 * 0.64 / (d / 100) ** 2;
+  const pts = []; for (let d = 4; d <= 18.001; d += 0.5) pts.push(`${X(d).toFixed(1)},${Y(N(d)).toFixed(1)}`);
+  return `<svg viewBox="0 0 600 236" role="img" aria-labelledby="ss2-t"><title id="ss2-t">Sample size needed per group against the lift you want to detect, at a 36 percent baseline. A 6-point lift needs about 1,000 users per group. With 150 per group, only lifts of about 16 points are reliably detectable.</title>
+  <path d="M70 190 H500 M70 190 V20" class="d-line"/>
+  ${[[100, '100'], [300, '300'], [1000, '1,000'], [3000, '3,000']].map(t => `<path d="M70 ${Y(t[0]).toFixed(1)} H500" class="d-grid"/><text x="62" y="${(Y(t[0]) + 4).toFixed(1)}" text-anchor="end" class="t-xs t-muted">${t[1]}</text>`).join('')}
+  ${[4, 6, 8, 10, 12, 14, 16, 18].map(d => `<text x="${X(d)}" y="206" text-anchor="middle" class="t-xs t-muted">${d}</text>`).join('')}
+  <polyline points="${pts.join(' ')}" class="d-acc"/>
+  <path d="M70 ${Y(150).toFixed(1)} H500" class="d-badline"/>
+  <circle cx="${X(6)}" cy="${Y(N(6)).toFixed(1)}" r="5" class="d-fill-gold"/>
+  <text x="${X(6) + 12}" y="${(Y(N(6)) - 14).toFixed(1)}" class="t-sm b t-gold">6-point lift → ~1,000 per group</text>
+  <circle cx="${X(15.7).toFixed(1)}" cy="${Y(150).toFixed(1)}" r="5" class="d-fill-acc"/>
+  <text x="80" y="${(Y(150) - 8).toFixed(1)}" class="t-xs t-bad">your test: 150 per group</text>
+  <text x="596" y="${(Y(150) - 8).toFixed(1)}" text-anchor="end" class="t-xs t-bad">→ only ~16-point lifts detectable</text>
+  <text x="285" y="226" text-anchor="middle" class="t-xs t-muted">lift you want to detect (percentage points, from a 36% baseline)</text>
+  <text x="20" y="105" text-anchor="middle" transform="rotate(-90 20 105)" class="t-xs t-muted">users per group (log scale)</text>
+</svg>`;
+})();
+
+DIAG.ci = `<svg viewBox="0 0 560 176" role="img" aria-labelledby="ci-t"><title id="ci-t">A converted 36 percent and B converted 42 percent, but with 150 advisors per group the approximate 95 percent intervals, about 28 to 44 percent and 34 to 50 percent, overlap heavily.</title>
+  <rect x="${60 + 14.1 * 11}" y="28" width="${(43.7 - 34.1) * 11}" height="104" class="d-gold" fill-opacity=".3" style="stroke:none"/>
+  <text x="${60 + (38.9 - 20) * 11}" y="22" text-anchor="middle" class="t-xs t-gold">overlap</text>
+  ${[['A · old onboarding', 36, 28.3, 43.7, 64, 'd-fill-muted'], ['B · guided onboarding', 42, 34.1, 49.9, 104, 'd-fill-acc']].map(r => {
+    const x = p => (60 + (p - 20) * 11).toFixed(1);
+    return `<path d="M${x(r[2])} ${r[4]} H${x(r[3])} M${x(r[2])} ${r[4] - 7} V${r[4] + 7} M${x(r[3])} ${r[4] - 7} V${r[4] + 7}" class="d-line" stroke-width="2"/>
+  <circle cx="${x(r[1])}" cy="${r[4]}" r="6" class="${r[5]}"/><text x="${x(r[1])}" y="${r[4] - 12}" text-anchor="middle" class="t-sm b">${r[1]}%</text>
+  <text x="${(+x(r[3]) + 10).toFixed(1)}" y="${r[4] + 4}" class="t-xs">${r[0]}</text>`;
+  }).join('')}
+  <path d="M60 140 H500" class="d-line"/>
+  ${[20, 30, 40, 50, 60].map(p => `<text x="${60 + (p - 20) * 11}" y="156" text-anchor="middle" class="t-xs t-muted">${p}%</text>`).join('')}
+  <text x="60" y="172" class="t-xs t-muted">dots: activation rate · lines: approximate 95% range with 150 advisors per group</text>
+</svg>`;
+
+DIAG.unitEcon = `<svg viewBox="0 0 640 230" role="img" aria-labelledby="ue-t"><title id="ue-t">Unit economics for a 15-advisor firm: ARPA 4.5 lakh rupees a year, 80 percent gross margin and 10 percent annual churn give an LTV of 36 lakh. With a CAC of 9 lakh, LTV to CAC is 4, which is healthy, but payback is about 30 months, which is slow.</title>
+  ${[['ARPA', '₹4.5 L / year', 14], ['Gross margin', '80%', 64], ['Annual churn', '10%', 114], ['CAC', '₹9 L', 174]].map(r => `<rect x="10" y="${r[2]}" width="170" height="40" rx="8" class="d-surface"/><text x="24" y="${r[2] + 25}" class="t-sm">${r[0]}</text><text x="168" y="${r[2] + 25}" text-anchor="end" class="t-sm b">${r[1]}</text>`).join('')}
+  <path d="M180 34 C 210 34, 210 74, 236 74 M180 84 H236 M180 134 C 210 134, 210 94, 236 94" class="d-line"/>
+  <rect x="240" y="50" width="160" height="68" rx="10" class="d-soft"/><text x="320" y="74" text-anchor="middle" class="t-mono t-acc">LTV</text><text x="320" y="98" text-anchor="middle" class="t-md b">₹36 L</text><text x="320" y="112" text-anchor="middle" class="t-xs t-muted">4.5 × 0.8 ÷ 0.10</text>
+  <path d="M400 76 H436 M180 194 H420 V48 H436 M420 168 H436" class="d-line"/>
+  <rect x="440" y="24" width="190" height="64" rx="10" class="d-good"/><text x="454" y="46" class="t-sm b">LTV : CAC = 4</text><text x="454" y="64" class="t-xs t-muted">rule of thumb ≥ 3</text><text x="454" y="78" class="t-xs t-good b">healthy</text>
+  <rect x="440" y="136" width="190" height="64" rx="10" class="d-bad"/><text x="454" y="158" class="t-sm b">Payback ≈ 30 months</text><text x="454" y="176" class="t-xs t-muted">rule of thumb 18–24</text><text x="454" y="190" class="t-xs t-bad b">slow → cut CAC</text>
+</svg>`;
+
+DIAG.pricing = `<svg viewBox="0 0 640 210" role="img" aria-labelledby="pr-t"><title id="pr-t">Annual revenue by pricing option: per seat 2.7 crore, per AUM 2.25 crore, usage 1.8 crore. The LLM cost of about 18 lakh a year is the same in each, so its share rises from about 7 to 10 percent.</title>
+  <text x="170" y="20" class="t-mono t-muted">ANNUAL REVENUE</text><text x="630" y="20" text-anchor="end" class="t-mono t-bad">AI COST SHARE</text>
+  ${[['Per seat', '₹2,500 / advisor / month', 2.7, '~7%'], ['Per AUM', '0.5 bp / year', 2.25, '~8%'], ['Usage', '₹40 per brief', 1.8, '10%']].map((r, i) => {
+    const y = 34 + i * 50, w = r[2] / 3 * 380;
+    return `<text x="10" y="${y + 16}" class="t-sm b">${r[0]}</text><text x="10" y="${y + 32}" class="t-xs t-muted">${r[1]}</text>
+  <rect x="170" y="${y + 4}" width="${w.toFixed(1)}" height="28" rx="4" class="d-fill-acc" fill-opacity=".8"/>
+  <rect x="170" y="${y + 4}" width="${(0.18 / 3 * 380).toFixed(1)}" height="28" rx="4" fill="var(--bad)"/>
+  <text x="${(178 + w).toFixed(1)}" y="${y + 23}" class="t-sm b">₹${r[2]} Cr</text>
+  <text x="630" y="${y + 23}" text-anchor="end" class="t-mono t-bad">${r[3]}</text>`;
+  }).join('')}
+  <rect x="170" y="190" width="12" height="12" rx="2" fill="var(--bad)"/><text x="188" y="200" class="t-xs t-muted">LLM cost ≈ ₹18 L a year, the same under every option</text>
+</svg>`;
+
 LESSONS.push({
   id: 'pm-11', track: 'pm', n: 11, minutes: 14,
   title: 'Building AI products', short: 'Building AI products',
@@ -2766,9 +3547,14 @@ LESSONS.push({
   body: `
 <h3>What changes when the feature is AI</h3>
 <p>Normal software is <strong>deterministic</strong>: the same input gives the same output, and a test either passes or fails. An LLM is <strong>probabilistic</strong>. The same prompt can give different answers, and an answer can be fluent, confident and wrong. Your job shifts from specifying exact behavior to specifying <strong>acceptable behavior</strong>, measuring it, and designing for the times it fails.</p>
+${contrast(
+  ['Normal software · deterministic', ['Same input, same output', 'A test passes or fails', 'You specify exact behavior'], 'muted'],
+  ['AI feature · probabilistic', ['Same prompt, different answers', 'Can be fluent, confident and wrong', 'You specify acceptable behavior, measure it, and design for failure'], 'acc']
+)}
 <p>Use AI where variety helps and small errors are cheap to catch: drafting, summarizing, classifying, extracting. Don’t use it where an exact answer is required. Portfolio values, XIRR and tax figures should come from your calculation engine, every time.</p>
 <h3>Grounding: numbers from systems, words from the model</h3>
 <p>The most important design rule for a wealth-tech AI feature: <strong>the model never invents facts</strong>. Fetch the facts (holdings, returns, SIP status) from your systems, pass them in, and ask the model only to explain and summarize them. Then check the output against the inputs. This is called <strong>grounding</strong>, and it removes most of the hallucination risk that matters.</p>
+${fig(DIAG.grounding, 'Numbers never pass through the model’s imagination. They come from your systems and get checked on the way out.')}
 <h3>Evals: how you define “good enough”</h3>
 <p>An <strong>eval</strong> is a repeatable test of AI output against explicit criteria, run on a fixed set of cases called the <strong>golden set</strong>. Typical eval types:</p>
 ${table(['Eval type', 'What it checks', 'Example'], [
@@ -2781,14 +3567,27 @@ ${table(['Eval type', 'What it checks', 'Example'], [
 ${fig(DIAG.aiLoop, 'Quality is a loop, not a launch checklist. Every production failure becomes a new test case.')}
 <h3>Human-in-the-loop</h3>
 <p>Decide how much the AI is allowed to do on its own. <strong>Suggest</strong>: the AI drafts and a human approves. <strong>Act with review</strong>: the AI acts and a human can undo. <strong>Act alone</strong>. In client-facing financial work, start with “suggest”: the advisor reviews every AI-written message before a client sees it. Move further only when the evals and production data justify it.</p>
+${scale([
+  ['Suggest', 'the AI drafts; a human approves', 'good'],
+  ['Act with review', 'the AI acts; a human can undo', 'gold'],
+  ['Act alone', 'no human in the loop', 'bad']
+], ['More human control', 'More AI autonomy'], 'Client-facing financial work starts on the left. Move right only with evidence.')}
 <h3>Cost, latency, quality</h3>
 <p>Every call costs money (priced per token) and time. Bigger models are usually better and slower and pricier. Typical levers: use a smaller model for simple steps, cache repeated work, generate in the background before the advisor opens the page, and stream text so it feels fast. Put a <strong>cost per output</strong> and a <strong>p95 latency</strong> target in the spec, next to the quality bar.</p>
+${fig(DIAG.cqTriangle, 'Three targets that pull against each other, and four levers that ease the tension.')}
 <h3>Version everything, and measure in production</h3>
 <ul>
   <li>Log the <strong>prompt version, model version and inputs</strong> for every output. You’ll need this for debugging, rollback and audit.</li>
   <li>AI-specific product metrics: <strong>acceptance and edit rate</strong> (did people use it as is?), <strong>error reports per 1,000 outputs</strong>, <strong>fallback rate</strong>, <strong>cost per output</strong>, p95 latency.</li>
   <li>Be open about it: label AI-generated text, show what data it used and its “as of” date, and make reporting an error a one-tap action.</li>
-</ul>`,
+</ul>
+${cards([
+  ['Adoption', 'Acceptance and edit rate', 'did people use it as is?', 'good'],
+  ['Quality', 'Error reports', 'per 1,000 outputs', 'bad'],
+  ['Reliability', 'Fallback rate', 'how often the safe path kicks in', 'gold'],
+  ['Cost', 'Cost per output', 'model calls are a real cost to serve'],
+  ['Speed', 'p95 latency', 'the slow cases, not the average', 'guide']
+], 'Five numbers to watch for every AI feature in production.', 5)}`,
   example: {
     title: 'The AI brief: from “the demo works” to “safe for 900 advisors”',
     html: `
@@ -2801,7 +3600,8 @@ ${table(['Criterion', 'How it’s checked', 'Pass bar', 'v3', 'v4'], [
   ['p95 latency / cost', 'Production-like load test', '≤ 10 s · ≤ ₹4', '12 s · ₹9', '<strong>8 s · ₹3</strong>']
 ])}
 <p><strong>What changed in v4:</strong> numbers are now computed by the engine and passed in as fields (grounding). The prompt forbids recommendations and the phrase check runs on every output. The narrative moved to a smaller model, with briefs generated the night before meetings.</p>
-<p><strong>Launch gate:</strong> all bars met on the golden set, then one week of internal use with zero numeric errors, then the staged rollout from Lesson 10. Advisor edits and error reports flow back into the golden set every week.</p>`
+<p><strong>Launch gate:</strong> all bars met on the golden set, then one week of internal use with zero numeric errors, then the staged rollout from Lesson 10. Advisor edits and error reports flow back into the golden set every week.</p>
+${fig(DIAG.scorecard, 'The same scorecard at a glance: v3 missed every bar, v4 cleared all five.')}`
   },
   mistakes: [
     'Judging an AI feature by a great demo instead of by evals on real, messy cases.',
@@ -2869,6 +3669,11 @@ ${table(['Event', 'When it fires', 'Key properties', 'Owner'], [
   <li>Send IDs, not personal data. <strong>Never send client names, PAN or phone numbers to an analytics tool.</strong></li>
   <li>Every event has an owner and is tested before release, just like a feature.</li>
 </ul>
+${cards([
+  ['Naming', 'One pattern, written down', 'object_action, past tense: brief_opened'],
+  ['Privacy', 'IDs, never personal data', 'no client names, PAN or phone numbers', 'bad'],
+  ['Quality', 'Owned and tested', 'every event has an owner and is tested before release', 'good']
+], 'Three rules that keep a tracking plan trustworthy.')}
 <h3>From events to answers</h3>
 ${fig(DIAG.analytics, 'Raw events become funnels (where do people drop?) and cohorts (do they keep coming back?).')}
 <p>A <strong>funnel</strong> counts how many users complete each step in order. A <strong>cohort</strong> table groups users by when they started and shows what share is still active each week. Cohorts are how you tell whether a product is getting better: here, each month’s new advisors retain better than the month before.</p>
@@ -2879,10 +3684,18 @@ ${fig(DIAG.analytics, 'Raw events become funnels (where do people drop?) and coh
   <li><strong>Definition changes:</strong> when a number jumps overnight, check first whether tracking or a definition changed.</li>
   <li><strong>Survivorship:</strong> “active users love it” ignores the users who already left.</li>
 </ul>
+${cards([
+  ['Distributions', 'Not just averages', '“12 briefs on average” can hide 800 advisors who never use it'],
+  ['Seasonality', 'The calendar moves usage', 'quarter-end, market falls, festivals', 'gold'],
+  ['Definitions', 'Jumped overnight?', 'check tracking and definitions first', 'guide'],
+  ['Survivorship', 'Who already left?', '“active users love it” ignores them', 'bad']
+], 'Four checks before you believe a number.', 4)}
 <h3>A/B tests in plain English</h3>
 <p>Randomly split users into control (A) and variant (B), change one thing, and compare a <strong>primary metric</strong> chosen in advance while watching <strong>guardrails</strong>. Before starting, write the hypothesis and the <strong>minimum detectable effect</strong> (the smallest improvement worth detecting), then work out the sample size. A common rule of thumb, for 80% power and 5% significance, is:</p>
+${fig(DIAG.abSplit, 'One change, one primary metric, decided before the test starts.')}
 <p class="formula">n per group ≈ 16 × p × (1 − p) ÷ δ²   (p = baseline rate, δ = absolute change to detect)</p>
 <p>To detect a 6-point lift on a 36% activation rate, you need about 16 × 0.36 × 0.64 ÷ 0.06² ≈ <strong>1,000 users per group</strong>. Then run the test for whole weeks and don’t stop early just because the numbers look good on day three.</p>
+${fig(DIAG.sampleSize, 'The rule of thumb above, plotted. Small lifts need far more users than most B2B products have.')}
 ${tip('<p><strong>B2B reality check:</strong> with 900 advisors at 60 firms you often can’t reach the sample size, and splitting advisors inside one firm causes confusion. Use staggered rollouts by firm (compare enabled vs not-yet-enabled firms over the same weeks), holdout firms, and qualitative evidence from interviews and session recordings. Then say plainly how confident you are.</p>')}
 <h3>Enough SQL to work with your data team</h3>
 <p>You don’t need to be an analyst, but reading a simple query lets you check definitions yourself:</p>
@@ -2903,6 +3716,7 @@ ${table(['Group', 'New advisors', 'Activated (3+ briefs in 14 days)', 'Rate'], [
   ['B · guided onboarding', '150', '63', '42%']
 ], [1, 2, 3])}
 <p>B is 6 points higher, a 17% relative lift. But with 150 advisors per group, a gap that size happens by chance fairly often. A standard two-proportion test gives p ≈ 0.29, far above the usual 0.05 threshold. The rule of thumb above says you’d need about 1,000 advisors per group to reliably detect a 6-point lift.</p>
+${fig(DIAG.ci, 'B looks better, but the ranges overlap a lot. At this sample size the gap could easily be chance.')}
 <p><strong>What you tell the CTO:</strong> “The direction is encouraging, but the result isn’t conclusive at this sample size. Session recordings show advisors in B finish setup faster, and none of the guardrails got worse (support tickets, time-to-first-brief). Since it’s cheap and low-risk, I recommend rolling it out to all new firms and tracking activation by monthly cohort, rather than waiting months for a significant A/B result.”</p>`
   },
   mistakes: [
@@ -2970,9 +3784,26 @@ ${fig(DIAG.strategyStack, 'Each layer answers a different question over a differ
   <li><strong>Guiding policy:</strong> the overall approach to meeting it, which also rules things out.</li>
   <li><strong>Coherent actions:</strong> a few coordinated steps that carry out the policy.</li>
 </ul>
+${flow([
+  ['Diagnosis', 'what’s really going on; the critical challenge', 'guide'],
+  ['Guiding policy', 'the approach, which also rules things out', 'gold'],
+  ['Coherent actions', 'a few coordinated steps that carry it out', 'good']
+], 'Rumelt’s strategy kernel: three parts that have to fit together.')}
 <p>“Be the best AI platform for wealth managers” is a goal, not a strategy. A strategy says where you’ll play, how you’ll win there, and what you’ll deliberately <em>not</em> do.</p>
+${contrast(
+  ['A goal', ['“Be the best AI platform for wealth managers”', 'Says what you want, not how you’ll get it']],
+  ['A strategy', ['Where you’ll play', 'How you’ll win there', 'What you’ll deliberately not do']]
+)}
 <h3>Positioning</h3>
 <p>Positioning is how buyers place you relative to the alternatives, including “do nothing and use Excel”. A simple template: <em>For [target customer] who [need], [product] is a [category] that [key benefit]. Unlike [main alternative], we [key difference].</em></p>
+${flow([
+  ['For…', 'the target customer'],
+  ['who…', 'their need'],
+  ['is a…', 'the category', 'muted'],
+  ['that…', 'the key benefit', 'good'],
+  ['Unlike…', 'the main alternative, even “do nothing and use Excel”', 'muted'],
+  ['we…', 'the key difference', 'gold']
+], 'The positioning statement, slot by slot.')}
 <h3>B2B pricing models</h3>
 ${table(['Model', 'How it works', 'Good for', 'Watch out for'], [
   ['Per seat', 'A fee per advisor per month', 'Predictable revenue; easy for buyers to budget', 'Firms share logins, and it charges junior advisors the same as senior ones'],
@@ -2988,9 +3819,21 @@ ${table(['Model', 'How it works', 'Good for', 'Watch out for'], [
   <li><strong>LTV:</strong> lifetime value ≈ ARPA × gross margin ÷ annual churn rate.</li>
   <li><strong>CAC payback:</strong> months of gross profit needed to recover CAC. Common rules of thumb: LTV:CAC of at least 3, and payback within about 18–24 months.</li>
 </ul>
+${cards([
+  ['ARPA', 'Revenue per firm', 'per year'],
+  ['Gross margin', 'What’s left after serving', 'AI adds model-call cost', 'gold'],
+  ['CAC', 'Cost to win a firm', 'sales and marketing ÷ new customers', 'bad'],
+  ['LTV', 'Value over the relationship', 'ARPA × margin ÷ churn', 'good'],
+  ['Payback', 'Months to earn back CAC', 'aim for ~18–24; LTV:CAC ≥ 3', 'guide']
+], 'Five numbers that say whether winning customers builds a business.', 5)}
 <p class="formula">LTV ≈ ARPA × gross margin ÷ annual churn   ·   CAC payback (months) = CAC ÷ (monthly ARPA × gross margin)</p>
 <h3>Build, buy or partner</h3>
-<p><strong>Build</strong> what differentiates you, such as the AI brief that knows your data. <strong>Buy</strong> commodities, such as e-signature, email delivery or generic OCR. <strong>Partner</strong> for regulated or network rails, such as KRAs, RTAs and payment mandates. Decide by asking: is this a reason customers choose us, and could we do it meaningfully better than a specialist?</p>`,
+<p><strong>Build</strong> what differentiates you, such as the AI brief that knows your data. <strong>Buy</strong> commodities, such as e-signature, email delivery or generic OCR. <strong>Partner</strong> for regulated or network rails, such as KRAs, RTAs and payment mandates. Decide by asking: is this a reason customers choose us, and could we do it meaningfully better than a specialist?</p>
+${cards([
+  ['Build', 'What differentiates you', 'the AI brief that knows your data', 'good'],
+  ['Buy', 'Commodities', 'e-signature, email delivery, generic OCR', 'muted'],
+  ['Partner', 'Regulated or network rails', 'KRAs, RTAs, payment mandates', 'guide']
+], 'Is this a reason customers choose us? If not, buy it or partner for it.')}`,
   example: {
     title: 'How should we price the AI copilot?',
     html: `
@@ -3001,7 +3844,9 @@ ${table(['Option', 'Annual revenue', 'AI cost share', 'Trade-off'], [
   ['Usage: ₹40 per brief', '₹1.8 Cr', '10%', 'Matches cost, but bills are unpredictable and advisors may avoid using it']
 ], [1, 2])}
 <p><strong>Recommendation:</strong> a <strong>hybrid</strong> model, per seat with a generous included allowance (say 60 briefs per advisor per month, well above today’s average of about 42) and a small overage fee. Buyers get a predictable budget, advisors aren’t discouraged from using it, and the overage protects margin if usage grows sharply.</p>
-<p><strong>Unit-economics check for a typical 15-advisor firm:</strong> ARPA ₹4.5 L/year, overall gross margin 80%, annual churn 10%. LTV ≈ 4.5 L × 0.8 ÷ 0.10 = <strong>₹36 L</strong>. With CAC of ₹9 L, LTV:CAC is <strong>4</strong> (healthy), but payback is 9 L ÷ (₹37,500 × 0.8) ≈ <strong>30 months</strong>, which is slow. That points the strategy towards cheaper acquisition, such as partner referrals and self-serve onboarding, more than towards a price change.</p>`
+${fig(DIAG.pricing, 'Three ways to charge for the same product. The AI cost doesn’t change, but its share of revenue does.')}
+<p><strong>Unit-economics check for a typical 15-advisor firm:</strong> ARPA ₹4.5 L/year, overall gross margin 80%, annual churn 10%. LTV ≈ 4.5 L × 0.8 ÷ 0.10 = <strong>₹36 L</strong>. With CAC of ₹9 L, LTV:CAC is <strong>4</strong> (healthy), but payback is 9 L ÷ (₹37,500 × 0.8) ≈ <strong>30 months</strong>, which is slow. That points the strategy towards cheaper acquisition, such as partner referrals and self-serve onboarding, more than towards a price change.</p>
+${fig(DIAG.unitEcon, 'The unit-economics check as a picture: healthy lifetime value, slow payback.')}`
   },
   mistakes: [
     'Confusing goals (“be #1”) or long feature lists with a strategy.',
@@ -3147,6 +3992,106 @@ DIAG.okr = `<svg viewBox="0 0 680 330" role="img" aria-labelledby="okr-t"><title
   <text x="340" y="322" text-anchor="middle" class="t-xs t-muted">Key results measure outcomes. Initiatives are the bets you think will move them, and they can change.</text>
 </svg>`;
 
+DIAG.decisionDoc = `<svg viewBox="0 0 600 260" role="img" aria-labelledby="dd-t"><title id="dd-t">A one-page decision doc: context, options including doing nothing, recommendation, risks and mitigations, whether it is reversible, the decider and the date. It leaves a trail and stops the same debate restarting.</title>
+  <rect x="20" y="10" width="290" height="240" rx="8" class="d-surface"/>
+  <text x="36" y="34" class="t-mono t-muted">DECISION DOC · ONE PAGE</text><path d="M20 44 H310" class="d-grid"/>
+  <rect x="26" y="106" width="278" height="24" rx="5" class="d-soft"/>
+  ${['Context', 'Options (incl. “do nothing”)', 'Recommendation', 'Risks & mitigations', 'Reversible?', 'Decider', 'Date'].map((t, i) => {
+    const y = 66 + i * 27;
+    return `<text x="36" y="${y + 3}" class="t-xs b">${t}</text>${i === 4 ? `<rect x="196" y="${y - 10}" width="92" height="18" rx="9" class="d-gold"/><text x="242" y="${y + 3}" text-anchor="middle" class="t-xs b">one-way door</text>` : `<rect x="196" y="${y - 5}" width="${[92, 80, 92, 70, 0, 60, 40][i]}" height="6" rx="3" class="d-fill-line"/>`}`;
+  }).join('')}
+  <path d="M312 70 H336 M312 150 H336" class="d-line"/>
+  <rect x="340" y="44" width="250" height="56" rx="8" class="d-guide"/><text x="354" y="66" class="t-sm b">Leaves a trail</text><text x="354" y="84" class="t-xs t-muted">future you can learn from it</text>
+  <rect x="340" y="124" width="250" height="56" rx="8" class="d-guide"/><text x="354" y="146" class="t-sm b">Ends re-litigation</text><text x="354" y="164" class="t-xs t-muted">the same debate stops restarting weekly</text>
+  <text x="340" y="214" class="t-sm b t-acc">Then: disagree and commit</text><text x="340" y="232" class="t-xs t-muted">argue before the call, back it fully after</text>
+</svg>`;
+
+DIAG.bets = `<svg viewBox="0 0 560 132" role="img" aria-labelledby="bets-t"><title id="bets-t">A portfolio of bets, using the widely cited 70/20/10 heuristic: about 70 percent core improvements, 20 percent adjacent bets and 10 percent exploratory bets, each with kill criteria set before it starts.</title>
+  <text x="10" y="18" class="t-mono t-muted">TEAM EFFORT · A WIDELY CITED HEURISTIC</text>
+  <rect x="10" y="28" width="376" height="46" rx="6" class="d-soft"/><text x="24" y="48" class="t-sm b">Core · ~70%</text><text x="24" y="65" class="t-xs t-muted">predictable improvements</text>
+  <rect x="390" y="28" width="106" height="46" rx="6" class="d-gold"/><text x="400" y="48" class="t-xs b">Adjacent · ~20%</text><text x="400" y="65" class="t-xs t-muted">new segments</text>
+  <rect x="500" y="28" width="50" height="46" rx="6" class="d-good"/><text x="525" y="56" text-anchor="middle" class="t-xs b">~10%</text>
+  <text x="550" y="90" text-anchor="end" class="t-xs t-good">exploratory ↑</text>
+  <text x="10" y="106" class="t-xs">Every bet gets kill criteria before it starts.</text>
+  <text x="10" y="124" class="t-xs t-muted">Money already spent is not a reason to keep spending.</text>
+</svg>`;
+
+DIAG.incident = `<svg viewBox="0 0 680 170" role="img" aria-labelledby="inc-t"><title id="inc-t">Incident timeline. 10:40 an advisor reports a wrong figure. Minutes later the flag goes off for all pilot firms. 10:55 the first update goes to the four firms’ admins, then updates every 60 minutes. About 5 hours later AI summaries are back. Two days later, a blameless postmortem.</title>
+  <path d="M30 90 H592 M608 90 H660" class="d-line"/><path d="M590 82 L596 98 M604 82 L610 98" class="d-line"/>
+  <circle cx="40" cy="90" r="6" fill="var(--bad)"/><path d="M40 52 V84" class="d-grid"/>
+  <text x="40" y="30" class="t-mono t-bad">10:40</text><text x="40" y="46" class="t-xs">Advisor reports ₹1.2 Cr instead of ₹12 L</text>
+  <circle cx="84" cy="90" r="6" class="d-fill-gold"/><path d="M84 96 V104" class="d-grid"/>
+  <text x="84" y="116" class="t-mono t-gold">MINUTES LATER</text><text x="84" y="130" class="t-xs">Flag off for all pilots · no meeting</text>
+  <circle cx="160" cy="90" r="6" class="d-fill-acc"/><path d="M160 78 V84" class="d-grid"/>
+  <text x="160" y="60" class="t-mono t-acc">10:55</text><text x="160" y="74" class="t-xs">First update to the 4 firms’ admins</text>
+  ${[250, 340, 430].map(x => `<circle cx="${x}" cy="90" r="4" class="d-fill-acc" fill-opacity=".6"/>`).join('')}
+  <text x="250" y="156" class="t-xs t-muted">updates every 60 minutes until resolved</text><path d="M250 94 V144" class="d-grid"/>
+  <circle cx="520" cy="90" r="6" class="d-fill-acc"/><path d="M520 52 V84" class="d-grid"/>
+  <text x="590" y="30" text-anchor="end" class="t-mono t-good">≈5 HOURS IN</text><text x="590" y="46" text-anchor="end" class="t-xs">AI summaries back on</text>
+  <circle cx="640" cy="90" r="6" class="d-fill-muted"/><path d="M640 96 V104" class="d-grid"/>
+  <text x="660" y="116" text-anchor="end" class="t-mono t-muted">2 DAYS LATER</text><text x="660" y="130" text-anchor="end" class="t-xs">Blameless postmortem</text>
+</svg>`;
+
+DIAG.committee = `<svg viewBox="0 0 640 230" role="img" aria-labelledby="com-t"><title id="com-t">A B2B purchase involves a champion who wants it, an economic buyer who signs, users who live with it and blockers such as security, legal and procurement. Evaluation runs through a demo, a pilot with written success criteria, a security questionnaire and sometimes an RFP.</title>
+  <defs><marker id="ah-com" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  ${[[10, 'd-good', 'Champion', 'wants it'], [170, 'd-gold', 'Economic buyer', 'signs'], [330, 'd-soft', 'Users', 'live with it'], [490, 'd-bad', 'Blockers', 'security, legal,|procurement']].map(b => `<rect x="${b[0]}" y="14" width="140" height="58" rx="8" class="${b[1]}"/><text x="${b[0] + 14}" y="36" class="t-sm b">${b[2]}</text>${b[3].split('|').map((l, i) => `<text x="${b[0] + 14}" y="${53 + i * 13}" class="t-xs t-muted">${l}</text>`).join('')}`).join('')}
+  <text x="10" y="106" class="t-mono t-muted">HOW THEY EVALUATE</text>
+  ${[[10, 130, 'Demo', '', ''], [160, 150, 'Pilot', 'criteria in writing', ''], [330, 170, 'Security questionnaire', 'access, encryption, certs', ''], [520, 110, 'RFP', 'sometimes', '5 4']].map((b, i) => `<rect x="${b[0]}" y="118" width="${b[1]}" height="50" rx="8" class="d-surface"${b[4] ? ` stroke-dasharray="${b[4]}"` : ''}/><text x="${b[0] + 12}" y="${b[3] ? 140 : 148}" class="t-sm b">${b[2]}</text>${b[3] ? `<text x="${b[0] + 12}" y="157" class="t-xs t-muted">${b[3]}</text>` : ''}${i < 3 ? `<path d="M${b[0] + b[1] + 2} 143 H${[160, 330, 520][i] - 4}" class="d-line" marker-end="url(#ah-com)"/>` : ''}`).join('')}
+  <text x="10" y="196" class="t-xs t-bad">A pilot without written success criteria never ends.</text>
+  <text x="10" y="214" class="t-xs t-muted">A ready security answer pack shortens every sales cycle.</text>
+</svg>`;
+
+DIAG.health = `<svg viewBox="0 0 640 170" role="img" aria-labelledby="hs-t"><title id="hs-t">A customer health score combines adoption, outcomes, support issues and relationship signals into red, amber or green, so customer success can act before the renewal conversation.</title>
+  <defs><marker id="ah-hs" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  ${['Adoption', 'Outcomes', 'Support issues', 'Relationship signals'].map((t, i) => `<rect x="10" y="${14 + i * 36}" width="180" height="28" rx="6" class="d-surface"/><text x="24" y="${33 + i * 36}" class="t-sm">${t}</text><path d="M192 ${28 + i * 36} C 222 ${28 + i * 36}, 222 86, 246 86" class="d-line"/>`).join('')}
+  <rect x="250" y="56" width="140" height="60" rx="10" class="d-soft"/><text x="320" y="82" text-anchor="middle" class="t-sm b">Health score</text><text x="320" y="100" text-anchor="middle" class="t-xs t-muted">one per customer</text>
+  <path d="M392 86 H424" class="d-line" marker-end="url(#ah-hs)"/>
+  <text x="430" y="50" class="t-mono t-muted">ACT BEFORE RENEWAL</text>
+  <rect x="430" y="62" width="66" height="44" rx="6" class="d-bad"/><text x="463" y="89" text-anchor="middle" class="t-xs b">red</text>
+  <rect x="498" y="62" width="66" height="44" rx="6" class="d-gold"/><text x="531" y="89" text-anchor="middle" class="t-xs b">amber</text>
+  <rect x="566" y="62" width="66" height="44" rx="6" class="d-good"/><text x="599" y="89" text-anchor="middle" class="t-xs b">green</text>
+  <text x="430" y="130" class="t-xs t-muted">CS steps in on amber, long before</text><text x="430" y="144" class="t-xs t-muted">the renewal conversation</text>
+</svg>`;
+
+DIAG.renewal = `<svg viewBox="0 0 600 196" role="img" aria-labelledby="rn-t"><title id="rn-t">Weekly active advisors at one firm fell from 70 percent to 35 percent after their champion left. After re-run onboarding, a QBR showing prep-time results and a new champion, the account was green again by the next renewal.</title>
+  <text x="50" y="16" class="t-mono t-muted">WEEKLY ACTIVE ADVISORS · ONE FIRM</text>
+  <path d="M50 160 H570" class="d-line"/>
+  <path d="M60 48 H220 L290 104 H360" class="d-acc"/>
+  <path d="M360 104 C 430 104, 470 70, 540 62" class="d-goldline" stroke-dasharray="6 4"/>
+  <circle cx="60" cy="48" r="5" class="d-fill-acc"/><text x="60" y="38" class="t-sm b">70%</text>
+  <circle cx="290" cy="104" r="5" class="d-fill-gold"/><text x="290" y="124" text-anchor="middle" class="t-sm b">35%</text>
+  <path d="M220 48 V160" class="d-grid" stroke-dasharray="3 3"/><text x="224" y="152" class="t-xs t-gold">champion leaves</text>
+  <rect x="300" y="60" width="104" height="22" rx="11" class="d-gold"/><text x="352" y="75" text-anchor="middle" class="t-xs b">account: amber</text>
+  <text x="364" y="128" class="t-xs">re-run onboarding · join their QBR</text><text x="364" y="142" class="t-xs">· find a new champion</text>
+  <rect x="470" y="28" width="112" height="22" rx="11" class="d-good"/><text x="526" y="43" text-anchor="middle" class="t-xs b">green by renewal</text>
+  <text x="50" y="186" class="t-xs t-muted">illustrative shape; only the 70% and 35% figures come from the example</text>
+</svg>`;
+
+DIAG.scaling = `<svg viewBox="0 0 640 252" role="img" aria-labelledby="scl-t"><title id="scl-t">Scaling Scrum per the Scrum Guide: when a team gets too large, split it into multiple Scrum Teams that share one Product Owner, one Product Backlog with one Product Goal, and a shared Definition of Done.</title>
+  <rect x="230" y="10" width="180" height="40" rx="8" class="d-gold"/><text x="320" y="35" text-anchor="middle" class="t-sm b">One Product Owner</text>
+  <path d="M320 50 V64" class="d-line"/>
+  <rect x="150" y="64" width="340" height="48" rx="8" class="d-soft"/><text x="320" y="85" text-anchor="middle" class="t-sm b">One Product Backlog</text><text x="320" y="102" text-anchor="middle" class="t-xs t-muted">and one Product Goal</text>
+  <path d="M320 112 V126 M170 126 H470 M170 126 V140 M470 126 V140" class="d-line"/>
+  ${[[40, 'Scrum Team A'], [340, 'Scrum Team B']].map(t => `<rect x="${t[0]}" y="140" width="260" height="66" rx="10" class="d-surface"/><text x="${t[0] + 14}" y="162" class="t-sm b">${t[1]}</text><text x="${t[0] + 246}" y="162" text-anchor="end" class="t-mono t-guide">SM</text>
+  ${Array.from({ length: 6 }, (_, i) => `<circle cx="${t[0] + 26 + i * 30}" cy="186" r="10" class="d-fill-acc" fill-opacity=".75"/>`).join('')}`).join('')}
+  <rect x="40" y="216" width="560" height="28" rx="6" class="d-guide"/><text x="320" y="235" text-anchor="middle" class="t-sm b">Shared Definition of Done</text>
+</svg>`;
+
+DIAG.prfaq = `<svg viewBox="0 0 640 250" role="img" aria-labelledby="pf-t"><title id="pf-t">A PR-FAQ for AI client follow-ups: a launch-day press release headline, and the hardest FAQ, “What stops a wrong number reaching a client?”, which turned into three requirements: source-validated figures, mandatory advisor approval and a one-tap error report.</title>
+  <defs><marker id="ah-pf" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  <rect x="10" y="10" width="300" height="230" rx="8" class="d-surface"/>
+  <text x="26" y="34" class="t-mono t-acc">PRESS RELEASE · LAUNCH DAY</text>
+  <text x="26" y="62" class="t-sm b">Advisors now send a personalised</text><text x="26" y="80" class="t-sm b">client follow-up in under two minutes.</text>
+  ${[0, 1, 2, 3].map(i => `<rect x="26" y="${98 + i * 14}" width="${[260, 240, 250, 180][i]}" height="6" rx="3" class="d-fill-line"/>`).join('')}
+  <rect x="26" y="162" width="268" height="58" rx="6" class="d-soft" fill-opacity=".7"/>
+  <text x="38" y="184" class="t-xs">“I used to spend my evenings writing these…”</text><text x="38" y="204" class="t-xs t-muted">a pilot advisor</text>
+  <rect x="330" y="10" width="300" height="230" rx="8" class="d-surface"/>
+  <text x="346" y="34" class="t-mono t-gold">FAQ · THE HARDEST QUESTION</text>
+  <text x="346" y="62" class="t-sm b">What stops a wrong number</text><text x="346" y="80" class="t-sm b">reaching a client?</text>
+  <path d="M346 92 V110" class="d-line" marker-end="url(#ah-pf)"/>
+  ${['Source-validated figures', 'Mandatory advisor approval', 'One-tap error report'].map((t, i) => `<rect x="346" y="${118 + i * 38}" width="268" height="30" rx="6" class="d-good"/><text x="360" y="${138 + i * 38}" class="t-sm b">${t}</text>`).join('')}
+</svg>`;
+
 LESSONS.push({
   id: 'senior-1', track: 'senior', n: 1, minutes: 14,
   title: 'Senior PM judgment: deciding with incomplete information', short: 'Judgment & decisions',
@@ -3160,22 +4105,36 @@ ${fig(DIAG.doors, 'Decide reversible things quickly and close to the work. Slow 
 <p>For one-way doors, write a one-page decision doc. That leaves a trail future you can learn from, and it stops the same debate restarting every week.</p>
 <p class="formula">Context · Options (incl. “do nothing”) · Recommendation · Risks &amp; mitigations · Reversible? · Decider · Date</p>
 <p>Once a decision is made, <strong>disagree and commit</strong>, a norm popularized by Intel and Amazon: argue openly before the call, then back it fully afterwards. Say up front what new evidence would make you revisit it.</p>
+${fig(DIAG.decisionDoc, 'A decision doc is short on purpose. The reversibility line tells everyone how carefully to read it.')}
 <h3>Pre-mortems and second-order effects</h3>
 <p>Psychologist Gary Klein’s <strong>pre-mortem</strong> asks: “It’s six months from now and this launch failed. What happened?” Everyone writes down reasons on their own first. That surfaces risks people are too polite to raise in a planning meeting. Then ask about <strong>second-order effects</strong>: if this works, what else changes? For example, if advisors trust AI drafts, do they stop checking them?</p>
+${flow([
+  ['Imagine failure', '“Six months on, this launch failed. What happened?”', 'bad'],
+  ['Write alone first', 'everyone lists reasons on their own'],
+  ['Surface the risks', 'the ones people are too polite to raise', 'gold'],
+  ['Look one step further', 'if it works, what else changes?', 'guide']
+], 'A pre-mortem in four moves, ending with second-order effects.')}
 <h3>Incidents: calm, fast, transparent</h3>
 <ul>
   <li><strong>Severity levels</strong>, defined in advance, such as SEV1 (customer-facing harm, all hands), SEV2 (degraded, same-day fix), SEV3 (minor).</li>
   <li><strong>Communication rhythm:</strong> name one incident lead, then update affected customers and leadership on a fixed cadence (say every 60 minutes), even when the update is “no change yet”.</li>
   <li><strong>Blameless postmortem</strong>, a practice popularized by Google’s SRE teams: timeline, impact, root causes (plural), what went well, and action items with owners. Focus on the system, not the person.</li>
 </ul>
+${cards([
+  ['Before', 'Severity levels', 'SEV1 all hands · SEV2 same-day fix · SEV3 minor', 'bad'],
+  ['During', 'One lead, fixed rhythm', 'updates every ~60 min, even “no change yet”', 'gold'],
+  ['After', 'Blameless postmortem', 'timeline, impact, root causes, what went well, owned actions', 'good']
+], 'Incidents before, during and after. Calm comes from deciding the rules in advance.')}
 <h3>A portfolio of bets</h3>
-<p>Senior PMs manage a mix: <strong>core</strong> improvements (most effort, predictable), <strong>adjacent</strong> bets (new segments or features) and a few <strong>exploratory</strong> bets. A widely cited heuristic is roughly 70/20/10. Give every bet <strong>kill criteria</strong> before it starts (“if fewer than 20% of pilot advisors use it weekly by week 6, we stop”), and resist the <strong>sunk-cost fallacy</strong>: money already spent is not a reason to keep spending.</p>`,
+<p>Senior PMs manage a mix: <strong>core</strong> improvements (most effort, predictable), <strong>adjacent</strong> bets (new segments or features) and a few <strong>exploratory</strong> bets. A widely cited heuristic is roughly 70/20/10. Give every bet <strong>kill criteria</strong> before it starts (“if fewer than 20% of pilot advisors use it weekly by week 6, we stop”), and resist the <strong>sunk-cost fallacy</strong>: money already spent is not a reason to keep spending.</p>
+${fig(DIAG.bets, '')}`,
   example: {
     title: 'The AI brief shows a wrong figure at a pilot firm',
     html: `
 <p>At 10:40, a pilot advisor reports that a client’s brief shows ₹1.2 Cr instead of ₹12 L for a redemption. Three other pilot firms use the brief that day.</p>
 <p><strong>Decision 1, a two-way door:</strong> turn the flag off for all pilot firms now. The advisors fall back to the data-only view. It takes 2 minutes and can be undone in 2 minutes, so there’s no meeting.</p>
 <p><strong>Incident handling (SEV2):</strong> Arjun leads the incident. You send the first update at 10:55 to the four pilot firms’ admins: “We’ve paused AI summaries while we investigate a formatting error in one brief. Your data is unaffected and the standard view is available.” Updates follow every 60 minutes until it’s resolved.</p>
+${fig(DIAG.incident, 'The incident on one line: fast reversible action first, steady communication, then a calm postmortem.')}
 <p><strong>Blameless postmortem, two days later:</strong></p>
 ${table(['Section', 'Content'], [
   ['Impact', '1 wrong figure shown to 1 advisor, caught before the client meeting; AI summaries paused for 5 hours'],
@@ -3241,6 +4200,7 @@ LESSONS.push({
 ${fig(DIAG.lifecycle, 'The customer lifecycle. Most renewal problems are created in implementation and adoption.')}
 <h3>How B2B customers buy</h3>
 <p>A typical B2B purchase involves a <strong>champion</strong> (wants it), an <strong>economic buyer</strong> (signs), <strong>users</strong> (live with it), and <strong>blockers</strong> such as security, legal and procurement. Evaluations usually include a demo, a <strong>pilot</strong> or proof of concept, a <strong>security questionnaire</strong> (questions on access control, encryption, incident response and certifications like ISO 27001 or SOC 2), and sometimes a formal RFP.</p>
+${fig(DIAG.committee, 'Who decides, and the hoops they run you through. Design the pilot for the economic buyer, not only the champion.')}
 <ul>
   <li>Agree <strong>pilot success criteria in writing</strong> before the pilot starts, for example “median prep time under 20 minutes for 10 advisors within 4 weeks”. A pilot without criteria never ends.</li>
   <li>Keep a ready answer pack for security reviews. Every week it saves shortens the sales cycle.</li>
@@ -3252,7 +4212,19 @@ ${table(['Tier', 'When', 'What it gets'], [
   ['Tier 2', 'Significant feature for existing customers', 'Release notes, in-app announcement, CS briefing, updated demo'],
   ['Tier 3', 'Improvements and fixes', 'Release notes only']
 ])}
+${scale([
+  ['Tier 3', 'improvements and fixes: release notes only', 'muted'],
+  ['Tier 2', 'significant feature: notes, in-app, CS briefing, demo'],
+  ['Tier 1', 'changes the pitch: positioning, event, emails, full training', 'gold']
+], ['Light launch', 'Full launch'], 'Match launch effort to how much the change matters to the pitch.')}
 <p><strong>Enablement</strong> means giving sales and customer success what they need to tell the story well: positioning, a demo script, objection handling, a <strong>battlecard</strong> against alternatives, and a crisp “what it does not do”.</p>
+${cards([
+  ['Story', 'Positioning', 'why it matters, in one line'],
+  ['Show', 'Demo script', 'the same strong demo every time'],
+  ['Defend', 'Objection handling', 'answers to the questions buyers always ask', 'gold'],
+  ['Compete', 'Battlecard', 'how you compare to the alternatives', 'guide'],
+  ['Limit', 'What it does not do', 'so nobody over-promises', 'bad']
+], 'A sales enablement kit: five things sales and CS need to tell the story well.', 5)}
 <h3>Implementation, adoption and renewal</h3>
 <ul>
   <li><strong>Time-to-value</strong> is set in implementation: data import, admin setup, training. A slow start shows up as churn 11 months later.</li>
@@ -3260,8 +4232,15 @@ ${table(['Tier', 'When', 'What it gets'], [
   <li><strong>QBRs</strong> (quarterly business reviews) show the customer their own results. They’re also a great discovery opportunity for you.</li>
   <li>Analyse <strong>churn reasons</strong> with a fixed taxonomy (product gap, poor adoption, price, champion left, company changed). Fix the patterns, not the anecdotes.</li>
 </ul>
+${fig(DIAG.health, 'A health score turns many signals into one early warning.')}
 <h3>Sales requests without becoming a feature factory</h3>
-<p>Run one intake channel. Log each request with the customer, deal size and the <em>problem</em> behind it, then look for patterns monthly. Meet a <strong>customer advisory board</strong> of 8–12 representative customers each quarter to test direction, not to take orders.</p>`,
+<p>Run one intake channel. Log each request with the customer, deal size and the <em>problem</em> behind it, then look for patterns monthly. Meet a <strong>customer advisory board</strong> of 8–12 representative customers each quarter to test direction, not to take orders.</p>
+${flow([
+  ['One intake channel', 'every sales request lands in one place'],
+  ['Log the problem', 'customer, deal size, and the problem behind it', 'gold'],
+  ['Find patterns monthly', 'fix patterns, not anecdotes'],
+  ['Test direction quarterly', 'with an advisory board of 8–12 customers', 'good']
+], 'How to hear sales without becoming a feature factory.')}`,
   example: {
     title: 'Taking the AI brief to market',
     html: `
@@ -3274,7 +4253,8 @@ ${table(['Item', 'Agreed upfront'], [
   ['Customer commitments', 'Admin available for setup in week 1; two 30-min feedback calls'],
   ['Decision', 'Go / no-go call in week 5 with the economic buyer']
 ])}
-<p><strong>Renewal-risk review, two quarters later:</strong> one firm turns amber. Weekly active advisors dropped from 70% to 35% after their champion left. Action: CS re-runs onboarding for new advisors, you join their QBR to show prep-time results, and you identify a new champion. The account is green again by the next renewal.</p>`
+<p><strong>Renewal-risk review, two quarters later:</strong> one firm turns amber. Weekly active advisors dropped from 70% to 35% after their champion left. Action: CS re-runs onboarding for new advisors, you join their QBR to show prep-time results, and you identify a new champion. The account is green again by the next renewal.</p>
+${fig(DIAG.renewal, 'Usage is the early warning. Losing the champion showed up in weekly activity long before the renewal.')}`
   },
   mistakes: [
     'Running pilots with no written success criteria, so they drift for months and end in “maybe”.',
@@ -3333,6 +4313,11 @@ LESSONS.push({
   body: `
 <h3>What “product sense” means</h3>
 <p>It’s the combination of <strong>empathy</strong> (seeing the product through a specific user’s eyes, in their real situation) and <strong>judgment</strong> (knowing which of ten possible improvements actually matters). Senior PMs aren’t born with it. They build it by using many products deliberately, writing down what works and why, and checking their instincts against data.</p>
+${cards([
+  ['Empathy', 'See it through their eyes', 'a specific user, in their real situation'],
+  ['Judgment', 'Know what matters', 'which of ten improvements actually counts', 'gold'],
+  ['Practice', 'Built, not born', 'use products deliberately, write it down, check against data', 'good']
+], 'Product sense is two skills and a habit.')}
 <h3>Principles that rarely fail</h3>
 <ul>
   <li><strong>Remove steps before you add features.</strong> Every step between the user and value loses people.</li>
@@ -3341,6 +4326,13 @@ LESSONS.push({
   <li><strong>Design every state:</strong> empty, loading, partial, error and success. Rough edges in these states break trust in B2B tools.</li>
   <li><strong>Copy is product.</strong> A clear label or error message often beats a redesign.</li>
 </ul>
+${cards([
+  ['Fewer steps', 'Remove before adding', 'every step loses people', 'good'],
+  ['Defaults', 'The default is the product', 'most users never change settings'],
+  ['Disclosure', 'Show what most need', 'advanced controls on request', 'guide'],
+  ['States', 'Design all five', 'empty · loading · partial · error · success', 'gold'],
+  ['Copy', 'Words are product', 'a clear label can beat a redesign']
+], 'Five principles that rarely fail.', 5)}
 <h3>Usability heuristics</h3>
 <p>The Nielsen Norman Group’s 10 usability heuristics are the most widely used checklist. Five do most of the work in B2B products:</p>
 ${table(['Heuristic', 'Ask', 'AI brief example'], [
@@ -3353,8 +4345,23 @@ ${table(['Heuristic', 'Ask', 'AI brief example'], [
 <h3>Structured critique</h3>
 <p class="formula">Goal → User &amp; situation → Flow walkthrough → Heuristic issues → Prioritized suggestions</p>
 <p>Critique against the goal and the user, not your taste. Prioritize: the top three issues matter far more than a list of twenty.</p>
+${flow([
+  ['Goal', 'what is this screen for?', 'gold'],
+  ['User and situation', 'who, where, with how much time'],
+  ['Walk the flow', 'step by step, as that user'],
+  ['Heuristic issues', 'check against the usability heuristics', 'guide'],
+  ['Top 3 suggestions', 'prioritized, not a list of twenty', 'good']
+], 'Structured critique: start from the goal and the user, end with three fixes.')}
 <h3>Product teardowns</h3>
-<p>Once a week, pick a product you use, such as a banking app, a travel app or a SaaS tool, and write a one-page teardown: who it’s for, the core job, the first-run experience step by step, one thing it does brilliantly, one thing you’d change, and why. Ten teardowns in, you’ll notice patterns everywhere.</p>`,
+<p>Once a week, pick a product you use, such as a banking app, a travel app or a SaaS tool, and write a one-page teardown: who it’s for, the core job, the first-run experience step by step, one thing it does brilliantly, one thing you’d change, and why. Ten teardowns in, you’ll notice patterns everywhere.</p>
+${cards([
+  ['1', 'Who it’s for', 'the specific user'],
+  ['2', 'The core job', 'what they hire it to do'],
+  ['3', 'First run', 'step by step, as a new user', 'guide'],
+  ['4', 'Does brilliantly', 'one thing to steal', 'good'],
+  ['5', 'I’d change', 'one thing, specifically', 'gold'],
+  ['6', 'Why', 'the reasoning is the point']
+], 'A one-page teardown in six boxes. Do one a week.')}`,
   example: {
     title: 'Teardown of the AI brief’s first-run experience',
     html: `
@@ -3367,6 +4374,12 @@ ${fig(DIAG.flow, 'Illustrative funnel: every removed step kept more advisors.')}
   <li><strong>A 25-second wait at the worst moment.</strong> Fix: generate overnight for every scheduled meeting.</li>
   <li><strong>No trust cues.</strong> Fix: show “Data as of…”, mark every figure as “from your portfolio data”, and add a one-tap “report an error”.</li>
 </ol>
+${cards([
+  ['Hidden in a menu', 'Lives on the meeting card', 'recognition rather than recall', 'bad'],
+  ['Four choices first', 'Smart defaults', 'since the last meeting, all sections', 'bad'],
+  ['25-second wait', 'Generated overnight', 'ready before every scheduled meeting', 'bad'],
+  ['No trust cues', 'Show the sources', '“Data as of…”, sourced figures, one-tap error report', 'bad']
+], 'Each issue (red label) and its fix. None of them changed the AI itself.', 4)}
 <p><strong>Result:</strong> 7 steps became 3, and the share of advisors who reached a brief rose from 38% to 81%. Nothing new was built into the AI itself.</p>`
   },
   mistakes: [
@@ -3425,6 +4438,11 @@ LESSONS.push({
   body: `
 <h3>Vision and narrative</h3>
 <p>A team vision describes the world you’re creating for users, in a sentence or two: “Every advisor walks into every client conversation fully prepared.” Pair it with a short strategy narrative of a page or two, covering the diagnosis, the policy and the key bets (Track 1, Lesson 13). That way people can make aligned decisions when you’re not in the room.</p>
+${flow([
+  ['Vision', '“Every advisor walks into every client conversation fully prepared.”'],
+  ['Strategy narrative', '1–2 pages: diagnosis, policy, key bets', 'gold'],
+  ['Aligned decisions', 'made well when you’re not in the room', 'good']
+], 'Vision and narrative are how your judgment travels without you.')}
 <h3>OKRs done right</h3>
 <p>Objectives and Key Results came from Andy Grove at Intel and were popularized by John Doerr. The <strong>objective</strong> is qualitative and inspiring. The <strong>key results</strong>, usually 3–4, are measurable <strong>outcomes</strong>, not tasks.</p>
 ${fig(DIAG.okr, 'OKRs cascade by outcome. The initiatives underneath are bets that can change mid-quarter.')}
@@ -3434,19 +4452,59 @@ ${table(['Output-style KR (avoid)', 'Outcome-style KR (better)'], [
   ['Write 200 golden-set cases', 'Numeric error reports stay at or below 0.5 per 1,000 briefs']
 ])}
 <p>Say whether each OKR is <strong>committed</strong> (expected to be met in full) or <strong>aspirational</strong> (a stretch, where partial achievement is still a win). Review progress every few weeks and grade honestly at quarter end.</p>
+${contrast(
+  ['Committed', ['Expected to be met in full', 'Example: prep time from 50 to 15 minutes'], 'acc'],
+  ['Aspirational', ['A deliberate stretch', 'Partial achievement is still a win', 'Example: 40% same-day follow-ups'], 'gold'],
+  'Label every OKR, so nobody reads a stretch goal as a promise.'
+)}
 <h3>Team charters and ownership</h3>
 <p>A one-page <strong>team charter</strong> states the mission, the customers and outcomes the team owns, what it doesn’t own, its key metrics, and how others should request work. Organize teams around <strong>outcomes and user journeys</strong> (what Team Topologies calls stream-aligned teams), not technical components, so each team can deliver value end to end.</p>
+${cards([
+  ['Mission', 'Why the team exists', 'one or two sentences'],
+  ['Owns', 'Customers and outcomes', 'what the team is accountable for', 'good'],
+  ['Doesn’t own', 'Explicit boundaries', 'what to take elsewhere', 'bad'],
+  ['Metrics', 'How we’ll know', 'the team’s key numbers', 'gold'],
+  ['Requests', 'How to ask us', 'the one way to request work', 'guide']
+], 'A team charter on one page, in five parts.', 5)}
+${contrast(
+  ['Organized by component', ['A frontend team, a backend team, an ML team', 'Every feature needs all three', 'Work waits at each handover']],
+  ['Organized by outcome (stream-aligned)', ['A team per journey, such as AI meeting prep or client onboarding', 'Each team has the skills it needs', 'Value delivered end to end']]
+)}
 <h3>Scaling Scrum</h3>
 <p>The Scrum Guide’s rule for growth is simple. When a Scrum Team gets too large, split it into multiple cohesive Scrum Teams focused on the same product, sharing <strong>one Product Goal, one Product Backlog and one Product Owner</strong>, and a shared Definition of Done. Frameworks like Nexus and LeSS add coordination practices on top. Start with the Guide’s rule before adopting a heavy framework.</p>
+${fig(DIAG.scaling, 'The Scrum Guide’s scaling rule: more teams, but still one product, one backlog and one Product Owner.')}
 <h3>Operating rhythm and decision rights</h3>
 <ul>
   <li><strong>Quarterly:</strong> OKR setting and roadmap review. <strong>Monthly:</strong> product review of metrics and bets. <strong>Weekly:</strong> a written update.</li>
   <li><strong>DACI</strong> makes decision rights explicit: Driver (runs the process), Approver (one person decides), Contributors (consulted), Informed.</li>
 </ul>
+${scale([
+  ['Weekly', 'a written update'],
+  ['Monthly', 'product review of metrics and bets', 'gold'],
+  ['Quarterly', 'OKR setting and roadmap review', 'good']
+], ['Most frequent', 'Least frequent'], 'An operating rhythm: each cadence has one job.')}
+${cards([
+  ['D · Driver', 'Runs the process', 'gathers input, drives to a decision'],
+  ['A · Approver', 'One person decides', 'exactly one', 'gold'],
+  ['C · Contributors', 'Consulted', 'input before the decision', 'guide'],
+  ['I · Informed', 'Told after', 'kept in the loop', 'muted']
+], 'DACI: decision rights written down before the argument starts.', 4)}
 <h3>Working backwards: the PR-FAQ</h3>
 <p>Amazon’s “working backwards” process, described in Colin Bryar and Bill Carr’s book <em>Working Backwards</em>, starts a big bet by writing the <strong>press release</strong> for launch day, written for customers, plus an <strong>FAQ</strong> answering the hard customer and internal questions. If the press release isn’t exciting, or the FAQ exposes unanswered problems, you’ve learned that cheaply, before building anything.</p>
+${flow([
+  ['Press release', 'launch day, written for customers'],
+  ['FAQ', 'the hardest customer and internal questions', 'gold'],
+  ['Read it cold', 'is it exciting? are the answers real?', 'guide'],
+  ['Decide', 'build it, reshape it, or drop it cheaply', 'good']
+], 'Working backwards: write the ending first, then decide whether to build.')}
 <h3>Growing other PMs</h3>
-<p>Leadership shows in other people’s growth. Give context rather than instructions, let people own outcomes and not just tasks, review their writing generously, and share the decision-making process, not just the decision.</p>`,
+<p>Leadership shows in other people’s growth. Give context rather than instructions, let people own outcomes and not just tasks, review their writing generously, and share the decision-making process, not just the decision.</p>
+${cards([
+  ['Give', 'Context', 'not instructions'],
+  ['Let them own', 'Outcomes', 'not just tasks', 'good'],
+  ['Review', 'Their writing', 'generously', 'gold'],
+  ['Share', 'How you decided', 'not just what you decided', 'guide']
+], 'Four habits that grow other PMs.', 4)}`,
   example: {
     title: 'Next quarter for the AI copilot team',
     html: `
@@ -3457,7 +4515,8 @@ ${table(['Output-style KR (avoid)', 'Outcome-style KR (better)'], [
 <p><strong>Objective (aspirational):</strong> Advisors follow up with clients the same day. <strong>KR:</strong> 40% of pilot advisors send an AI-drafted follow-up within 24 hours of a meeting.</p>
 <p><strong>PR-FAQ opening for “AI client follow-ups”:</strong></p>
 <blockquote><strong>Advisors now send a personalised client follow-up in under two minutes.</strong> After each review, the platform drafts a follow-up email from the meeting notes and the client’s portfolio, with every figure checked against live data. The advisor edits, approves and sends. “I used to spend my evenings writing these. Now my clients get them before they’ve left the parking lot,” says a pilot advisor.</blockquote>
-<p><strong>The hardest FAQ:</strong> “What stops a wrong number reaching a client?” Answering it honestly turned into three requirements: source-validated figures, mandatory advisor approval, and a one-tap error report. Writing it down surfaced them before the build started.</p>`
+<p><strong>The hardest FAQ:</strong> “What stops a wrong number reaching a client?” Answering it honestly turned into three requirements: source-validated figures, mandatory advisor approval, and a one-tap error report. Writing it down surfaced them before the build started.</p>
+${fig(DIAG.prfaq, 'One page of writing turned the scariest question into three requirements before any code existed.')}`
   },
   mistakes: [
     'Writing key results as a task list (“launch X”) instead of measurable outcomes.',
