@@ -266,7 +266,7 @@ textarea.draft{width:100%;min-height:150px;resize:vertical;border:1px solid var(
 /* home */
 .hero{padding-top:10px}
 .hero .lead{max-width:56rem}
-.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:36px}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:36px}
 .track-card{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:22px;display:grid;gap:14px;align-content:start;min-width:0}
 .track-card h2{font-size:1.35rem}
 .track-card ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
@@ -3084,6 +3084,469 @@ CHEAT += `
 </section>`;
 </script>
 
+<script>
+/* ================= Module 9 · Track 3: Senior PM Playbook ================= */
+DIAG.doors = `<svg viewBox="0 0 600 390" role="img" aria-labelledby="dr-t"><title id="dr-t">Decision matrix: reversibility against impact, with how fast to decide in each quadrant and four example decisions.</title>
+  <rect x="70" y="20" width="250" height="160" class="d-gold" fill-opacity=".55"/>
+  <rect x="320" y="20" width="250" height="160" class="d-bad" fill-opacity=".5"/>
+  <rect x="70" y="180" width="250" height="160" class="d-good" fill-opacity=".5"/>
+  <rect x="320" y="180" width="250" height="160" class="d-surface"/>
+  <text x="84" y="42" class="t-mono t-gold">DECIDE FAST, WATCH CLOSELY</text>
+  <text x="556" y="42" text-anchor="end" class="t-mono t-bad">SLOW DOWN</text>
+  <text x="556" y="58" text-anchor="end" class="t-xs t-muted">decision doc · pre-mortem · escalate</text>
+  <text x="84" y="328" class="t-mono t-good">DELEGATE · DECIDE IN MINUTES</text>
+  <text x="556" y="328" text-anchor="end" class="t-mono t-muted">USE A CHECKLIST</text>
+  <circle cx="150" cy="110" r="7" class="d-fill-acc"/><text x="162" y="106" class="t-sm b">Pause a staged rollout</text><text x="162" y="121" class="t-xs t-muted">flag off, back in minutes</text>
+  <circle cx="400" cy="110" r="7" class="d-fill-acc"/><text x="412" y="106" class="t-sm b">3-year LLM vendor deal</text><text x="412" y="121" class="t-xs t-muted">hard to unwind</text>
+  <circle cx="130" cy="250" r="7" class="d-fill-acc"/><text x="142" y="254" class="t-sm b">Button copy</text>
+  <circle cx="380" cy="250" r="7" class="d-fill-acc"/><text x="392" y="246" class="t-sm b">Retire a legacy report</text><text x="392" y="261" class="t-xs t-muted">customers lose it for good</text>
+  <text x="320" y="366" text-anchor="middle" class="t-sm t-muted">Reversible (two-way door) ← → Irreversible (one-way door)</text>
+  <text x="34" y="180" text-anchor="middle" transform="rotate(-90 34 180)" class="t-sm t-muted">Impact →</text>
+</svg>`;
+
+DIAG.lifecycle = `<svg viewBox="0 0 680 270" role="img" aria-labelledby="lc-t"><title id="lc-t">The B2B customer lifecycle from prospect to renewal, with the PM's role at each stage and an expansion loop.</title>
+  <defs><marker id="ah-lc" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-fill-muted"/></marker></defs>
+  ${[['Prospect', 'positioning,', 'demo story'], ['Evaluate', 'pilot criteria,', 'security review'], ['Contract', 'scope, SLAs,', 'no promised dates'], ['Implement', 'onboarding plan,', 'time-to-value'], ['Adopt', 'health score,', 'QBR insights'], ['Renew · Expand', 'roadmap story,', 'new modules']].map((st, i) => {
+    const x = 10 + i * 112;
+    return `<rect x="${x}" y="40" width="100" height="56" rx="10" class="${i === 4 ? 'd-soft' : 'd-surface'}"/>
+      <text x="${x + 50}" y="73" text-anchor="middle" class="t-sm b">${st[0]}</text>
+      ${i < 5 ? `<path d="M${x + 101} 68 H${x + 110}" class="d-line" marker-end="url(#ah-lc)"/>` : ''}
+      <text x="${x + 50}" y="122" text-anchor="middle" class="t-xs t-muted">${st[1]}</text><text x="${x + 50}" y="137" text-anchor="middle" class="t-xs t-muted">${st[2]}</text>`;
+  }).join('')}
+  <text x="10" y="24" class="t-mono t-acc">STAGE · WITH WHERE THE PM ADDS VALUE UNDERNEATH</text>
+  <path d="M620 148 C 620 200, 172 200, 172 154" class="d-goldline" marker-end="url(#ah-lc)"/>
+  <text x="396" y="214" text-anchor="middle" class="t-xs t-gold b">expansion: more seats, new modules → evaluated again</text>
+  <text x="400" y="246" text-anchor="middle" class="t-xs t-muted">Churn usually starts in “Implement” and “Adopt”, long before the renewal date.</text>
+</svg>`;
+
+DIAG.flow = `<svg viewBox="0 0 680 270" role="img" aria-labelledby="fl-t"><title id="fl-t">Before: seven steps to get an AI brief, with 38 percent of advisors finishing. After: three steps, with 81 percent finishing.</title>
+  <text x="10" y="22" class="t-mono t-bad">BEFORE · 7 STEPS · 38% REACH A BRIEF</text>
+  ${['Open client', 'AI tools menu', 'Choose “Brief”', 'Pick dates', 'Pick sections', 'Generate · 25 s', 'Review'].map((t, i) => `<rect x="${10 + i * 95}" y="34" width="87" height="52" rx="8" class="d-surface"/><text x="${53 + i * 95}" y="65" text-anchor="middle" class="t-xs b">${t}</text>`).join('')}
+  ${[100, 92, 80, 66, 55, 44, 38].map((v, i) => `<rect x="${10 + i * 95}" y="94" width="${(87 * v / 100).toFixed(1)}" height="6" rx="3" class="d-fill-acc" fill-opacity=".7"/><text x="${10 + i * 95}" y="116" class="t-mono t-muted">${v}%</text>`).join('')}
+  <path d="M10 140 H670" class="d-grid"/>
+  <text x="10" y="166" class="t-mono t-good">AFTER · 3 STEPS · 81% REACH A BRIEF</text>
+  ${['Open the meeting', 'Brief already generated overnight', 'Review & tweak'].map((t, i) => `<rect x="${10 + i * 222}" y="178" width="210" height="52" rx="8" class="${i === 1 ? 'd-soft' : 'd-surface'}"/><text x="${115 + i * 222}" y="209" text-anchor="middle" class="t-sm b">${t}</text>`).join('')}
+  ${[100, 90, 81].map((v, i) => `<rect x="${10 + i * 222}" y="238" width="${(210 * v / 100).toFixed(1)}" height="6" rx="3" class="d-fill-acc" fill-opacity=".7"/><text x="${10 + i * 222}" y="262" class="t-mono t-muted">${v}%</text>`).join('')}
+</svg>`;
+
+DIAG.okr = `<svg viewBox="0 0 680 330" role="img" aria-labelledby="okr-t"><title id="okr-t">OKR cascade: a company objective, a team objective, three key results and the initiatives that serve them.</title>
+  <rect x="170" y="10" width="340" height="50" rx="10" class="d-surface"/>
+  <text x="340" y="30" text-anchor="middle" class="t-mono t-muted">COMPANY OBJECTIVE</text><text x="340" y="48" text-anchor="middle" class="t-sm b">Become the platform advisors can’t work without</text>
+  <path d="M340 60 V78" class="d-line"/>
+  <rect x="150" y="78" width="380" height="50" rx="10" class="d-soft"/>
+  <text x="340" y="98" text-anchor="middle" class="t-mono t-acc">TEAM OBJECTIVE (QUALITATIVE)</text><text x="340" y="116" text-anchor="middle" class="t-sm b">Advisors walk into every review fully prepared</text>
+  <path d="M340 128 V146 M115 146 H565 M115 146 V160 M340 146 V160 M565 146 V160" class="d-line"/>
+  ${[[115, 'KR1 · median prep time', '50 → 15 min'], [340, 'KR2 · reviews using the brief', '30% → 60%'], [565, 'KR3 · numeric error reports', '≤ 0.5 per 1,000 briefs']].map(k => `
+    <rect x="${k[0] - 105}" y="160" width="210" height="56" rx="10" class="d-gold"/>
+    <text x="${k[0]}" y="183" text-anchor="middle" class="t-sm b">${k[1]}</text><text x="${k[0]}" y="203" text-anchor="middle" class="t-mono t-gold">${k[2]}</text>`).join('')}
+  <path d="M115 216 V236 M340 216 V236 M565 216 V236" class="d-line" stroke-dasharray="3 3"/>
+  ${[[115, 'Overnight brief generation', 'SIP data in the brief'], [340, 'Calendar integration', 'Partner-admin rollout kit'], [565, 'Golden-set regression gate', 'One-tap error reporting']].map(k => `
+    <rect x="${k[0] - 105}" y="236" width="210" height="64" rx="10" class="d-surface" stroke-dasharray="4 4"/>
+    <text x="${k[0]}" y="256" text-anchor="middle" class="t-mono t-muted">INITIATIVES (BETS)</text>
+    <text x="${k[0]}" y="274" text-anchor="middle" class="t-xs">${k[1]}</text><text x="${k[0]}" y="290" text-anchor="middle" class="t-xs">${k[2]}</text>`).join('')}
+  <text x="340" y="322" text-anchor="middle" class="t-xs t-muted">Key results measure outcomes. Initiatives are the bets you think will move them, and they can change.</text>
+</svg>`;
+
+LESSONS.push({
+  id: 'senior-1', track: 'senior', n: 1, minutes: 14,
+  title: 'Senior PM judgment: deciding with incomplete information', short: 'Judgment & decisions',
+  sub: 'Reversible vs irreversible decisions, decision docs, pre-mortems, incidents and postmortems, and managing a portfolio of bets.',
+  idea: 'Match your decision speed to how reversible the decision is. Write down the big calls, imagine failure before it happens, and treat every incident as a lesson for the whole system.',
+  body: `
+<h3>One-way and two-way doors</h3>
+<p>Jeff Bezos’s 2015 Amazon shareholder letter splits decisions into two types. <strong>One-way doors</strong> are hard or impossible to reverse: a multi-year vendor contract, deleting data, a public pricing change. <strong>Two-way doors</strong> can be undone cheaply: a flagged rollout, button copy, a pilot. The most common mistake experienced PMs see is treating two-way doors like one-way doors, which slows the whole team down. The second most common is the reverse.</p>
+${fig(DIAG.doors, 'Decide reversible things quickly and close to the work. Slow down only for irreversible, high-impact calls.')}
+<h3>The decision doc</h3>
+<p>For one-way doors, write a one-page decision doc. That leaves a trail future you can learn from, and it stops the same debate restarting every week.</p>
+<p class="formula">Context · Options (incl. “do nothing”) · Recommendation · Risks &amp; mitigations · Reversible? · Decider · Date</p>
+<p>Once a decision is made, <strong>disagree and commit</strong>, a norm popularized by Intel and Amazon: argue openly before the call, then back it fully afterwards. Say up front what new evidence would make you revisit it.</p>
+<h3>Pre-mortems and second-order effects</h3>
+<p>Psychologist Gary Klein’s <strong>pre-mortem</strong> asks: “It’s six months from now and this launch failed. What happened?” Everyone writes down reasons on their own first. That surfaces risks people are too polite to raise in a planning meeting. Then ask about <strong>second-order effects</strong>: if this works, what else changes? For example, if advisors trust AI drafts, do they stop checking them?</p>
+<h3>Incidents: calm, fast, transparent</h3>
+<ul>
+  <li><strong>Severity levels</strong>, defined in advance, such as SEV1 (customer-facing harm, all hands), SEV2 (degraded, same-day fix), SEV3 (minor).</li>
+  <li><strong>Communication rhythm:</strong> name one incident lead, then update affected customers and leadership on a fixed cadence (say every 60 minutes), even when the update is “no change yet”.</li>
+  <li><strong>Blameless postmortem</strong>, a practice popularized by Google’s SRE teams: timeline, impact, root causes (plural), what went well, and action items with owners. Focus on the system, not the person.</li>
+</ul>
+<h3>A portfolio of bets</h3>
+<p>Senior PMs manage a mix: <strong>core</strong> improvements (most effort, predictable), <strong>adjacent</strong> bets (new segments or features) and a few <strong>exploratory</strong> bets. A widely cited heuristic is roughly 70/20/10. Give every bet <strong>kill criteria</strong> before it starts (“if fewer than 20% of pilot advisors use it weekly by week 6, we stop”), and resist the <strong>sunk-cost fallacy</strong>: money already spent is not a reason to keep spending.</p>`,
+  example: {
+    title: 'The AI brief shows a wrong figure at a pilot firm',
+    html: `
+<p>At 10:40, a pilot advisor reports that a client’s brief shows ₹1.2 Cr instead of ₹12 L for a redemption. Three other pilot firms use the brief that day.</p>
+<p><strong>Decision 1, a two-way door:</strong> turn the flag off for all pilot firms now. The advisors fall back to the data-only view. It takes 2 minutes and can be undone in 2 minutes, so there’s no meeting.</p>
+<p><strong>Incident handling (SEV2):</strong> Arjun leads the incident. You send the first update at 10:55 to the four pilot firms’ admins: “We’ve paused AI summaries while we investigate a formatting error in one brief. Your data is unaffected and the standard view is available.” Updates follow every 60 minutes until it’s resolved.</p>
+<p><strong>Blameless postmortem, two days later:</strong></p>
+${table(['Section', 'Content'], [
+  ['Impact', '1 wrong figure shown to 1 advisor, caught before the client meeting; AI summaries paused for 5 hours'],
+  ['Root causes', '(1) Amounts were passed to the model as raw numbers and it reformatted lakh/crore itself. (2) The golden set had no redemption cases. (3) The output check validated totals but not individual transactions.'],
+  ['What went well', 'The advisor reported it in one tap; the kill switch worked; customer updates went out within 15 minutes'],
+  ['Actions (owner, date)', 'Pass pre-formatted amounts only (backend, Fri) · add 30 redemption cases to the golden set (QA, Wed) · validate every figure against its source (backend, next Sprint)']
+])}
+<p>No individual is named as the cause. The system let a formatting step happen inside the model, so the system is what gets fixed.</p>`
+  },
+  mistakes: [
+    'Running every decision through a meeting, including reversible ones you could have made in five minutes.',
+    'Rushing one-way doors, such as long contracts, data deletion or public pricing, because the team is in “move fast” mode.',
+    'Re-opening decisions every week because nobody wrote down what was decided and why.',
+    'Going quiet during an incident until there is a fix. Silence is worse than “no change yet”.',
+    'Postmortems that end with “be more careful” or a person’s name instead of system changes with owners.',
+    'Keeping a failing bet alive because of what has already been spent on it.'
+  ],
+  tryit: {
+    prompt: '<p>You’re about to launch <strong>AI-drafted client follow-up emails</strong>. Run a solo pre-mortem: list <strong>5 reasons it failed</strong> six months from now, each with a mitigation. Then write <strong>2 kill criteria</strong> for the pilot.</p>',
+    placeholder: 'It failed because…\n1. … → mitigation …\n2.\n3.\n4.\n5.\nKill criteria:\n- \n- ',
+    model: `<ol>
+<li><strong>Advisors stopped checking drafts and a wrong number reached a client.</strong> → Every figure is validated against its source, numbers are highlighted for review, and anything unchecked can’t be sent.</li>
+<li><strong>Drafts sounded generic, so advisors rewrote them and gave up.</strong> → Track edit rate from day 1, and include the meeting notes and client goals in the context.</li>
+<li><strong>Compliance blocked it in week 3.</strong> → Compliance reviews 50 sample drafts before the pilot and sets the guardrails.</li>
+<li><strong>Cost per email made it uneconomic at scale.</strong> → Set a cost-per-draft budget, use a smaller model for the narrative, and generate only when an advisor asks.</li>
+<li><strong>Clients felt the emails were “robotic” and trust dropped.</strong> → The advisor’s name and edits are always applied, there’s a short tone guide, and a “sounds like me” rating.</li></ol>
+<p><strong>Kill criteria:</strong> (1) fewer than 30% of pilot advisors send at least 2 AI-drafted emails a week by week 6; (2) more than one factual error reaches a client during the pilot. Either one means we stop and rethink.</p>`
+  },
+  quiz: [
+    { q: 'Pausing a flagged rollout for 3 pilot firms after an error report is best treated as…', o: [
+      ['A one-way door that needs a decision meeting with the CTO.', false, 'It can be undone in minutes. A meeting would only delay protecting users.'],
+      ['A two-way door: decide immediately, tell people, and revisit once you know more.', true, 'It’s reversible, and the cost of waiting (more wrong outputs) is higher than the cost of pausing.'],
+      ['Something to leave until the next Sprint Review.', false, 'Customer-facing errors can’t wait for a scheduled event.'],
+      ['A decision for the pilot firms to make.', false, 'You own the product’s safety. Decide, then tell them.']
+    ] },
+    { q: 'What is a pre-mortem?', o: [
+      ['A review held after a project fails.', false, 'That’s a postmortem.'],
+      ['Imagining the project has already failed and listing why, before it starts, to surface hidden risks.', true, 'Gary Klein’s technique uses hindsight in advance and makes it safe to raise risks.'],
+      ['A status meeting before a launch.', false, 'Status meetings report progress. They don’t probe for failure.'],
+      ['A legal review.', false, 'Unrelated.']
+    ] },
+    { q: 'Which postmortem action item is best?', o: [
+      ['“The engineer should be more careful with formatting.”', false, 'That’s blame plus a vague intention, and it doesn’t change the system.'],
+      ['“Validate every figure in the output against its source before display (backend, next Sprint).”', true, 'It’s specific, owned, dated and changes the system so the error can’t recur silently.'],
+      ['“Discuss AI quality at the next all-hands.”', false, 'Awareness isn’t a fix.'],
+      ['“Stop using AI.”', false, 'An overreaction that ignores the root causes.']
+    ] },
+    { q: 'Six months and a lot of effort into an exploratory feature, usage is far below its kill criteria. What’s the strongest move?', o: [
+      ['Keep going, because we’ve already invested so much.', false, 'That’s the sunk-cost fallacy. Past spending doesn’t change future returns.'],
+      ['Stop or radically re-scope it as the kill criteria say, write down what was learned, and move the capacity to better bets.', true, 'Kill criteria exist so this call is easier and less political.'],
+      ['Quietly lower the kill criteria.', false, 'Moving the goalposts destroys the credibility of the whole portfolio process.'],
+      ['Ask for more engineers.', false, 'More resources won’t fix a value problem.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'senior-2', track: 'senior', n: 2, minutes: 14,
+  title: 'B2B go-to-market & the customer lifecycle', short: 'Go-to-market & customers',
+  sub: 'How B2B customers buy, adopt and renew, and where the PM makes the difference at each stage.',
+  idea: 'In B2B, the product is bought by a committee, rolled out by an admin, used by people who didn’t choose it, and renewed only if it delivers. A senior PM designs for every one of those moments.',
+  body: `
+${fig(DIAG.lifecycle, 'The customer lifecycle. Most renewal problems are created in implementation and adoption.')}
+<h3>How B2B customers buy</h3>
+<p>A typical B2B purchase involves a <strong>champion</strong> (wants it), an <strong>economic buyer</strong> (signs), <strong>users</strong> (live with it), and <strong>blockers</strong> such as security, legal and procurement. Evaluations usually include a demo, a <strong>pilot</strong> or proof of concept, a <strong>security questionnaire</strong> (questions on access control, encryption, incident response and certifications like ISO 27001 or SOC 2), and sometimes a formal RFP.</p>
+<ul>
+  <li>Agree <strong>pilot success criteria in writing</strong> before the pilot starts, for example “median prep time under 20 minutes for 10 advisors within 4 weeks”. A pilot without criteria never ends.</li>
+  <li>Keep a ready answer pack for security reviews. Every week it saves shortens the sales cycle.</li>
+  <li>Never let a contract include an undated “roadmap promise”. Write “exploring” or “committed for Q3”, and only with PM sign-off.</li>
+</ul>
+<h3>Launch tiers and sales enablement</h3>
+${table(['Tier', 'When', 'What it gets'], [
+  ['Tier 1', 'New product or major capability that changes the pitch', 'Positioning, launch event, customer emails, press or social, full sales and CS training'],
+  ['Tier 2', 'Significant feature for existing customers', 'Release notes, in-app announcement, CS briefing, updated demo'],
+  ['Tier 3', 'Improvements and fixes', 'Release notes only']
+])}
+<p><strong>Enablement</strong> means giving sales and customer success what they need to tell the story well: positioning, a demo script, objection handling, a <strong>battlecard</strong> against alternatives, and a crisp “what it does not do”.</p>
+<h3>Implementation, adoption and renewal</h3>
+<ul>
+  <li><strong>Time-to-value</strong> is set in implementation: data import, admin setup, training. A slow start shows up as churn 11 months later.</li>
+  <li>A <strong>customer health score</strong> combines adoption, outcomes, support issues and relationship signals into red, amber or green, so CS acts before the renewal conversation.</li>
+  <li><strong>QBRs</strong> (quarterly business reviews) show the customer their own results. They’re also a great discovery opportunity for you.</li>
+  <li>Analyse <strong>churn reasons</strong> with a fixed taxonomy (product gap, poor adoption, price, champion left, company changed). Fix the patterns, not the anecdotes.</li>
+</ul>
+<h3>Sales requests without becoming a feature factory</h3>
+<p>Run one intake channel. Log each request with the customer, deal size and the <em>problem</em> behind it, then look for patterns monthly. Meet a <strong>customer advisory board</strong> of 8–12 representative customers each quarter to test direction, not to take orders.</p>`,
+  example: {
+    title: 'Taking the AI brief to market',
+    html: `
+<p><strong>Launch tier:</strong> Tier 1. It changes the pitch from “a portfolio platform” to “your advisors walk into every review prepared”.</p>
+<p><strong>Enablement kit, prepared with Kabir’s sales team:</strong> a 3-minute demo on a masked client, a one-page explainer of how accuracy is guaranteed (grounding plus evals), answers to the top 5 objections (“Will it give advice?”, “Is our data used for training?”, cost, accuracy, change management), and a battlecard against “we already do this in Excel”.</p>
+<p><strong>Pilot success plan for a new 25-advisor firm:</strong></p>
+${table(['Item', 'Agreed upfront'], [
+  ['Success criteria', 'Median prep time ≤ 20 min and ≥ 60% of reviews using the brief, by week 4'],
+  ['Scope', '10 advisors, mutual fund clients only, advisor-only view'],
+  ['Customer commitments', 'Admin available for setup in week 1; two 30-min feedback calls'],
+  ['Decision', 'Go / no-go call in week 5 with the economic buyer']
+])}
+<p><strong>Renewal-risk review, two quarters later:</strong> one firm turns amber. Weekly active advisors dropped from 70% to 35% after their champion left. Action: CS re-runs onboarding for new advisors, you join their QBR to show prep-time results, and you identify a new champion. The account is green again by the next renewal.</p>`
+  },
+  mistakes: [
+    'Running pilots with no written success criteria, so they drift for months and end in “maybe”.',
+    'Treating launch as a release note and never enabling sales and CS to tell the story.',
+    'Letting sales close deals on undated roadmap promises.',
+    'Ignoring implementation and onboarding, where most future churn is created.',
+    'Treating every loud customer request as a roadmap item instead of looking for patterns.',
+    'Hearing about churn for the first time at the renewal meeting.'
+  ],
+  tryit: {
+    prompt: '<p>Design a <strong>customer health score</strong> for partner firms using the AI platform. Choose <strong>4–5 signals</strong>, give each a weight (summing to 100%), and define red, amber and green thresholds. Then say what action each colour triggers.</p>',
+    placeholder: 'Signal — weight — how measured\n1.\n2.\n3.\n4.\n5.\nThresholds:\nActions:',
+    model: `${table(['Signal', 'Weight', 'Measured as'], [
+  ['Adoption depth', '35%', 'Weekly active advisors ÷ licensed seats'],
+  ['Outcome achieved', '25%', 'Median prep time vs the target agreed at onboarding'],
+  ['Breadth', '15%', 'Number of core features used weekly (brief, alerts, reports)'],
+  ['Support health', '15%', 'Open high-priority tickets and their age'],
+  ['Relationship', '10%', 'Champion still active; executive sponsor engaged in the last 90 days']
+])}
+<p><strong>Thresholds:</strong> each signal is scored 0–100 and weighted. <strong>Green</strong> ≥ 70, <strong>amber</strong> 50–69, <strong>red</strong> &lt; 50, or automatically red if the champion has left and adoption fell by more than 20%.</p>
+<p><strong>Actions:</strong> green → expansion conversation at the QBR. Amber → CS runs an adoption plan within 2 weeks and the PM reviews the usage data. Red → the account lead sets a recovery plan with an exec sponsor, and the PM joins a call to understand the product gaps.</p>`
+  },
+  quiz: [
+    { q: 'A prospect wants a 3-month pilot. What should be agreed before it starts?', o: [
+      ['Nothing yet. See how it goes.', false, 'Pilots without criteria drift, and “maybe” is the most likely outcome.'],
+      ['Written success criteria, scope, the customer’s commitments and a go/no-go date with the economic buyer.', true, 'That turns a pilot into a decision process.'],
+      ['A discount for the full contract.', false, 'Commercial terms come after you’ve proved value.'],
+      ['A promise to build any feature they request during the pilot.', false, 'That turns the pilot into custom development.']
+    ] },
+    { q: 'Where is most B2B churn actually created?', o: [
+      ['In the renewal meeting.', false, 'By then the decision is usually already made.'],
+      ['In implementation and adoption: slow time-to-value, low usage, or a champion leaving.', true, 'That’s why health scores and onboarding matter so much.'],
+      ['In the first sales demo.', false, 'A bad demo loses a deal. It doesn’t create churn.'],
+      ['In the pricing page.', false, 'Price matters, but it’s rarely the root cause on its own.']
+    ] },
+    { q: 'Which launch deserves a Tier 1 treatment?', o: [
+      ['A fix to date formatting.', false, 'Tier 3: release notes only.'],
+      ['A new capability that changes how you pitch the product to buyers.', true, 'Tier 1 is for launches that change the story and need full enablement.'],
+      ['A new export button.', false, 'Probably Tier 2 or 3.'],
+      ['An internal refactor.', false, 'Customers don’t see it, so there’s nothing to launch.']
+    ] },
+    { q: 'What is a customer advisory board best used for?', o: [
+      ['Collecting a feature wish list to build in order.', false, 'That turns the board into an order book.'],
+      ['Testing direction and problems with a representative group of customers on a regular cadence.', true, 'It’s a strategic discovery forum, not a request queue.'],
+      ['Replacing user research.', false, 'Board members are mostly buyers and leaders. You still need research with daily users.'],
+      ['Approving the roadmap.', false, 'Customers inform the roadmap. They don’t own it.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'senior-3', track: 'senior', n: 3, minutes: 13,
+  title: 'Product sense & craft', short: 'Product sense & craft',
+  sub: 'Building product intuition: simplicity, defaults, usability heuristics, every state of the UI, structured critique and teardowns.',
+  idea: 'Product sense is judgment about what makes a product good, and you can train it: use products critically, apply a few proven heuristics, and keep removing steps between the user and value.',
+  body: `
+<h3>What “product sense” means</h3>
+<p>It’s the combination of <strong>empathy</strong> (seeing the product through a specific user’s eyes, in their real situation) and <strong>judgment</strong> (knowing which of ten possible improvements actually matters). Senior PMs aren’t born with it. They build it by using many products deliberately, writing down what works and why, and checking their instincts against data.</p>
+<h3>Principles that rarely fail</h3>
+<ul>
+  <li><strong>Remove steps before you add features.</strong> Every step between the user and value loses people.</li>
+  <li><strong>Good defaults beat options.</strong> Most users never change settings, so the default <em>is</em> the product.</li>
+  <li><strong>Progressive disclosure:</strong> show what most people need now, and reveal advanced controls on request.</li>
+  <li><strong>Design every state:</strong> empty, loading, partial, error and success. Rough edges in these states break trust in B2B tools.</li>
+  <li><strong>Copy is product.</strong> A clear label or error message often beats a redesign.</li>
+</ul>
+<h3>Usability heuristics</h3>
+<p>The Nielsen Norman Group’s 10 usability heuristics are the most widely used checklist. Five do most of the work in B2B products:</p>
+${table(['Heuristic', 'Ask', 'AI brief example'], [
+  ['Visibility of system status', 'Do users know what’s happening?', '“Generating… usually 8 seconds”, plus the “data as of” time'],
+  ['Match between system and the real world', 'Is it in the user’s language?', '“Since your last meeting on 3 Aug”, not “delta T-90”'],
+  ['User control and freedom', 'Can they undo or escape?', 'Edit, regenerate or revert to the data-only view'],
+  ['Error prevention', 'Is the mistake hard to make?', 'Unchecked numbers can’t be sent to a client'],
+  ['Recognition rather than recall', 'Is the next step visible?', 'The brief appears on the meeting card. Nobody has to remember where it lives.']
+])}
+<h3>Structured critique</h3>
+<p class="formula">Goal → User &amp; situation → Flow walkthrough → Heuristic issues → Prioritized suggestions</p>
+<p>Critique against the goal and the user, not your taste. Prioritize: the top three issues matter far more than a list of twenty.</p>
+<h3>Product teardowns</h3>
+<p>Once a week, pick a product you use, such as a banking app, a travel app or a SaaS tool, and write a one-page teardown: who it’s for, the core job, the first-run experience step by step, one thing it does brilliantly, one thing you’d change, and why. Ten teardowns in, you’ll notice patterns everywhere.</p>`,
+  example: {
+    title: 'Teardown of the AI brief’s first-run experience',
+    html: `
+${fig(DIAG.flow, 'Illustrative funnel: every removed step kept more advisors.')}
+<p><strong>Goal:</strong> an advisor gets a useful brief before a meeting with as little effort as possible. <strong>User and situation:</strong> between back-to-back calls, often on a tablet, with 5 minutes to spare.</p>
+<p><strong>Top issues found:</strong></p>
+<ol>
+  <li><strong>The feature was hidden</strong> under an “AI tools” menu (recognition rather than recall). Fix: the brief lives on the meeting card.</li>
+  <li><strong>Four choices before any value</strong> (dates, sections). Fix: smart defaults (since the last meeting, all sections), with settings tucked away.</li>
+  <li><strong>A 25-second wait at the worst moment.</strong> Fix: generate overnight for every scheduled meeting.</li>
+  <li><strong>No trust cues.</strong> Fix: show “Data as of…”, mark every figure as “from your portfolio data”, and add a one-tap “report an error”.</li>
+</ol>
+<p><strong>Result:</strong> 7 steps became 3, and the share of advisors who reached a brief rose from 38% to 81%. Nothing new was built into the AI itself.</p>`
+  },
+  mistakes: [
+    'Adding settings and options instead of choosing a good default.',
+    'Designing only the happy path, leaving empty, loading and error states as afterthoughts.',
+    'Giving feedback based on personal taste (“I don’t like it”) instead of the goal, the user and a heuristic.',
+    'Listing twenty issues without saying which three matter.',
+    'Judging a flow on a big desktop screen when users are on a tablet between meetings.',
+    'Assuming more AI capability will fix what is really a flow or copy problem.'
+  ],
+  tryit: {
+    prompt: `<p>Critique this onboarding screen using the structured method, and give the <strong>top 5 issues with fixes</strong>.</p>
+<blockquote>A new partner-firm admin logs in for the first time and sees an empty dashboard titled “Welcome!”. A sidebar has 14 menu items. The only button reads “Configure”. Clicking it opens a 22-field settings form, with all fields required, including “API webhook URL”. There’s no progress indicator. Saving shows the error “Invalid input” with no field highlighted.</blockquote>`,
+    placeholder: 'Goal:\nUser & situation:\nTop 5 issues → fixes:\n1.\n2.\n3.\n4.\n5.',
+    model: `<p><strong>Goal:</strong> get the firm live, meaning advisors invited and client data imported, in one sitting. <strong>User:</strong> a busy operations or admin person, not technical, who has never seen the product.</p>
+<ol>
+<li><strong>The empty dashboard gives no direction</strong> (visibility, recognition). → Replace it with a 3-step setup checklist: import clients, invite advisors, generate the first brief.</li>
+<li><strong>A 22-field form, all required</strong> (minimalist design, progressive disclosure). → Ask only for the 3–4 fields needed to start, with sensible defaults. Move advanced settings, webhooks included, to a later “Integrations” page.</li>
+<li><strong>Technical jargon</strong> (“API webhook URL”) for a non-technical admin (match the real world). → Remove it from onboarding, or explain it and mark it optional.</li>
+<li><strong>“Invalid input” with no field highlighted</strong> (help users recognize and recover from errors). → Validate inline, highlight the field, and explain the fix in plain words.</li>
+<li><strong>No progress or time estimate</strong> (visibility of status). → Show “Step 1 of 3 · about 10 minutes” and save progress automatically.</li></ol>`
+  },
+  quiz: [
+    { q: 'Which change is most likely to increase the share of users who reach value?', o: [
+      ['Adding three new configuration options.', false, 'More choices usually add friction and lower completion.'],
+      ['Removing steps between the user and the first useful outcome, using smart defaults.', true, 'Fewer steps and good defaults reliably raise activation.'],
+      ['A longer welcome video.', false, 'Passive content rarely substitutes for a shorter path.'],
+      ['A more detailed help article.', false, 'Helpful, but it doesn’t remove the friction.']
+    ] },
+    { q: '“Invalid input” appears after saving a 22-field form, with no field highlighted. Which heuristic is most violated?', o: [
+      ['Aesthetic and minimalist design.', false, 'The form is bloated too, but the error message is the bigger problem here.'],
+      ['Help users recognize, diagnose and recover from errors.', true, 'Errors should say what went wrong, where, and how to fix it, in plain language.'],
+      ['Flexibility and efficiency of use.', false, 'That one is about accelerators for expert users.'],
+      ['Help and documentation.', false, 'Docs can’t fix an unhelpful error message.']
+    ] },
+    { q: 'What makes design feedback useful?', o: [
+      ['“I’d use a different color.”', false, 'Taste, unconnected to the goal.'],
+      ['Tying each point to the goal, the user’s situation and a heuristic, then prioritizing the top issues.', true, 'That makes it actionable and easy for the designer to agree or push back on.'],
+      ['Listing every small issue you notice.', false, 'Without priority, the important issues get lost.'],
+      ['Redesigning it yourself.', false, 'That replaces the designer’s judgment instead of informing it.']
+    ] },
+    { q: 'What is progressive disclosure?', o: [
+      ['Releasing features to users in stages.', false, 'That’s a staged rollout.'],
+      ['Showing the essentials first, and revealing advanced options only when they’re needed.', true, 'It keeps the common path simple without removing power.'],
+      ['Disclosing data-privacy terms gradually.', false, 'Unrelated.'],
+      ['Hiding features from free users.', false, 'That’s packaging, not a UX principle.']
+    ] }
+  ]
+});
+
+LESSONS.push({
+  id: 'senior-4', track: 'senior', n: 4, minutes: 14,
+  title: 'Product leadership & scaling teams', short: 'Leadership & scaling',
+  sub: 'Team vision, OKRs done right, team charters, scaling Scrum, operating rhythm, PR-FAQs and growing other PMs.',
+  idea: 'As you grow, your job shifts from making good decisions to building a system where other people make good decisions: clear outcomes, clear ownership, and writing that travels without you.',
+  body: `
+<h3>Vision and narrative</h3>
+<p>A team vision describes the world you’re creating for users, in a sentence or two: “Every advisor walks into every client conversation fully prepared.” Pair it with a short strategy narrative of a page or two, covering the diagnosis, the policy and the key bets (Track 1, Lesson 13). That way people can make aligned decisions when you’re not in the room.</p>
+<h3>OKRs done right</h3>
+<p>Objectives and Key Results came from Andy Grove at Intel and were popularized by John Doerr. The <strong>objective</strong> is qualitative and inspiring. The <strong>key results</strong>, usually 3–4, are measurable <strong>outcomes</strong>, not tasks.</p>
+${fig(DIAG.okr, 'OKRs cascade by outcome. The initiatives underneath are bets that can change mid-quarter.')}
+${table(['Output-style KR (avoid)', 'Outcome-style KR (better)'], [
+  ['Launch overnight brief generation', 'Median review prep time falls from 50 to 15 minutes'],
+  ['Ship calendar integration', 'Reviews prepared with the brief rise from 30% to 60%'],
+  ['Write 200 golden-set cases', 'Numeric error reports stay at or below 0.5 per 1,000 briefs']
+])}
+<p>Say whether each OKR is <strong>committed</strong> (expected to be met in full) or <strong>aspirational</strong> (a stretch, where partial achievement is still a win). Review progress every few weeks and grade honestly at quarter end.</p>
+<h3>Team charters and ownership</h3>
+<p>A one-page <strong>team charter</strong> states the mission, the customers and outcomes the team owns, what it doesn’t own, its key metrics, and how others should request work. Organize teams around <strong>outcomes and user journeys</strong> (what Team Topologies calls stream-aligned teams), not technical components, so each team can deliver value end to end.</p>
+<h3>Scaling Scrum</h3>
+<p>The Scrum Guide’s rule for growth is simple. When a Scrum Team gets too large, split it into multiple cohesive Scrum Teams focused on the same product, sharing <strong>one Product Goal, one Product Backlog and one Product Owner</strong>, and a shared Definition of Done. Frameworks like Nexus and LeSS add coordination practices on top. Start with the Guide’s rule before adopting a heavy framework.</p>
+<h3>Operating rhythm and decision rights</h3>
+<ul>
+  <li><strong>Quarterly:</strong> OKR setting and roadmap review. <strong>Monthly:</strong> product review of metrics and bets. <strong>Weekly:</strong> a written update.</li>
+  <li><strong>DACI</strong> makes decision rights explicit: Driver (runs the process), Approver (one person decides), Contributors (consulted), Informed.</li>
+</ul>
+<h3>Working backwards: the PR-FAQ</h3>
+<p>Amazon’s “working backwards” process, described in Colin Bryar and Bill Carr’s book <em>Working Backwards</em>, starts a big bet by writing the <strong>press release</strong> for launch day, written for customers, plus an <strong>FAQ</strong> answering the hard customer and internal questions. If the press release isn’t exciting, or the FAQ exposes unanswered problems, you’ve learned that cheaply, before building anything.</p>
+<h3>Growing other PMs</h3>
+<p>Leadership shows in other people’s growth. Give context rather than instructions, let people own outcomes and not just tasks, review their writing generously, and share the decision-making process, not just the decision.</p>`,
+  example: {
+    title: 'Next quarter for the AI copilot team',
+    html: `
+<p><strong>Objective (committed):</strong> Advisors walk into every review fully prepared.</p>
+<ul><li><strong>KR1:</strong> median review prep time falls from 50 to 15 minutes at pilot firms.</li>
+<li><strong>KR2:</strong> reviews prepared with the brief rise from 30% to 60%.</li>
+<li><strong>KR3:</strong> numeric error reports stay at or below 0.5 per 1,000 briefs. This is a guardrail-style KR that keeps quality honest.</li></ul>
+<p><strong>Objective (aspirational):</strong> Advisors follow up with clients the same day. <strong>KR:</strong> 40% of pilot advisors send an AI-drafted follow-up within 24 hours of a meeting.</p>
+<p><strong>PR-FAQ opening for “AI client follow-ups”:</strong></p>
+<blockquote><strong>Advisors now send a personalised client follow-up in under two minutes.</strong> After each review, the platform drafts a follow-up email from the meeting notes and the client’s portfolio, with every figure checked against live data. The advisor edits, approves and sends. “I used to spend my evenings writing these. Now my clients get them before they’ve left the parking lot,” says a pilot advisor.</blockquote>
+<p><strong>The hardest FAQ:</strong> “What stops a wrong number reaching a client?” Answering it honestly turned into three requirements: source-validated figures, mandatory advisor approval, and a one-tap error report. Writing it down surfaced them before the build started.</p>`
+  },
+  mistakes: [
+    'Writing key results as a task list (“launch X”) instead of measurable outcomes.',
+    'Setting so many OKRs that none of them guide decisions.',
+    'Organizing teams by technical layer, so no single team can deliver a user outcome.',
+    'Scaling to several teams with several backlogs and several Product Owners for one product.',
+    'Leaving decision rights implicit, so every cross-team decision turns into a negotiation.',
+    'Doing the work for your team instead of building their context and judgment.'
+  ],
+  tryit: {
+    prompt: `<p><strong>Part 1:</strong> write <strong>one objective with three key results</strong> for next quarter’s failed-SIP alerts work.</p>
+<p><strong>Part 2:</strong> rewrite these two output-style KRs as outcomes: (a) “Ship WhatsApp alerts”; (b) “Build an alerts dashboard for admins”.</p>`,
+    placeholder: 'Objective:\nKR1:\nKR2:\nKR3:\n\nRewrites:\n(a)\n(b)',
+    model: `<p><strong>Objective:</strong> no client misses an investment because of a failed SIP we could have flagged.</p>
+<ul><li><strong>KR1:</strong> share of failed SIPs actioned within 48 hours rises from 25% to 80%.</li>
+<li><strong>KR2:</strong> median time from failure to advisor action falls from 6 days to 1 day.</li>
+<li><strong>KR3 (guardrail):</strong> false-positive alerts stay under 2%.</li></ul>
+<p><strong>Rewrites:</strong> (a) “Ship WhatsApp alerts” becomes “Advisors act on 80% of alerts within 48 hours, whichever channel they use”, so the channel stays a bet. (b) “Build an admin dashboard” becomes “Admins at 90% of live firms review alert follow-up weekly”, or better still, tie it to the client outcome in KR1.</p>`
+  },
+  quiz: [
+    { q: 'Which is the best key result?', o: [
+      ['“Launch the calendar integration.”', false, 'That’s an output, so you could ship it and achieve nothing.'],
+      ['“Reviews prepared with the brief rise from 30% to 60%.”', true, 'It’s measurable, outcome-based and leaves the team free to choose the best initiatives.'],
+      ['“Work harder on adoption.”', false, 'There’s no way to measure it.'],
+      ['“Hold 12 customer calls.”', false, 'An activity, not an outcome.']
+    ] },
+    { q: 'Your product grows to 3 Scrum Teams. According to the Scrum Guide, what should they share?', o: [
+      ['Nothing. Each team should be independent.', false, 'Teams working on the same product need a shared direction and shared priorities.'],
+      ['One Product Goal, one Product Backlog and one Product Owner, plus a shared Definition of Done.', true, 'This is the Guide’s rule when Scrum Teams split while working on the same product.'],
+      ['One Scrum Master, who runs all their events.', false, 'The Guide doesn’t require that.'],
+      ['One Daily Scrum with all developers together.', false, 'Each Scrum Team holds its own Daily Scrum.']
+    ] },
+    { q: 'What is a PR-FAQ for?', o: [
+      ['Announcing a feature after it ships.', false, 'It’s written before building, as a thinking tool.'],
+      ['Working backwards from the customer: writing the launch press release and hard FAQs first, to test whether a bet is worth building.', true, 'It exposes weak value propositions and hard problems cheaply.'],
+      ['Writing release notes.', false, 'Release notes describe shipped changes.'],
+      ['Collecting customer feature requests.', false, 'It’s about one specific bet, not intake.']
+    ] },
+    { q: 'In DACI, how many Approvers should a decision have?', o: [
+      ['As many as there are stakeholders.', false, 'Then nobody really decides.'],
+      ['One.', true, 'Like the Accountable in RACI, one person makes the call. The Driver runs the process.'],
+      ['Exactly two, for balance.', false, 'Two approvers create deadlocks.'],
+      ['None. Decisions are made by consensus.', false, 'Consensus is nice when it happens, but someone must own the decision.']
+    ] }
+  ]
+});
+
+GLOSSARY.push(
+  { term: 'One-way door', track: 'pm', card: 1, lesson: 'senior-1', def: 'An irreversible, high-consequence decision (long contracts, data deletion, public pricing). Worth slowing down for. The term comes from Jeff Bezos’s 2015 shareholder letter.' },
+  { term: 'Two-way door', track: 'pm', card: 1, lesson: 'senior-1', def: 'A reversible decision, such as a flagged rollout or copy change. Decide quickly and close to the work, then adjust.' },
+  { term: 'Decision doc', track: 'pm', card: 1, lesson: 'senior-1', def: 'A one-page record of context, options, recommendation, risks, reversibility, decider and date for an important decision.' },
+  { term: 'Disagree and commit', track: 'pm', lesson: 'senior-1', def: 'Debate openly before a decision, then fully support it once it’s made. Popularized by Intel and Amazon.' },
+  { term: 'Pre-mortem', track: 'pm', card: 1, lesson: 'senior-1', def: 'Imagine a project has failed and list why, before it starts. Gary Klein’s technique for surfacing hidden risks.' },
+  { term: 'Blameless postmortem', track: 'pm', card: 1, lesson: 'senior-1', def: 'An incident review covering timeline, impact, root causes and owned actions. It focuses on fixing the system, not blaming people.' },
+  { term: 'Severity level', track: 'pm', lesson: 'senior-1', def: 'A pre-agreed incident classification (e.g. SEV1–SEV3) that sets response urgency and communication cadence.' },
+  { term: 'Kill criteria', track: 'pm', card: 1, lesson: 'senior-1', def: 'Conditions, set before a bet starts, under which you’ll stop it, e.g. “under 20% weekly usage by week 6”.' },
+  { term: 'Sunk-cost fallacy', track: 'pm', lesson: 'senior-1', def: 'Continuing something because of what has already been spent, rather than its future value.' },
+  { term: 'Launch tiers', track: 'pm', card: 1, lesson: 'senior-2', def: 'Classifying launches (Tier 1–3) by how much they change the customer story, to decide the level of marketing, enablement and communication.' },
+  { term: 'Sales enablement', track: 'pm', card: 1, lesson: 'senior-2', def: 'Equipping sales and CS to sell and support a product: positioning, demo scripts, objection handling and battlecards.' },
+  { term: 'Battlecard', track: 'pm', lesson: 'senior-2', def: 'A one-page guide for sales comparing your product with an alternative: strengths, weaknesses, landmines and responses.' },
+  { term: 'Pilot (proof of concept)', track: 'pm', card: 1, lesson: 'senior-2', def: 'A limited trial with a prospect that runs to written success criteria, scope and a go/no-go date.' },
+  { term: 'Security questionnaire', track: 'pm', lesson: 'senior-2', def: 'A buyer’s list of security and privacy questions (access control, encryption, incidents, certifications) completed during evaluation.' },
+  { term: 'Customer health score', track: 'pm', card: 1, lesson: 'senior-2', def: 'A weighted score of adoption, outcomes, support and relationship signals that flags accounts as green, amber or red.' },
+  { term: 'QBR', track: 'pm', card: 1, lesson: 'senior-2', aka: 'quarterly business review', def: 'Quarterly business review: a session showing a customer their results and plans. Also a strong discovery opportunity.' },
+  { term: 'Customer advisory board', track: 'pm', lesson: 'senior-2', def: 'A small, representative group of customers who meet regularly to test product direction. A strategic forum, not a request queue.' },
+  { term: 'Product sense', track: 'pm', card: 1, lesson: 'senior-3', def: 'Empathy plus judgment about what makes a product good for a specific user and situation. Built through deliberate practice.' },
+  { term: 'Progressive disclosure', track: 'pm', card: 1, lesson: 'senior-3', def: 'Showing what most users need first and revealing advanced options only when they’re needed.' },
+  { term: 'Usability heuristics', track: 'pm', card: 1, lesson: 'senior-3', def: 'Rules of thumb for usable interfaces. The best known are the Nielsen Norman Group’s 10 (e.g. visibility of system status, error prevention).' },
+  { term: 'Product teardown', track: 'pm', lesson: 'senior-3', def: 'A structured written analysis of a product: user, core job, first-run flow, what it does brilliantly, what you’d change, and why.' },
+  { term: 'OKR', track: 'pm', card: 1, lesson: 'senior-4', aka: 'objectives and key results', def: 'Objectives and Key Results: a qualitative objective plus 3–4 measurable outcome key results, set quarterly.' },
+  { term: 'Key result', track: 'pm', lesson: 'senior-4', def: 'A measurable outcome that shows progress on an objective, e.g. “prep time 50 → 15 min”. Not a task or launch.' },
+  { term: 'PR-FAQ', track: 'pm', card: 1, lesson: 'senior-4', aka: 'working backwards', def: 'Amazon’s “working backwards” document: a launch press release plus hard FAQs, written before building to test a big bet.' },
+  { term: 'Team charter', track: 'pm', lesson: 'senior-4', def: 'A one-page statement of a team’s mission, owned outcomes and customers, what it doesn’t own, key metrics and how to request work.' },
+  { term: 'DACI', track: 'pm', card: 1, lesson: 'senior-4', def: 'Driver, Approver (one person), Contributors, Informed: a way to make decision rights explicit.' }
+);
+
+CHEAT += `
+<section>
+  <h2>Senior PM</h2>
+  <ul>
+    <li><b>Decide:</b> two-way doors fast and delegated · one-way doors get a decision doc and a pre-mortem · disagree and commit · kill criteria up front · ignore sunk costs.</li>
+    <li><b>Incidents:</b> severity · one lead · regular updates · blameless postmortem with owned actions.</li>
+    <li><b>GTM:</b> pilot criteria in writing · launch tiers · enablement kit · health score · QBRs · no undated promises.</li>
+    <li><b>Craft:</b> fewer steps · good defaults · design every state · NN/g heuristics · prioritized critique.</li>
+    <li><b>Lead:</b> OKRs = outcome KRs · charters · one Product Backlog per product · DACI · PR-FAQ before big bets.</li>
+  </ul>
+</section>`;
+</script>
+
 <!-- @content-end -->
 
 <script>
@@ -3124,10 +3587,11 @@ CHEAT += `
 
   const TRACKS = {
     pm: { name: 'PM Fundamentals', label: 'Track 1' },
-    scrum: { name: 'Scrum Fundamentals', label: 'Track 2' }
+    scrum: { name: 'Scrum Fundamentals', label: 'Track 2' },
+    senior: { name: 'Senior PM Playbook', label: 'Track 3' }
   };
   const byTrack = t => LESSONS.filter(l => l.track === t).sort((a, b) => a.n - b.n);
-  const ORDER = [...byTrack('pm'), ...byTrack('scrum')];
+  const ORDER = [...byTrack('pm'), ...byTrack('scrum'), ...byTrack('senior')];
   const LMAP = Object.fromEntries(ORDER.map(l => [l.id, l]));
 
   /* ---------- State ---------- */
@@ -3196,6 +3660,7 @@ CHEAT += `
       <div class="nav-group">${tool('home', IC.home, 'Start here')}</div>
       ${navTrack('pm')}
       ${navTrack('scrum')}
+      ${navTrack('senior')}
       <div class="nav-group">
         <div class="nav-head"><h2>Practice &amp; reference</h2></div>
         ${tool('simulator', IC.sim, 'Sprint simulator', S.simBest != null ? `Best score ${S.simBest}%` : '8 decisions · ~10 min')}
@@ -3363,7 +3828,7 @@ CHEAT += `
         <div><b>Try it</b><span>Exercise + model answer</span></div>
         <div><b>Check</b><span>Quiz with explanations</span></div>
       </div>
-      <div class="home-grid">${trackCard('pm')}${trackCard('scrum')}</div>
+      <div class="home-grid">${trackCard('pm')}${trackCard('scrum')}${trackCard('senior')}</div>
       <div class="tools">
         <a class="tool" href="#simulator">${IC.sim}<b>Sprint simulator</b><span>Run a 2-week Sprint and handle a mid-Sprint request from Sales.</span></a>
         <a class="tool" href="#flashcards">${IC.cards}<b>Flashcards</b><span>Drill the key PM and Scrum terms.</span></a>
@@ -3784,7 +4249,9 @@ CHEAT += `
     { name: 'SEBI', match: ['SEBI'], url: 'https://www.sebi.gov.in/', desc: 'Securities and Exchange Board of India, the securities market regulator.' },
     { name: 'Mixpanel', match: ['Mixpanel'], url: 'https://mixpanel.com/', desc: 'Product analytics for events, funnels, cohorts and retention.' },
     { name: 'Amplitude', match: ['Amplitude'], url: 'https://amplitude.com/', desc: 'Product analytics and experimentation platform.' },
-    { name: 'Google Analytics', match: ['Google Analytics'], url: 'https://marketingplatform.google.com/about/analytics/', desc: 'Google’s web and app analytics service.' }
+    { name: 'Google Analytics', match: ['Google Analytics'], url: 'https://marketingplatform.google.com/about/analytics/', desc: 'Google’s web and app analytics service.' },
+    { name: 'Nielsen Norman Group', match: ['Nielsen Norman Group'], url: 'https://www.nngroup.com/articles/ten-usability-heuristics/', desc: 'UX research firm; its 10 usability heuristics are the standard checklist for interface design.' },
+    { name: 'ISO/IEC 27001', match: ['ISO/IEC 27001', 'ISO 27001'], url: 'https://www.iso.org/standard/27001', desc: 'The international standard for information security management systems.' }
   ];
   const TOOLMAP = Object.fromEntries(TOOLS.map(t => [t.name, t]));
   const TOOL_BY_MATCH = {};
